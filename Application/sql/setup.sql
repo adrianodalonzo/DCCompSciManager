@@ -42,6 +42,16 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
                                 element_id REFERENCES elements(element_id) ON DELETE CASCADE, 
                                 element_hours number NOT NULL);
 
+--Courses_Users
+create table courses_users (
+    user_id number generated always as identity PRIMARY KEY,
+    name varchar2(100) NOT NULL,
+    email varchar2(100) NOT NULL,
+    password varchar2(102) NOT NULL,
+    user_group varchar2(13) NOT NULL, 
+    avatar_path varchar2(2000)
+);
+
 --calling creation of sample data
 @inserting.sql
 

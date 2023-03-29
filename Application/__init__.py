@@ -1,5 +1,6 @@
 from flask import Flask
 import secrets
+from .dbmanager import get_db
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -13,11 +14,14 @@ def create_app(test_config=None):
     app.teardown_appcontext(cleanup)
     make_blueprints(app)
     
+    from .dbmanager import init_db_command
+    app.cli.add_command(init_db_command)
+    
     return app
     
-def make_blueprints(app:Flask):
+def make_blueprints(app):
     from .blueprints.home_view import bp as home_bp
     app.register_blueprint(home_bp)
     
 def cleanup(value):
-    pass
+    get_db().close()

@@ -9,6 +9,7 @@
 
         {% endblock %}
     </title>
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='style.css' ) }}">
 </head>
 <body>
 
@@ -21,6 +22,16 @@
             </ul>
         {% endif %}
     {% endwith %}
+
+    <nav>
+        <ul>
+            <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
+            <li><a href="#">PlaceHolder</a></li>
+            <li><a href="#">PlaceHolder</a></li>
+            <li><a href="#">Sign Up</a></li>
+            <li><a href="#">Login</a></li>
+        </ul>
+    </nav>
 
     {% block content %}
 

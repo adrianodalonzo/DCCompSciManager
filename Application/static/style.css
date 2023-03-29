@@ -1,0 +1,36 @@
+#home_page_heading {
+    text-align: center;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-evenly;
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li a {
+    color: rgb(197, 197, 197);
+    text-decoration: none;
+    font-size: larger;
+}
+
+nav ul li a:hover, nav ul li a:visited {
+    color: white;
+}
+
+nav ul li a:active {
+    color: rgb(78, 184, 255);
+}
+
+nav {
+    background-color: rgb(20, 20, 20);
+    border-radius: 6px;
+    padding: 8px;
+}
+
+body {
+    background-color: #002550;
+    color: white;
+    margin: 0;
+}

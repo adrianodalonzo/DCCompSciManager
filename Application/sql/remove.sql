@@ -10,9 +10,6 @@ drop table domains;
 --Logging
 drop table audit_logs;
 
---Users
-drop table course_users;
-
 --Drop Triggers
 --courses
 drop trigger after_courses_updated;

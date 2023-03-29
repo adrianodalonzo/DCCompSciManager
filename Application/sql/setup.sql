@@ -45,7 +45,7 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
 --Courses_Users
 create table courses_users (
     user_id number generated always as identity PRIMARY KEY,
-    name varchar2(100) NOT NULL,
+    username varchar2(100) NOT NULL,
     email varchar2(100) NOT NULL,
     password varchar2(102) NOT NULL,
     user_group varchar2(13) NOT NULL, 

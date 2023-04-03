@@ -17,7 +17,7 @@ def signup():
             user = User(form.email.data, form.name.data, hash, form.avatarlink.data)
 
             test_user = get_db().get_user(user.email)
-            if not test_user is None:
+            if not test_user:
                 flash('A User With That Email Already Exists!', category='invalid')
             else:
                 get_db().insert_user(user)
@@ -42,10 +42,10 @@ def login():
                     flash('Login Successful!', category='valid')
                     return render_template('index.html')
                 else:
-                    flash('Password Invalid!', category='invalid')
+                    flash('Email or Password Entered are Invalid!', category='invalid')
                     return redirect(url_for('auth.login'))
             else:
-                flash("Email Invalid!", category='invalid')
+                flash("Email or Password Entered are Invalid!", category='invalid')
                 return redirect(url_for('auth.login'))
         else:
             flash('Form Invalid!', category='invalid')

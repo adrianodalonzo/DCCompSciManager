@@ -34,12 +34,12 @@ from wtforms import StringField, EmailField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length
 
 class SignUpForm(FlaskForm):
-    email = EmailField('Email', validators=[DataRequired(), Length(min=3, max=100)])
+    email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
     name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     avatarlink = StringField()
     
 class LoginForm(FlaskForm):
-    email = EmailField('Email', validators=[DataRequired(), Length(min=3, max=100)])
+    email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     remember_me = BooleanField('Remember Me?')

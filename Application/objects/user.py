@@ -1,15 +1,15 @@
 class User:
     def __init__(self, email, name, password, avatarlink):
-        if email is not isinstance(str):
+        if not isinstance(email, str):
             raise TypeError("email must be a string")
 
         if name.isalnum() == False:
             raise TypeError("name must only contain alphanumeric characters")
 
-        if password is not isinstance(str):
+        if not isinstance(password, str):
             raise TypeError("password must be a string")
 
-        if avatarlink is not isinstance(str):
+        if not isinstance(avatarlink, str):
             raise TypeError("avatarlink must be a string")
         
         self.email = email

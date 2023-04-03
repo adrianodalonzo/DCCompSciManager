@@ -50,4 +50,5 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return render_template('logout.html')
+    flash('Successfully Logged Out!', category='valid')
+    return redirect(url_for('index.index'))

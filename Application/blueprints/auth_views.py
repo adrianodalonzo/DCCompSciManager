@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from objects.user import User, SignUpForm, LoginForm
+from ..objects.user import User, SignUpForm, LoginForm
 from ..dbmanager import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth/")
@@ -14,8 +14,9 @@ def signup():
         if form.validate_on_submit():
             hash = generate_password_hash(form.password.data)
             user = User(form.email.data, form.name.data, hash, form.avatarlink.data)
-            # get_db().insert_user(user)
-            # flash("User Added")
+            # insert validation
+            get_db().insert_user(user)
+            flash("User Added Successfully", category='valid')
     
     return render_template("signup.html", form=form)
 
@@ -31,6 +32,8 @@ def login():
                 password = form.password.data
                 if check_password_hash(user.password, password):
                     login_user(user, remember=form.remember_me.data)
+                    flash('You have logged in successfully!', category='valid')
+                    return render_template(url_for('index.index'))
                 else:
                     flash('Invalid Password!', category='invalid')
                     return redirect(url_for('auth.login'))

@@ -49,12 +49,6 @@ class Database:
     def get_user(self, email):
         if not isinstance(email, str):
             raise TypeError('Email MUST be a string!')
-        
-        # with self.__get_cursor() as cursor:
-        #     results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users
-        #                              where email = :email""", email=email)
-        #     if results.rowcount == 0:
-        #         raise oracledb.DataError
 
         with self.__get_cursor() as cursor:
             results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users
@@ -68,12 +62,6 @@ class Database:
     def get_user_id(self, id):
         if not isinstance(id, int):
             raise TypeError('ID MUST be a number!!')
-        
-        # with self.__get_cursor() as cursor:
-        #     results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users
-        #                              where user_id = :id""", id=id)
-        #     if results.rowcount == 0:
-        #         raise oracledb.DataError
         
         with self.__get_cursor() as cursor:
             results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users

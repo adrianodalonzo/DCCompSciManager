@@ -39,16 +39,16 @@ def login():
                 password = form.password.data
                 if check_password_hash(user.password, password):
                     login_user(user, remember=form.remember_me.data)
-                    flash('You have logged in successfully!', category='valid')
+                    flash('Login Successful!', category='valid')
                     return render_template('index.html')
                 else:
-                    flash('Invalid Password!', category='invalid')
+                    flash('Password Invalid!', category='invalid')
                     return redirect(url_for('auth.login'))
             else:
-                flash("Couldn't Find User!", category='invalid')
+                flash("Email Invalid!", category='invalid')
                 return redirect(url_for('auth.login'))
         else:
-            flash('Invalid Form!', category='invalid')
+            flash('Form Invalid!', category='invalid')
             return redirect(url_for('auth.login'))
     elif request.method == 'GET':
         return render_template('login.html', form=form)

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+    Sign Up
+{% endblock %}
+{% block content %}
+<form method="post">
+    {{ form.csrf_token }}
+    {{ form.email.label }} {{ form.email() }}
+    {{ form.name.label }} {{ form.name() }}
+    {{ form.password.label }} {{ form.password() }}
+    {{ form.avatarlink.label }} {{ form.avatarlink() }}
+    <input type="submit" value="submit">
+</form>
+{% endblock %}

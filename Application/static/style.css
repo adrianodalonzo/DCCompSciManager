@@ -43,6 +43,7 @@ ul.flashes {
     padding: 0.5em;
     font-size: 20px;
     list-style-type: none;
+    text-align: center;
 }
 
 .flashes .invalid {

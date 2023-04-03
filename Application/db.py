@@ -34,6 +34,11 @@ class Database:
             raise TypeError('User passed in MUST be a User object!')
         
         with self.__get_cursor() as cursor:
+            cursor.execute("""select email from courses_users where email = :email""", email=user.email)
+            if cursor.rowcount != 0:
+                raise oracledb.IntegrityError
+        
+        with self.__get_cursor() as cursor:
             cursor.execute("""insert into courses_users (username, email, password, user_group, avatar_path) 
                            values (:username, :email, :password, 'Member', :avatar_path)""",
                            username=user.name, 

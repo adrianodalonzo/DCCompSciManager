@@ -17,11 +17,11 @@ def signup():
             user = User(form.email.data, form.name.data, hash, form.avatarlink.data)
 
             test_user = get_db().get_user(user.email)
-            if not test_user:
-                flash('A User With That Email Already Exists!', category='invalid')
-            else:
+            if test_user:
                 get_db().insert_user(user)
                 flash("User Added Successfully", category='valid')
+            else:
+                flash('A User With That Email Already Exists!', category='invalid')
             return render_template("signup.html", form=form) 
         
     elif request.method == 'GET':

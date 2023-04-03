@@ -31,6 +31,8 @@ def create_app(test_config=None):
 def make_blueprints(app):
     from .blueprints.home_view import bp as home_bp
     app.register_blueprint(home_bp)
+    from .blueprints.auth_views import bp as auth_bp
+    app.register_blueprint(auth_bp)
     
 def cleanup(value):
     get_db().close()

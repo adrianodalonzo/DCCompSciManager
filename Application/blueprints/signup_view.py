@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from objects.user import User, UserForm
 
-bp = Blueprint("signup", __name__, url_prefix="/signup/")
+bp = Blueprint("signup", __name__, url_prefix="/auth/signup/")
 
 @bp.route("/", methods=['GET', 'POST'])
 def signup():

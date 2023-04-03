@@ -3,6 +3,7 @@
     Sign Up
 {% endblock %}
 {% block content %}
+<h1>Sign Up</h1>
 <form method="post">
     {{ form.csrf_token }}
     {{ form.email.label }} {{ form.email() }}

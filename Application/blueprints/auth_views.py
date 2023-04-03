@@ -33,7 +33,7 @@ def login():
                 if check_password_hash(user.password, password):
                     login_user(user, remember=form.remember_me.data)
                     flash('You have logged in successfully!', category='valid')
-                    return render_template(url_for('index.index'))
+                    return render_template('index.html')
                 else:
                     flash('Invalid Password!', category='invalid')
                     return redirect(url_for('auth.login'))

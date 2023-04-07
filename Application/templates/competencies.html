@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Competencies
+{% endblock %}
+
+{% block content %}
+    <h1 id="competencies_page_heading">Competencies</h1>
+
+    {% for competency in competencies %}
+        <div>
+            <h2>{{ competency.name | safe }}</h2>
+            <h3>{{ competency.id | safe }}</h3>
+            <h3>{{ competency.type | safe }}</h3>
+            <h3>{{ competency.acheivement | safe}}</h3>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -21,7 +21,15 @@ def create_app(test_config=None):
     
 def make_blueprints(app):
     from .blueprints.home_view import bp as home_bp
+    from .blueprints.competencies_view import bp as competencies_bp
+    from .blueprints.course_view import bp as course_bp
+    from .blueprints.courses_view import bp as courses_bp
+    from .blueprints.domains_view import bp as domains_bp
     app.register_blueprint(home_bp)
+    app.register_blueprint(competencies_bp)
+    app.register_blueprint(course_bp)
+    app.register_blueprint(courses_bp)
+    app.register_blueprint(domains_bp)
     
 def cleanup(value):
     get_db().close()

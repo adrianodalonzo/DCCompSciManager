@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}
-    Sign Up
+    Log In
 {% endblock %}
 {% block content %}
-<h1>Sign Up</h1>
+<h1>Login</h1>
 <form method="post">
     {{ form.csrf_token }}
     {{ form.email.label }} {{ form.email() }}
-    {{ form.name.label }} {{ form.name() }}
     {{ form.password.label }} {{ form.password() }}
-    {{ form.avatarlink.label }} {{ form.avatarlink() }}
-    <input type="submit" value="submit">
+    {{ form.remember_me.label }} {{ form.remember_me() }}
+    <input type="submit" value="Log In">
 </form>
 {% endblock %}

@@ -34,3 +34,24 @@ body {
     color: white;
     margin: 0;
 }
+
+ul.flashes {
+    padding: 0;
+}
+
+.flashes li {
+    padding: 0.5em;
+    font-size: 20px;
+    list-style-type: none;
+    text-align: center;
+}
+
+.flashes .invalid {
+    background-color: rgb(255, 55, 55);
+    color: black;
+}
+
+.flashes .valid {
+    background-color: lightgreen;
+    color: black;
+}

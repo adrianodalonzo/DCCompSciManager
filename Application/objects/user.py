@@ -1,4 +1,6 @@
-class User:
+from flask_login import UserMixin
+
+class User(UserMixin):
     def __init__(self, email, name, password, avatarlink):
         if not isinstance(email, str):
             raise TypeError("email must be a string")
@@ -28,10 +30,16 @@ class User:
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, PasswordField
+from wtforms import StringField, EmailField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length
-class UserForm(FlaskForm):
-    email = EmailField(DataRequired(), Length(min=3, max=100))
-    name = StringField(DataRequired(), Length(min=1, max=100))
-    password = PasswordField(DataRequired(), Length(min=1))
+
+class SignUpForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
+    name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     avatarlink = StringField()
+    
+class LoginForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
+    remember_me = BooleanField('Remember Me?')

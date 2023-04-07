@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Course
+    {{ course.title | safe }}
 {% endblock %}
 
 {% block content %}
-    <h1 id="course_page_heading">Course</h1>
+    <h1 id="course_page_heading">{{ course.title | safe }}</h1>
+    <p>term: {{ course.term_id | safe}}</p>
+    <p>Domain: need to make a get domain method in db.py</p>
+    <p>Teaory hours: {{ course.theory_hours | safe}}</p>
+    <p>Lab hours: {{ course.lab_hours | safe}}</p>
+    <p>Work Hours: {{ course.work_hours | safe}}</p>
+    <p>Description</p>
+    {{ course.description | safe}}
+    
 {% endblock %}

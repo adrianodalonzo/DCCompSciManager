@@ -6,7 +6,6 @@
 
 {% block content %}
     <h1 id="competencies_page_heading">Competencies</h1>
-
     {% for competency in competencies %}
         <div>
             <h2>{{ competency.name | safe }}</h2>
@@ -14,5 +13,16 @@
             <h3>{{ competency.type | safe }}</h3>
             <h3>{{ competency.acheivement | safe}}</h3>
         </div>
+        
+        {% for elements in elements_array %}
+            {% for element in elements %}
+                {% if competency.id == element.competency_id %}
+                    <h3>Criteria {{ element.order | safe }}</h3>
+                    <h4> {{ element.name | safe }}</h4>
+                    <p>{{ element.criteria | safe }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
     {% endfor %}
 {% endblock %}

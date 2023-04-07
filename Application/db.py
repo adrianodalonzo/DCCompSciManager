@@ -152,18 +152,18 @@ class Database:
             return all_course_competencies
 
     def get_competency_elements(self, id):
-        if not isinstance(id, int):
-            raise TypeError("id must be an int")
+        # if not isinstance(id, int):
+        #     raise TypeError("id must be an int")
         
         with self.__get_cursor() as cursor:
             all_competency_elements = []
 
             try:
-                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria 
+                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
                 FROM view_competencies_elements WHERE competency_id=:id""", id=id)
 
                 for row in results:
-                    element = Element(row[1], row[2], row[3])
+                    element = Element(row[1], row[2], row[3], row[4])
                     element.id = row[0]
                     all_competency_elements.append(element)
 

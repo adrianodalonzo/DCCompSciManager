@@ -3,12 +3,15 @@ from ..dbmanager import get_db
 
 bp = Blueprint("competencies", __name__, url_prefix="/competencies/")
 
-@bp.route("/<competency_id>", methods=['GET', 'POST'])
-def show_competencies(competency_id):
+@bp.route("/<course_id>", methods=['GET', 'POST'])
+def show_competencies(course_id):
     if request.method == 'GET':
-        competencies = get_db().get_course_competencies(competency_id)
+        competencies = get_db().get_course_competencies(course_id)
         if competencies:
-            return render_template('competencies.html', competencies=competencies)
-        else:
-            flash("404, The competency does not exist.")
-    return render_template('competencies.html', competencies=competencies)
+            elements_array = []
+            for competency in competencies:
+                elements_array.append(get_db().get_competency_elements(competency.id))
+            return render_template('competencies.html', competencies=competencies, elements_array=elements_array)
+        
+        flash("The competencies does not exist.")
+    return render_template('index.html')

@@ -10,4 +10,4 @@ def show_course(course_id):
     if course:
         return render_template('course.html', course=course)
     flash("The course does not exist.")
-    return render_template('course.html') ##should go to courses
+    return render_template('index.html') 

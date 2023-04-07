@@ -5,7 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1 id="courses_page_heading">Courses</h1>
+    <h1 id="courses_page_heading">
+        {% if domain %}    
+            {{ domain.name | safe}}
+        {% endif %}
+        Courses
+    </h1>
+    
     {% for course in courses %}
     <div>
        <a href="{{url_for('course.show_course', course_id=course.id)}}">{{ course.title | safe }}</a>

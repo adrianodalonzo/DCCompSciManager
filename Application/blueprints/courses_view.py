@@ -9,4 +9,13 @@ def show_courses():
     if courses:
         return render_template('courses.html', courses=courses)
     flash("No courses")
-    return render_template('courses.html')
+    return render_template('index.html')
+
+@bp.route("/<int:domain_id>", methods=['GET', 'POST'])
+def show_courses_by_domain(domain_id):
+    courses = get_db().get_courses_by_domain(domain_id)
+    if courses:
+        domain = get_db().get_domain(domain_id)
+        return render_template('courses.html', courses=courses, domain=domain)
+    flash("No courses by this domain")
+    return render_template('index.html')

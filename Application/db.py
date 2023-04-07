@@ -1,8 +1,8 @@
 import oracledb
 import os
 from Application.objects.competency import Competency
-
 from Application.objects.course import Course
+from Application.objects.domain import Domain
 from Application.objects.element import Element
 from .objects.user import User
 
@@ -193,6 +193,64 @@ class Database:
                 pass
 
             return all_courses_by_term
+        
+    def get_domain(self, id):
+        if not isinstance(id, int):
+            raise TypeError("id must be an int")
+        
+        with self.__get_cursor() as cursor:
+            try:
+                result = cursor.execute("""SELECT domain, domain_description FROM domains
+                WHERE domain_id=:id""", id=id)
+
+                for row in result:
+                    domain = Domain(row[0], row[1])
+                    domain.id = id
+                    return domain
+                
+            except oracledb.Error:
+                pass
+    
+    def get_courses_by_domain(self, id):
+        if not isinstance(id, int):
+            raise TypeError("id must be an int")
+        
+        with self.__get_cursor() as cursor:
+            courses_by_domain = []
+
+            try:
+                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours, 
+                work_hours, description, term_id FROM view_courses_domains WHERE domain_id=:id"""
+                                         , id=id)
+
+                for row in results:
+                    course = Course(row[1], row[2], row[3], row[4], row[5], id, row[6])
+                    course.id = row[0]
+                    courses_by_domain.append(course)
+
+            except oracledb.Error:
+                pass
+
+            return courses_by_domain
+        
+    def get_all_domains(self):
+        with self.__get_cursor() as cursor:
+            all_domains = []
+
+            try:
+                results = cursor.execute("""SELECT domain_id, domain, domain_description 
+                FROM domains""")
+
+                for row in results:
+                    domain = Domain(row[1], row[2])
+                    domain.id = row[0]
+                    all_domains.append(domain)
+
+            except oracledb.Error:
+                pass
+
+            return all_domains
+
 
 if __name__ == '__main__':
     print('Provide file to initialize database')

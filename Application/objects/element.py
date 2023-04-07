@@ -27,3 +27,4 @@ class Element:
     def __str__(self):
         to_return = f'Order: {self.order}, Name: {self.name}, '
         + f'Criteria: {self.criteria}, Competency ID: {self.competency_id}'
+        return to_return

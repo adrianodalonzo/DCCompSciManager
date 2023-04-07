@@ -11,7 +11,7 @@ def show_courses():
     flash("No courses")
     return render_template('index.html')
 
-@bp.route("/<int:domain_id>", methods=['GET', 'POST'])
+@bp.route("/domain/<int:domain_id>", methods=['GET', 'POST'])
 def show_courses_by_domain(domain_id):
     courses = get_db().get_courses_by_domain(domain_id)
     if courses:

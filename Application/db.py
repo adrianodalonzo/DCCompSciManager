@@ -60,7 +60,7 @@ class Database:
                 work_hours, description, domain_id, term_id FROM courses""")
 
                 for row in results:
-                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6])
+                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     course.id = row[0]
                     all_courses.append(course)
 

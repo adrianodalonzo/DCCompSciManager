@@ -32,14 +32,22 @@ class Course:
         self.id = None
     
     def __repr__(self):
-        to_return = f'Course(title:{self.title}, theory_hours:{self.theory_hours}, '
-        + f'lab_hours:{self.lab_hours}, work_hours:{self.work_hours}, '
-        + f'description:{self.description}, domain_id:{self.domain_id}, '
-        + f'term_id:{self.term_id}, id:{self.id})'
+        to_return = f'Course(title:{self.title}, theory_hours:{self.theory_hours}, ' + f'lab_hours:{self.lab_hours}, work_hours:{self.work_hours}, ' + f'description:{self.description}, domain_id:{self.domain_id}, ' + f'term_id:{self.term_id}, id:{self.id})'
         return to_return
     
     def __str__(self):
-        to_return = f'Title: {self.title}, Theory Hours: {self.theory_hours}, '
-        + f'Lab Hours: {self.lab_hours}, Work Hours: {self.work_hours}, '
-        + f'Description: {self.description}, Domain ID: {self.domain_id}, '
-        + f'Term ID: {self.term_id}'
+        to_return = f'Title: {self.title}, Theory Hours: {self.theory_hours}, ' + f'Lab Hours: {self.lab_hours}, Work Hours: {self.work_hours}, ' + f'Description: {self.description}, Domain ID: {self.domain_id}, ' + f'Term ID: {self.term_id}'
+        return to_return
+    
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, SelectField
+from wtforms.validators import DataRequired, Length
+
+class CompetencyForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=10, max=100)])
+    theory_hours = IntegerField('Achievement', validators=[DataRequired(), Length(min=1, max=3)])
+    lab_hours = IntegerField('Achievement', validators=[DataRequired(), Length(min=1, max=3)])
+    work_hours = IntegerField('Achievement', validators=[DataRequired(), Length(min=1, max=3)])
+    description = StringField('Achievement', validators=[DataRequired(), Length(min=1, max=500)])
+    domain = StringField('Achievement', validators=[DataRequired(), Length(min=1, max=50)])
+    term = SelectField('Choose an term', choices=[('Fall'), ('Winter')])

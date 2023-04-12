@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app
+from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app, send_from_directory
 from flask_login import login_required, login_user, logout_user
 import oracledb
 import os
@@ -21,13 +21,13 @@ def signup():
                 os.makedirs(avatar_dir)
             avatar_path = os.path.join(avatar_dir, 'avatar.png')
             try:
-                file.save(avatar_dir)
+                file.save(avatar_path)
             except Exception:
                 flash('An error occurred with saving the avatar!', category='invalid')
                 return redirect(url_for('auth.signup'))
             
             hash = generate_password_hash(form.password.data)
-            user = User(form.email.data, form.name.data, hash, form.avatarlink.data)
+            user = User(form.email.data, form.name.data, hash)
 
             test_user = get_db().get_user(user.email)
             if test_user:
@@ -72,3 +72,9 @@ def logout():
     logout_user()
     flash('Successfully Logged Out!', category='valid')
     return redirect(url_for('index.index'))
+
+@bp.route('/avatar/<email>/avatar.png/')
+@login_required
+def get_avatar(email):
+    dir = os.path.join(current_app.config['IMAGE_PATH'], email)
+    return send_from_directory(dir, 'avatar.png')

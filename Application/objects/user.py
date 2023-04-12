@@ -26,7 +26,7 @@ class User(UserMixin):
 
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, EmailField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length
 
@@ -34,7 +34,7 @@ class SignUpForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
     name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    avatar = FileField('Avatar')
+    avatar = FileField('Avatar', validators=[FileAllowed(['png'])])
     
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])

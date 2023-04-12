@@ -35,7 +35,10 @@ def signup():
             else:
                 get_db().insert_user(user)
                 flash("User Added Successfully", category='valid')
-            return render_template("signup.html", form=form) 
+            return render_template("index.html") 
+        else:
+            flash("Avatar Passed Must Have a '.png' File Extension", category='invalid')
+            return redirect(url_for('auth.signup'))
         
     elif request.method == 'GET':
         return render_template("signup.html", form=form)

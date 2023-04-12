@@ -16,3 +16,12 @@ class Domain:
     
     def __str__(self):
         return f'ID: {self.id}, Name: {self.name}, Description: {self.description}'
+    
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired, Length
+
+class CompetencyForm(FlaskForm):
+    name = StringField('Domain Name', validators=[DataRequired(), Length(min=1, max=25)]) 
+    description = StringField('Description', validators=[DataRequired(), Length(min=1, max=50)])
+    

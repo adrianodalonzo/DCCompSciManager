@@ -37,7 +37,8 @@ def signup():
                 flash("User Added Successfully", category='valid')
             return render_template("index.html") 
         else:
-            flash("Avatar Passed Must Have a '.png' File Extension", category='invalid')
+            # TODO MAYBE: Add code to check for what specific aspects of the form are invalid.
+            flash("Form Is Invalid!", category='invalid')
             return redirect(url_for('auth.signup'))
         
     elif request.method == 'GET':

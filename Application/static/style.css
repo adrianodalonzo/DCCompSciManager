@@ -60,3 +60,27 @@ ul.flashes {
     background-color: lightgreen;
     color: black;
 }
+
+.avatar {
+    border-radius: 50%;
+}
+
+#small_avatar {
+    width: 25px;
+    border-radius: 50%;
+}
+
+#small_avatar_a {
+    display: flex;
+}
+
+#profile_li {
+    display: flex;
+}
+
+.profile_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2em;
+}

@@ -48,8 +48,7 @@ create table courses_users (
     username varchar2(100) NOT NULL,
     email varchar2(100) NOT NULL,
     password varchar2(102) NOT NULL,
-    user_group varchar2(13) NOT NULL, 
-    avatar_path varchar2(2000)
+    user_group varchar2(13) NOT NULL
 );
 
 --calling creation of sample data

@@ -45,7 +45,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length
 
-class CompetencyForm(FlaskForm):
+class CourseForm(FlaskForm):
     id = StringField('Course ID', validators=[DataRequired(), Length(min=10, max=100)])
     title = StringField('Course Title', validators=[DataRequired(), Length(min=10, max=100)])
     theory_hours = IntegerField('Theory Hours', validators=[DataRequired(), Length(min=1, max=3)])

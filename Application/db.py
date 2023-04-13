@@ -104,8 +104,7 @@ class Database:
                 work_hours, description, domain_id, term_id FROM courses""")
 
                 for row in results:
-                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                    course.id = row[0]
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     all_courses.append(course)
 
             except oracledb.Error:
@@ -123,8 +122,7 @@ class Database:
                 work_hours, description, domain_id, term_id FROM courses WHERE course_id=:id""", id=id)
                 
                 for row in result:
-                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                    course.id = row[0]
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     return course
                 
             except oracledb.Error:

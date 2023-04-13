@@ -129,7 +129,16 @@ class Database:
                 
             except oracledb.Error:
                 pass
-
+    
+    def add_course(self, course):
+        if self.get_course(course.id):
+            raise ValueError("Course already exist. Please change to a valid course ID.") 
+            
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO courses VALUES(:id, :title, :theory_hours, :lab_hours, :work_hours, :description, :domain_id, :term_id)",
+                    id=course.id, title=course.title, theory_hours=course.theory_hours, lab_hours=course.lab_hours,
+                    work_hours=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)
+        
     def get_course_competencies(self, id):
         # if not isinstance(id, int):
         #     raise TypeError("id must be an int")

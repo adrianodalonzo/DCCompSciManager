@@ -42,3 +42,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me?')
     
 #TODO: Add form here for resetting a password
+class ResetPasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired(), Length(min=8)])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
+    retype_new_password = PasswordField('Retype New Password', validators=[DataRequired(), Length(min=8)])

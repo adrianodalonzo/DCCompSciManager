@@ -70,6 +70,17 @@ class Database:
                 user.id = result[2]
                 user.group = result[4]
                 return user
+            
+    def update_user_password(self, email, password):
+        if not isinstance(password, str):
+            raise TypeError('Password MUST be a string!')
+        
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            user_id = self.get_user(email).id
+            cursor.execute('update courses_users set password = :password where user_id = :id', password=password, id=user_id)
 
     def __get_cursor(self):
             for i in range(3):

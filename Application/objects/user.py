@@ -40,3 +40,5 @@ class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     remember_me = BooleanField('Remember Me?')
+    
+#TODO: Add form here for resetting a password

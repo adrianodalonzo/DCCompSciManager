@@ -112,10 +112,7 @@ class Database:
 
             return all_courses
 
-    def get_course(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
-        
+    def get_course(self, id):  
         with self.__get_cursor() as cursor:
             try:
                 result = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
@@ -137,10 +134,7 @@ class Database:
                     id=course.id, title=course.title, theory_hours=course.theory_hours, lab_hours=course.lab_hours,
                     work_hours=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)
         
-    def get_course_competencies(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
-        
+    def get_course_competencies(self, id): 
         with self.__get_cursor() as cursor:
             all_course_competencies = []
 
@@ -149,8 +143,7 @@ class Database:
                 competency_type FROM view_courses_elements_competencies WHERE course_id=:id""", id=id)
 
                 for row in results:
-                    competency = Competency(row[1], row[2], row[3])
-                    competency.id = row[0]
+                    competency = Competency(row[0], row[1], row[2], row[3])
                     all_course_competencies.append(competency)
 
             except oracledb.Error:
@@ -181,9 +174,6 @@ class Database:
                            competency_id=competency.id, competency=competency.name, competency_achievement=competency.achievement, competency_type=competency.type)
     
     def get_competency_elements(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
-        
         with self.__get_cursor() as cursor:
             all_competency_elements = []
 

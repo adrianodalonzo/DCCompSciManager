@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ current_user.name }}</h1>
-    <h2>{{ current_user.email }}</h2>
-    <img src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="profile_picture">
+    <div class="profile_info">
+        <img class="avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="profile_picture">
+        <h1>{{ current_user.name }}</h1>
+        <h2>{{ current_user.email }}</h2>
+    </div>
 {% endblock %}

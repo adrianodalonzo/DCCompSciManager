@@ -9,9 +9,6 @@ class Element:
         if not isinstance(criteria, str):
             raise TypeError("criteria must be a string")
         
-        # if not isinstance(competency_id, int):
-        #     raise TypeError("competency_id must be an int")
-        
         self.order = order
         self.name = name
         self.criteria = criteria
@@ -26,3 +23,13 @@ class Element:
     def __str__(self):
         to_return = f'Order: {self.order}, Name: {self.name}, ' + f'Criteria: {self.criteria}, Competency ID: {self.competency_id}'
         return to_return
+    
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired, Length
+
+class CompetencyForm(FlaskForm):
+    order = IntegerField('Element Order', validators=[DataRequired(), Length(min=1, max=25)])
+    name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
+    criteria = StringField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])
+    competency = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])

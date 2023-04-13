@@ -160,6 +160,28 @@ class Database:
 
             return all_course_competencies
 
+    def get_competency(self, id):
+         with self.__get_cursor() as cursor:
+
+            try:
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE competency_id=:id""", id=id)
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    return competency
+            
+            except oracledb.Error:
+                pass
+
+    def add_competency(self, competency):
+        if self.get_competency(competency.id):
+            raise ValueError("Competency already exist. Please change to a valid competency id.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO competencies VALUES(:competency_id, :competency, :competency_achievement, :competency_type FROM competencies WHERE competency_id=:id)",
+                           competency_id=competency.id, competency=competency.name, competency_achievement=competency.achievement, competency_type=competency.type)
+    
     def get_competency_elements(self, id):
         # if not isinstance(id, int):
         #     raise TypeError("id must be an int")

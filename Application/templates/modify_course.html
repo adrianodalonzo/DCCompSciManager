@@ -7,13 +7,15 @@
 {% block content %}
     {% if course %}
         <h2>Editing Course</h2>
-        <p></p>
+        <p>{{ course }}</p>
     {% endif %}
 
     <form method="post">
         {{ form.csrf_token }}
 
-        {% if course != none %}
+        {% if course %}
+            <p>ID cannot be changed</p>
+        {% else %}
             {{ form.id.label }} {{ form.id() }}
         {% endif %}
 

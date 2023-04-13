@@ -46,6 +46,11 @@ ul.flashes {
     text-align: center;
 }
 
+.message {
+    background-color: rgb(255, 255, 140);
+    color: black;
+}
+
 .flashes .invalid {
     background-color: rgb(255, 55, 55);
     color: black;

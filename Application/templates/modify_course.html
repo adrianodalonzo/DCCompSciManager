@@ -5,12 +5,18 @@
 {% endblock %}
 
 {% block content %}
-
+    {% if course %}
+        <h2>Editing Course</h2>
+        <p></p>
+    {% endif %}
 
     <form method="post">
         {{ form.csrf_token }}
 
-        {{ form.id.label }} {{ form.id() }}
+        {% if course != none %}
+            {{ form.id.label }} {{ form.id() }}
+        {% endif %}
+
         {{ form.title.label }} {{ form.title() }}
         {{ form.theory_hours.label }} {{ form.theory_hours() }}
         {{ form.lab_hours.label }} {{ form.lab_hours() }}

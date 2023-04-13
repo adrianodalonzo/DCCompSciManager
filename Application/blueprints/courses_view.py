@@ -37,7 +37,7 @@ def add_course():
     if request.method == 'GET':
         return render_template('modify_course.html', form=form)
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         if form.validate_on_submit():
             matchingCourse = False
 
@@ -52,3 +52,15 @@ def add_course():
                                 form.description.data, form.domain_id.data, form.term_id.data)
                 # get_db().add_course(course)
                 # ^ not implemented yet
+
+@bp.route("/edit/<string:course_id>/", methods=['GET', 'POST'])
+def edit_course(course_id):
+    form = CourseForm()
+    course = get_db().get_course(course_id)
+
+    if request.method == 'GET':
+        return render_template('modify_course.html', form=form, course=course)
+    
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            pass

@@ -26,6 +26,9 @@
     <nav>
         <ul>
             <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('members.list_members') }}">View Members</a></li>
+            {% endif %}
             <li><a href="#">PlaceHolder</a></li>
             <li><a href="#">PlaceHolder</a></li>
             {% if current_user.is_authenticated %}

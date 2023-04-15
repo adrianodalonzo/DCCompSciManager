@@ -8,11 +8,11 @@
     <h2>Add Member Form</h2>
     <!-- Load Form for Adding Member -->
     <form method="POST" enctype="multipart/form-data">
-        {{ add_form.csrf_token }}
-        {{ add_form.email.label }} {{ add_form.email() }}
-        {{ add_form.name.label }} {{ add_form.name() }}
-        {{ add_form.password.label }} {{ add_form.password() }}
-        {{ add_form.avatar.label }} {{ add_form.avatar() }}
-        <input type="submit" name="add_form" value="Add Member">
+        {{ form.csrf_token }}
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.password.label }} {{ form.password() }}
+        {{ form.avatar.label }} {{ form.avatar() }}
+        <input type="submit" value="Add Member">
     </form>
 {% endblock %}

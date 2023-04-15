@@ -39,6 +39,7 @@ def list_members():
             else:
                 get_db().insert_user(user)
                 flash("Member Added Successfully", category='valid')
+                members = get_db().get_members()
                 return render_template("members.html", add_form=add_form, members=members)
         else:
             for error in add_form.errors:

@@ -240,15 +240,23 @@ class Database:
             return all_competency_elements
 
     def add_competency_element(self, element):
-        if self.get_competency_elements(element.competency_id).name == element.name:
-            raise ValueError("Element already exist in this competency. Please change the element order.")
+        competency_elements = self.get_competency_elements(element.competency_id)
+        for competency_element in competency_elements:
+            if competency_element.name == element.name:
+                raise ValueError("Element already exist in this competency. Please change the element order.")
         
         with self.__connection.cursor() as cursor:
             cursor.execute("INSERT INTO elements VALUES(:element_order, :element, :element_criteria, :competency_id)",
             element_order=element.order, element=element.name, element_criteria=element.criteria, competency_id=element.competency_id)
 
     def modify_competency_element(self, element):
-        if not (self.get_competency_elements(element.competency_id).name == element.name):
+        competency_elements = self.get_competency_elements(element.competency_id)
+        bool element_exist = False
+        for competency_element in competency_elements:
+            if competency_element.name == element.name:
+                element_exist = True
+
+        if not element_exist:
             raise ValueError("Element does not exist in this competency. Please modify an existing competency element.")
         
         with self.__connection.cursor() as cursor:
@@ -256,7 +264,13 @@ class Database:
             element_order=element.order, element=element.name, element_criteria=element.criteria, competency_id=element.competency_id)
 
     def delete_competency_element(self, element):
-        if not (self.get_competency_elements(element.competency_id).name == element.name):
+        competency_elements = self.get_competency_elements(element.competency_id)
+        bool element_exist = False
+        for competency_element in competency_elements:
+            if competency_element.name == element.name:
+                element_exist = True
+
+        if not element_exist:
             raise ValueError("Element does not exist in this competency. Please choose an existing competency element to delete.")
         
         with self.__connection.cursor() as cursor:

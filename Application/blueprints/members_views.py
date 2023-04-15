@@ -3,15 +3,21 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import SignUpForm, User
+from ..objects.user import DeleteMemberForm, SignUpForm, User
 
 from ..dbmanager import get_db
 
 bp = Blueprint('members', __name__, url_prefix='/members/')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/')
 @login_required
 def list_members():
+    members = get_db().get_members()
+    return render_template('members.html', members=members)
+    
+@bp.route('/add/', methods=['GET', 'POST'])
+@login_required
+def add_member():
     members = get_db().get_members()
     add_form = SignUpForm()
     # will need lots a verification for this
@@ -55,4 +61,4 @@ def list_members():
             return redirect(url_for('members.list_members'))
         
     elif request.method == 'GET':
-        return render_template("members.html", add_form=add_form, members=members)
+        return render_template("add_member.html", add_form=add_form, members=members)

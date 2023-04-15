@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, redirect, render_template, request, flash, url_for
 
 from Application.objects.course import Course, CourseForm
 from ..dbmanager import get_db
@@ -50,8 +50,9 @@ def add_course():
                 course = Course(form.id.data, form.title.data, form.theory_hours.data, 
                                 form.lab_hours.data, form.work_hours.data, 
                                 form.description.data, form.domain_id.data, form.term_id.data)
-                # get_db().add_course(course)
-                # ^ not implemented yet
+                get_db().add_course(course)
+    
+    return redirect(url_for('show_courses'))
 
 @bp.route("/edit/<string:course_id>/", methods=['GET', 'POST'])
 def edit_course(course_id):
@@ -63,4 +64,32 @@ def edit_course(course_id):
     
     elif request.method == 'POST':
         if form.validate_on_submit():
-            pass
+            
+            course_title = form.title.data
+            course_theo_hours = form.theory_hours.data
+            course_lab_hours = form.lab_hours.data
+            course_work_hours = form.work_hours.data
+            course_desc = form.description.data
+            course_dom_id = form.domain.data
+            course_term_id = form.term.data
+
+            if course_title is None:
+                course_title = course.title
+            if course_theo_hours is None:
+                course_theo_hours = course.theory_hours
+            if course_lab_hours is None:
+                course_lab_hours = course.lab_hours
+            if course_work_hours is None:
+                course_work_hours = course.work_hours
+            if course_desc is None:
+                course_desc = course.description
+            if course_dom_id is None:
+                course_dom_id = course.domain_id
+            if course_term_id is None:
+                course_term_id = course.term_id
+            
+            edited_course = Course(course_id, course_title, course_theo_hours, course_lab_hours,
+                                   course_work_hours, course_desc, course_dom_id, course_term_id)
+            get_db().modify_course(edited_course)
+
+    return redirect(url_for('show_courses'))

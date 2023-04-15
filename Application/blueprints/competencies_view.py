@@ -76,6 +76,10 @@ def edit_competency(comp_id):
     elif request.method == 'POST':
         if form.validate_on_submit():
 
+            comp_name = form.name.data
+            comp_achieve = form.achievement.data
+            comp_type = form.type.data
+
             if form.name.data is None:
                 comp_name = competency.name
             if form.achievement.data is None:
@@ -86,4 +90,4 @@ def edit_competency(comp_id):
             comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
             get_db().modify_competency(comp)
 
-            return render_template('modify_competency.html', form=form, competency=get_db().get_competency(comp_id))
+    return redirect(url_for('show_all_competencies'))

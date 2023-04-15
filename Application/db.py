@@ -164,6 +164,23 @@ class Database:
             
             except oracledb.Error:
                 pass
+    
+    def get_all_competencies(self):
+        with self.__get_cursor() as cursor:
+            all_competencies = []
+            
+            try:
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies""")
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    all_competencies.append(competency)
+                
+            except oracledb.Error:
+                pass
+
+        return all_competencies
 
     def add_competency(self, competency):
         if self.get_competency(competency.id):
@@ -190,6 +207,14 @@ class Database:
                 pass
 
             return all_competency_elements
+
+    def add_competency_element(self, element):
+        if self.get_competency_elements(element.competency_id).name == element.name:
+            raise ValueError("Element already exist in this competency. Please change the element order.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO elements VALUES(:element_order, :element, :element_criteria, :competency_id)",
+            element_order=element.order, element=element.name, element_criteria=element.criteria, competency_id=element.competency_id)
 
     def get_courses_by_term(self, id):
         if not isinstance(id, int):
@@ -269,6 +294,15 @@ class Database:
                 pass
 
             return all_domains
+    
+    # Wierd method
+    # def add_domain(self, domain):
+    #     if self.get_domain(domain.id):
+    #         raise ValueError("Domain already exist. Please change the domain id.")
+        
+    #     with self.__connection.cursor() as cursor:
+    #         cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
+    #         domain=domain.name, domain_description=domain.description)
 
 
 if __name__ == '__main__':

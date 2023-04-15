@@ -15,7 +15,7 @@
             </div>
         {% endfor %}
     </ul>
-    {% if current_user.group == 'User Admin' %}
+    {% if current_user.group != 'Member' %}
         <button id="add_member_btn">Add Member</button>
         <button id="delete_member_btn">Delete Member</button>
         <button id="block_member_btn">Block Member</button>

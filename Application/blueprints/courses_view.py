@@ -46,7 +46,7 @@ def add_course():
                     matchingCourse = True
                     flash("A Course with the same number already exists!")
             
-            if matchingCourse:
+            if not matchingCourse:
                 course = Course(form.id.data, form.title.data, form.theory_hours.data, 
                                 form.lab_hours.data, form.work_hours.data, 
                                 form.description.data, form.domain_id.data, form.term_id.data)

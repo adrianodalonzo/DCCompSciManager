@@ -251,7 +251,7 @@ class Database:
 
     def modify_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
-        bool element_exist = False
+        element_exist = False
         for competency_element in competency_elements:
             if competency_element.name == element.name:
                 element_exist = True
@@ -265,7 +265,7 @@ class Database:
 
     def delete_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
-        bool element_exist = False
+        element_exist = False
         for competency_element in competency_elements:
             if competency_element.name == element.name:
                 element_exist = True

@@ -84,5 +84,6 @@ def edit_competency(comp_id):
                 comp_type = competency.type
 
             comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
-            # get_db().update_competency(comp)
-            # ^ not implemented yet
+            get_db().modify_competency(comp)
+
+            return render_template('modify_competency.html', form=form, competency=get_db().get_competency(comp_id))

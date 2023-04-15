@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if competency %}
+        Editing Competency
+    {% else %}         
+        Add Competency
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if competency %}
+        <h2>Editing Competency</h2>
+        <p>{{ competency }}</p>
+    {% endif %}
+{% endblock %}

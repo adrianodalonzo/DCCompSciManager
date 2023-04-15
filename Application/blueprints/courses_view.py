@@ -13,6 +13,14 @@ def show_courses():
     flash("No courses")
     return render_template('index.html')
 
+@bp.route("/<string:course_id>/", methods=['GET', 'POST'])
+def show_course(course_id):
+    course = get_db().get_course(course_id)
+    if course:
+        return render_template('course.html', course=course)
+    flash("The course does not exist.")
+    return render_template('index.html') 
+
 @bp.route("/domain/<int:domain_id>/", methods=['GET', 'POST'])
 def show_courses_by_domain(domain_id):
     courses = get_db().get_courses_by_domain(domain_id)

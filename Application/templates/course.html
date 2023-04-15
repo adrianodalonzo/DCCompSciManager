@@ -14,4 +14,8 @@
     <p>Description</p>
     {{ course.description | safe}}
     
+    <div id="course-edit-del-buttons">
+        <a href="{{url_for('courses.edit_course', course_id=course.id)}}"><input type="button" value="Edit" /></a>
+        <a href="{{url_for('courses.delete_course', course_id=course.id)}}"><input type="button" value="Delete" /></a>
+    </div>
 {% endblock %}

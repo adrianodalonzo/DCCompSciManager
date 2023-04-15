@@ -27,20 +27,25 @@
     <nav>
         <ul>
             <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
+
             {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('members.list_members') }}">View Members</a></li>
-            {% endif %}
-            <li><a href="#">PlaceHolder</a></li>
-            <li><a href="#">PlaceHolder</a></li>
-            {% if current_user.is_authenticated %}
-                <li><a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">
-                    <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
-                </a></li>
+                {% if current_user.group == 'User Admin' or current_user.group == 'Admin' %}
+                    <li><a href="{{ url_for('members.add_member') }}">Add Member</a></li>
+                    <li><a href="{{ url_for('members.delete_member') }}">Delete Member</a></li>
+                    <li><a href="{{ url_for('members.delete_member') }}">Block Member</a></li>
+                {% endif %}
+                <li>
+                    <a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">
+                        <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
+                    </a>
+                </li>
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
                 <li><a href="{{ url_for('auth.login') }}">Login</a></li>
             {% endif %}
+            
         </ul>
     </nav>
 

@@ -16,28 +16,10 @@
         {% endfor %}
     </ul>
     {% if current_user.group != 'Member' %}
-        <button id="add_member_btn">Add Member</button>
+        <a href="{{ url_for('members.add_member') }}">
+            <button id="add_member_btn">Add Member</button>
+        </a>
         <button id="delete_member_btn">Delete Member</button>
         <button id="block_member_btn">Block Member</button>
     {% endif %}
-    <div id="add_member">
-        <h2>Add Member Form</h2>
-        <!-- Load Form for Adding Member -->
-        <form method="POST" enctype="multipart/form-data">
-            {{ add_form.csrf_token }}
-            {{ add_form.email.label }} {{ add_form.email() }}
-            {{ add_form.name.label }} {{ add_form.name() }}
-            {{ add_form.password.label }} {{ add_form.password() }}
-            {{ add_form.avatar.label }} {{ add_form.avatar() }}
-            <input type="submit" value="Add Member">
-        </form>
-    </div>
-    <div id="delete_member">
-        <h2>Delete Member Form</h2>
-        <!-- Load Form for Deleting Member -->
-    </div>
-    <div id="block_member">
-        <h2>Block Member Form</h2>
-        <!-- Load Form for Blocking Member -->
-    </div>
 {% endblock %}

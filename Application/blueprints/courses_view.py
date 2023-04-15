@@ -93,3 +93,9 @@ def edit_course(course_id):
             get_db().modify_course(edited_course)
 
     return redirect(url_for('show_courses'))
+
+@bp.route("/delete/<string:course_id>/")
+def delete_course(course_id):
+    get_db().delete_course(course_id)
+    flash("Course " + course_id + " has been deleted")
+    return redirect(url_for('show_courses'))

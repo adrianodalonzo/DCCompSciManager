@@ -91,3 +91,9 @@ def edit_competency(comp_id):
             get_db().modify_competency(comp)
 
     return redirect(url_for('show_all_competencies'))
+
+@bp.route("/delete/<string:comp_id>/")
+def delete_competency(comp_id):
+    get_db().delete_competency(comp_id)
+    flash('Competency ' + comp_id + ' has been deleted, along with its elements')
+    return redirect(url_for('show_all_competencies'))

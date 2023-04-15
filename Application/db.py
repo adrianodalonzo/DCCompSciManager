@@ -139,16 +139,16 @@ class Database:
             raise ValueError("Course does not exist. Please modify an existing course.") 
             
         with self.__connection.cursor() as cursor:
-            cursor.execute("UPDATES courses SET course_title=:course_title, theory_hours=:theory_hours, lab_hours=:lab_hours, work_hours=:work_hours, description=:description, domain_id:domain_id, term_id:term_id WHERE course_id=:course_id)",
+            cursor.execute("UPDATE courses SET course_title=:course_title, theory_hours=:theory_hours, lab_hours=:lab_hours, work_hours=:work_hours, description=:description, domain_id:domain_id, term_id:term_id WHERE course_id=:course_id)",
                     course_id=course.id, course_title=course.title, theory_hours=course.theory_hours, lab_hours=course.lab_hours,
-                    work_hours=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)):
+                    work_hours=course.work_hours, description=course.description, domain_id=course.domain_id, term_id=course.term_id)
 
     def delete_course(self, id):
-        if not self.get_course(course.id):
+        if not self.get_course(id):
             raise ValueError("Course does not exist. Please choose an existing course to delete.") 
 
         with self.__connection.cursor() as cursor:
-            cursor.execute("DELETE FROM courses WHERE course_id=:course_id)", course_id=course.id):
+            cursor.execute("DELETE FROM courses WHERE course_id=:course_id)", course_id=id)
 
     def get_course_competencies(self, id): 
         with self.__get_cursor() as cursor:
@@ -203,23 +203,23 @@ class Database:
             raise ValueError("Competency already exist. Please modify an existing competency.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("UPDATES competencies SET competency=:competency, competency_achievement=:competency_achievement, competency_type=:competency_type WHERE competency_id=:competency_id",
+            cursor.execute("INSERT INTO competencies VALUES(:competency_id, :competency, :competency_achievement, :competency_type)",
                            competency_id=competency.id, competency=competency.name, competency_achievement=competency.achievement, competency_type=competency.type)
-    
+          
     def modify_competency(self, competency):
         if not self.get_competency(competency.id):
             raise ValueError("Competency does not exist. Please change to a valid competency id.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO competencies VALUES(:competency_id, :competency, :competency_achievement, :competency_type FROM competencies WHERE competency_id=:id)",
+            cursor.execute("UPDATE competencies SET competency=:competency, competency_achievement=:competency_achievement, competency_type=:competency_type WHERE competency_id=:competency_id",
                            competency_id=competency.id, competency=competency.name, competency_achievement=competency.achievement, competency_type=competency.type)
-
-     def delete_competency(self, id):
+    
+    def delete_competency(self, id):
         if not self.get_competency(id):
             raise ValueError("Competency does not exist. Please choose an existing competency to delete.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("DELETE FROM competencies WHERE competency_id=:competency_id)", competency_id=competency.id)
+            cursor.execute("DELETE FROM competencies WHERE competency_id=:competency_id)", competency_id=id)
 
     def get_competency_elements(self, id):
         with self.__get_cursor() as cursor:

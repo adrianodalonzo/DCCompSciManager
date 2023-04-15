@@ -27,7 +27,7 @@ class User(UserMixin):
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, EmailField, PasswordField, BooleanField
+from wtforms import StringField, EmailField, PasswordField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
 
 class SignUpForm(FlaskForm):
@@ -45,3 +45,6 @@ class ResetPasswordForm(FlaskForm):
     old_password = PasswordField('Old Password', validators=[DataRequired(), Length(min=8)])
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     retype_new_password = PasswordField('Retype New Password', validators=[DataRequired(), Length(min=8)])
+
+class DeleteMemberForm(FlaskForm):
+    members = SelectField('Select a Member to Delete')

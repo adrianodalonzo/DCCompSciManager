@@ -164,6 +164,23 @@ class Database:
             
             except oracledb.Error:
                 pass
+    
+    def get_all_competencies(self):
+        with self.__get_cursor() as cursor:
+            all_competencies = []
+            
+            try:
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies""")
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    all_competencies.append(competency)
+                
+            except oracledb.Error:
+                pass
+
+        return all_competencies
 
     def add_competency(self, competency):
         if self.get_competency(competency.id):

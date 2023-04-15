@@ -21,7 +21,7 @@ class Competency:
         return f'Competency(id:{self.id}, name:{self.name}, achievement:{self.achievement}, type:{self.type}, id:{self.id})'
     
     def __str__(self):
-        to_return = f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'
+        return f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'
         
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField

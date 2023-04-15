@@ -12,5 +12,21 @@
     {% if competency %}
         <h2>Editing Competency</h2>
         <p>{{ competency }}</p>
+    {% else %}
+        <h2>Add Competency</h2>
     {% endif %}
+
+    <form method="post">
+        {{ form.csrf_token }}
+
+        {% if competency %}
+            <p>ID cannot be changed</p>
+        {% else %}
+            {{ form.id.label }} {{ form.id() }}
+        {% endif %}
+
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.achievement.label }} {{ form.achievement() }}
+        {{ form.type.label }} {{ form.type() }}
+    </form>
 {% endblock %}

@@ -47,7 +47,7 @@ def add_competency():
     form = CompetencyForm()
 
     if request.method == 'GET':
-        return render_template('modify_competency.html')
+        return render_template('modify_competency.html', form=form)
     
     elif request.method == 'POST':
         if form.validate_on_submit():
@@ -62,3 +62,27 @@ def add_competency():
                 comp = Competency(form.id.data, form.name.data,
                                   form.achievement.data, form.type.data)
                 get_db().add_competency(comp)
+    
+    return redirect(url_for('show_all_competencies'))
+
+@bp.route("/edit/<string:comp_id>/", methods=['GET', 'POST'])
+def edit_competency(comp_id):
+    form = CompetencyForm()
+    competency = get_db().get_competency(comp_id)
+
+    if request.method == 'GET':
+        return render_template('modify_competency.html', form=form, competency=competency)
+    
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+
+            if form.name.data is None:
+                comp_name = competency.name
+            if form.achievement.data is None:
+                comp_achieve = competency.achievement
+            if form.type.data is None:
+                comp_type = competency.type
+
+            comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
+            # get_db().update_competency(comp)
+            # ^ not implemented yet

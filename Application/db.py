@@ -92,6 +92,13 @@ class Database:
                 member.group = result[4]
                 members.append(member)
         return members
+    
+    def delete_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courses_users where email = :email', email=email)
 
     def __get_cursor(self):
             for i in range(3):

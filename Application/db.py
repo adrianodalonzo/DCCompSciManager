@@ -82,6 +82,17 @@ class Database:
             user_id = self.get_user(email).id
             cursor.execute('update courses_users set password = :password where user_id = :id', password=password, id=user_id)
 
+    def get_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group from courses_users where user_group = 'Member'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                members.append(member)
+        return members
+
     def __get_cursor(self):
             for i in range(3):
                 try:

@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
-from flask_login import login_required
+from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
 from ..objects.user import DeleteMemberForm, SignUpForm, User
@@ -18,14 +18,17 @@ def list_members():
 @bp.route('/add/', methods=['GET', 'POST'])
 @login_required
 def add_member():
+    if current_user.group == 'Member':
+        flash("You Don't Have the Permissions to View This Page", category='invalid')
+        return redirect(url_for('members.list_members'))
     members = get_db().get_members()
-    add_form = SignUpForm()
+    form = SignUpForm()
     # will need lots a verification for this
     if request.method == 'POST':
-        if add_form.validate_on_submit():
+        if form.validate_on_submit():
             
-            file = add_form.avatar.data
-            avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], add_form.email.data)
+            file = form.avatar.data
+            avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], form.email.data)
             if not os.path.exists(avatar_dir):
                 os.makedirs(avatar_dir)
             avatar_path = os.path.join(avatar_dir, 'avatar.png')
@@ -35,8 +38,8 @@ def add_member():
                 flash('An error occurred with saving the avatar!', category='invalid')
                 return redirect(url_for('members.list_members'))
             
-            hash = generate_password_hash(add_form.password.data)
-            user = User(add_form.email.data, add_form.name.data, hash)
+            hash = generate_password_hash(form.password.data)
+            user = User(form.email.data, form.name.data, hash)
 
             test_user = get_db().get_user(user.email)
             if test_user:
@@ -46,13 +49,13 @@ def add_member():
                 get_db().insert_user(user)
                 flash("Member Added Successfully", category='valid')
                 members = get_db().get_members()
-                return render_template("members.html", add_form=add_form, members=members)
+                return render_template("members.html", form=form, members=members)
         else:
-            for error in add_form.errors:
+            for error in form.errors:
                 if error == 'avatar':
                     flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
                 else:
-                    if len(add_form.errors) == 1:
+                    if len(form.errors) == 1:
                         flash(f"{error} is Invalid!", category='invalid')
                     else:
                         errors = ""
@@ -61,4 +64,25 @@ def add_member():
             return redirect(url_for('members.list_members'))
         
     elif request.method == 'GET':
-        return render_template("add_member.html", add_form=add_form, members=members)
+        return render_template("add_member.html", form=form, members=members)
+    
+@bp.route('/delete/', methods=['GET', 'POST'])
+@login_required
+def delete_member():
+    if current_user.group == 'Member':
+        flash("You Don't Have the Permissions to View This Page", category='invalid')
+        return redirect(url_for('members.list_members'))
+    form = DeleteMemberForm()
+    # assigns select options by looping through the members and adding the emails to the select
+    form.members.choices = [member.email for member in get_db().get_members()]
+
+    if request.method == 'POST' and form.validate_on_submit():
+        member = get_db().get_user(form.members.data)
+        if member:
+            get_db().delete_member(member.email)
+            flash('Member Successfully Deleted!', category='valid')
+            members = get_db().get_members()
+            return render_template('members.html', members=members)
+    elif request.method == 'GET':
+        members = get_db().get_members()
+        return render_template('delete_member.html', members=members, form=form)

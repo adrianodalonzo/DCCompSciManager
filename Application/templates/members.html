@@ -11,15 +11,25 @@
             <div class="member_info">
                 <li>
                     {{ member.email }}, {{ member.name }}
-                {% if current_user.group == 'User Admin' %}
-                    <button>Delete</button>
-                    <button>Block</button>
-                {% endif %}
                 </li>
             </div>
         {% endfor %}
     </ul>
     {% if current_user.group == 'User Admin' %}
-        <button>Add Member</button>
+        <button id="add_member_btn">Add Member</button>
+        <button id="delete_member_btn">Delete Member</button>
+        <button id="block_member_btn">Block Member</button>
     {% endif %}
+    <div id="add_member">
+        <h2>Add Member Form</h2>
+        <!-- Load Form for Adding Member -->
+    </div>
+    <div id="delete_member">
+        <h2>Delete Member Form</h2>
+        <!-- Load Form for Deleting Member -->
+    </div>
+    <div id="block_member">
+        <h2>Block Member Form</h2>
+        <!-- Load Form for Blocking Member -->
+    </div>
 {% endblock %}

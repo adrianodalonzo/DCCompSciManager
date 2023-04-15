@@ -1,6 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app, send_from_directory
 from flask_login import login_required, login_user, logout_user
-import oracledb
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 from ..objects.user import User, SignUpForm, LoginForm
@@ -32,13 +31,22 @@ def signup():
             test_user = get_db().get_user(user.email)
             if test_user:
                 flash('A User With That Email Already Exists!', category='invalid')
+                return redirect(url_for('auth.signup'))
             else:
                 get_db().insert_user(user)
                 flash("User Added Successfully", category='valid')
             return render_template("index.html") 
         else:
-            # TODO MAYBE: Add code to check for what specific aspects of the form are invalid.
-            flash("Form Is Invalid!", category='invalid')
+            for error in form.errors:
+                if error == 'avatar':
+                    flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
+                else:
+                    if len(form.errors) == 1:
+                        flash(f"{error} is Invalid!", category='invalid')
+                    else:
+                        errors = ""
+                        errors += f"{error.capitalize()}, "
+                        flash(f"{errors} are Invalid!", category='invalid')
             return redirect(url_for('auth.signup'))
         
     elif request.method == 'GET':

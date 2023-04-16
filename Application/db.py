@@ -239,6 +239,19 @@ class Database:
 
             return all_competency_elements
 
+    def get_element(self, name):
+        with self.__get_cursor() as cursor:
+            try:
+                result = cursor.execute("""SELECT element_id, element_order element_criteria, competency_id 
+                FROM view_competencies_elements WHERE element=:name""", name=name)
+
+                for row in result:
+                    element = Element(row[1], name, row[2], row[3])
+                    element.id = row[0]
+                    return element
+            except oracledb.Error:
+                pass
+
     def add_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
         for competency_element in competency_elements:

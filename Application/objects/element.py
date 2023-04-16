@@ -28,7 +28,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Length
 
-class CompetencyForm(FlaskForm):
+class ElementForm(FlaskForm):
     order = IntegerField('Element Order', validators=[DataRequired(), Length(min=1, max=25)])
     name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
     criteria = StringField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])

@@ -48,3 +48,6 @@ class ResetPasswordForm(FlaskForm):
 
 class DeleteMemberForm(FlaskForm):
     members = SelectField('Select a Member to Delete')
+
+class BlockMemberForm(FlaskForm):
+    members = SelectField('Select a Member to Block')

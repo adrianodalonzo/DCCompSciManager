@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import DeleteMemberForm, SignUpForm, User
+from ..objects.user import BlockMemberForm, DeleteMemberForm, SignUpForm, User
 
 from ..dbmanager import get_db
 
@@ -86,3 +86,24 @@ def delete_member():
     elif request.method == 'GET':
         members = get_db().get_members()
         return render_template('delete_member.html', members=members, form=form)
+    
+@bp.route('/block/', methods=['GET', 'POST'])
+@login_required
+def block_member():
+    if current_user.group == 'Member':
+        flash("You Don't Have the Permissions to View This Page", category='invalid')
+        return redirect(url_for('members.list_members'))
+    form = BlockMemberForm()
+    # assigns select options by looping through the members and adding the emails to the select
+    form.members.choices = [member.email for member in get_db().get_members()]
+
+    if request.method == 'POST' and form.validate_on_submit():
+        member = get_db().get_user(form.members.data)
+        if member:
+            get_db().block_member(member.email)
+            flash('Member Successfully Blocked!', category='valid')
+            members = get_db().get_members()
+            return render_template('block_member.html', members=members, form=form)
+    elif request.method == 'GET':
+        members = get_db().get_members()
+        return render_template('block_member.html', members=members, form=form)

@@ -45,11 +45,10 @@ class Database:
                            email=user.email, 
                            password=user.password)
     
-    def fetch_blocked(result):
+    def fetch_blocked(self, result):
         if result == '1':
             return True
-        else:
-            return False
+        return False
             
     def get_user(self, email):
         if not isinstance(email, str):

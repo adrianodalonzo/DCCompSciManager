@@ -17,6 +17,7 @@ class User(UserMixin):
 
         self.id = None
         self.group = None
+        self.blocked = False
     
     def __repr__(self):
         return f'User: ({self.email}, {self.name}, {self.password}, {self.id}, {self.group})'

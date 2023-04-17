@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app, send_from_directory
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 from ..objects.user import User, SignUpForm, LoginForm
@@ -9,6 +9,9 @@ bp = Blueprint("auth", __name__, url_prefix="/auth/")
 
 @bp.route("/signup/", methods=['GET', 'POST'])
 def signup():
+    if current_user.is_authenticated:
+        flash('You Already Have an Account Here!', category='message')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     form = SignUpForm()
 
     if request.method == 'POST':
@@ -54,6 +57,9 @@ def signup():
 
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        flash('You Are Already Logged In!', category='message')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     form = LoginForm()
     
     if request.method == 'POST':

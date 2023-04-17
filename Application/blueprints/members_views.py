@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import BlockMemberForm, DeleteMemberForm, SignUpForm, User
+from ..objects.user import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, User
 
 from ..dbmanager import get_db
 
@@ -111,3 +111,20 @@ def block_member():
     elif request.method == 'GET':
         members = get_db().get_members()
         return render_template('block_member.html', members=members, form=form)
+
+@bp.route('/move/', methods=['GET', 'POST'])
+@login_required
+def move_member():
+    if current_user.group != 'Admin':
+        flash("You Don't Have the Permissions to View this Page!", category='invalid')
+        return redirect(url_for('index.index'))
+    form = MoveMemberForm()
+    form.members.choices = [member.email for member in get_db().get_members()]
+    form.groups.choices = ['User Admin', 'Admin']
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            pass
+        pass
+    elif request.method == 'GET':
+        return render_template('move_member.html', form=form)

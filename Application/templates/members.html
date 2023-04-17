@@ -25,5 +25,10 @@
         <button>
             <a href="{{ url_for('members.block_member') }}">Block Member</a>
         </button>
+        {% if current_user.group == 'Admin' %}
+            <button>
+                <a href="{{ url_for('members.move_member') }}">Move Member</a>
+            </button>
+        {% endif %}
     {% endif %}
 {% endblock %}

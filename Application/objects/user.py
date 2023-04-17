@@ -52,3 +52,7 @@ class DeleteMemberForm(FlaskForm):
 
 class BlockMemberForm(FlaskForm):
     members = SelectField('Select a Member to Block')
+
+class MoveMemberForm(FlaskForm):
+    members = SelectField("Select a Member to Move")
+    groups = SelectField("to")

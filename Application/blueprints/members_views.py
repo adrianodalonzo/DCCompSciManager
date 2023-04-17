@@ -106,11 +106,11 @@ def block_member():
             get_db().block_member(member.email)
             flash('Member Successfully Blocked!', category='valid')
             members = get_db().get_unblocked_members()
-            form.members.choices = [member.email for member in get_db().get_unblocked_members()]
-            return render_template('block_member.html', members=members, form=form)
+            form.members.choices = [member.email for member in members]
+            return render_template('block_member.html', form=form)
     elif request.method == 'GET':
         members = get_db().get_members()
-        return render_template('block_member.html', members=members, form=form)
+        return render_template('block_member.html', form=form)
 
 @bp.route('/move/', methods=['GET', 'POST'])
 @login_required
@@ -122,9 +122,13 @@ def move_member():
     form.members.choices = [member.email for member in get_db().get_members()]
     form.groups.choices = ['User Admin', 'Admin']
 
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            pass
-        pass
+    if request.method == 'POST' and form.validate_on_submit():
+        member = get_db().get_user(form.members.data)
+        if member:
+            get_db().move_member(member.email, form.groups.data)
+            flash(f'Member Successfully Moved to {form.groups.data} Group!', category='valid')
+            members = get_db().get_members()
+            form.members.choices = [member.email for member in members]
+            return render_template('move_member.html', form=form)
     elif request.method == 'GET':
         return render_template('move_member.html', form=form)

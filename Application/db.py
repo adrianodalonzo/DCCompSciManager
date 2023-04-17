@@ -146,6 +146,16 @@ class Database:
         with self.__get_cursor() as cursor:
             cursor.execute("update courses_users set blocked = '0' where email = :email", email=email)
 
+    def move_member(self, email, group):
+        if not isinstance(email, str):
+            raise TypeError("Email MUST be a string!")
+        
+        if not isinstance(group, str):
+            raise TypeError("Email MUST be a string!")
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('update courses_users set user_group = :user_group where email = :email', user_group=group, email=email)
+
     def __get_cursor(self):
             for i in range(3):
                 try:

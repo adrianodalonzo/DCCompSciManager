@@ -94,5 +94,9 @@ def logout():
 @bp.route('/avatar/<email>/avatar.png/')
 @login_required
 def get_avatar(email):
+    # ask dirk about if any user can view another user's avatar or is it just for those who are blocked that can't
+    if current_user.email != email:
+        flash("You Can't View This User's Avatar!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     dir = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(dir, 'avatar.png')

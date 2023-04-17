@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    List of Members
+    Members Dashboard
 {% endblock %}
 
 {% block content %}
-    <h1>Members</h1>
+    <h1>List of Members</h1>
     <ul>
         {% for member in members %}
             <div class="member_info">
@@ -15,4 +15,15 @@
             </div>
         {% endfor %}
     </ul>
+    {% if current_user.group == 'User Admin' or current_user.group == 'Admin' %}
+        <button>
+            <a href="{{ url_for('members.add_member') }}">Add Member</a>
+        </button>
+        <button>
+            <a href="{{ url_for('members.delete_member') }}">Delete Member</a>
+        </button>
+        <button>
+            <a href="{{ url_for('members.block_member') }}">Block Member</a>
+        </button>
+    {% endif %}
 {% endblock %}

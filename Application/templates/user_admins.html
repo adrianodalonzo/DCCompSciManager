@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    User Admins Dashboard
+{% endblock %}
+
+{% block content %}
+    <h1>List of User Admins</h1>
+    <ul>
+        {% for member in members %}
+            <div class="member_info">
+                <li>
+                    {{ member.email }}, {{ member.name }}
+                </li>
+            </div>
+        {% endfor %}
+    </ul>
+    <button>
+        <a href="{{ url_for('members.add_member') }}">Add Member</a>
+    </button>
+    <button>
+        <a href="{{ url_for('members.delete_member') }}">Delete Member</a>
+    </button>
+    <button>
+        <a href="{{ url_for('members.block_member') }}">Block Member</a>
+    </button>
+{% endblock %}

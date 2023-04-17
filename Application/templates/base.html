@@ -37,11 +37,12 @@
                 <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
 
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('members.list_members') }}">View Members</a></li>
-                    {% if current_user.group == 'User Admin' or current_user.group == 'Admin' %}
-                        <li><a href="{{ url_for('members.add_member') }}">Add Member</a></li>
-                        <li><a href="{{ url_for('members.delete_member') }}">Delete Member</a></li>
-                        <li><a href="{{ url_for('members.block_member') }}">Block Member</a></li>
+                    <li><a href="{{ url_for('members.list_members') }}">Members Dashboard</a></li>
+                    {% if current_user.group == 'Admin' %}
+                        <li><a href="{{ url_for('user_admins.list_user_admins') }}">User Admin Dashboard</a></li>
+                    {% endif %}
+                    {% if current_user.group == 'Admin' %}
+                        YOU ARE AN ADMIN!
                     {% endif %}
                     <li>
                         <a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">

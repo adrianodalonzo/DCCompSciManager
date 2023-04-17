@@ -50,8 +50,12 @@ class ResetPasswordForm(FlaskForm):
 class DeleteMemberForm(FlaskForm):
     members = SelectField('Select a Member to Delete')
 
+# find way to use 1 class
 class BlockMemberForm(FlaskForm):
     members = SelectField('Select a Member to Block')
+
+class UnblockMemberForm(FlaskForm):
+    blocked_members = SelectField('Select a Member to Unblock')
 
 class MoveMemberForm(FlaskForm):
     members = SelectField("Select a Member to Move")

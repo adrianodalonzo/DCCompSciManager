@@ -10,7 +10,12 @@
         {% for member in members %}
             <div class="member_info">
                 <li>
-                    {{ member.email }}, {{ member.name }}
+                    {{ member.email }}, {{ member.name }}. Status: 
+                    {% if member.blocked %}
+                        BLOCKED
+                    {% else %}
+                        NOT BLOCKED
+                    {% endif %}
                 </li>
             </div>
         {% endfor %}
@@ -24,6 +29,9 @@
         </button>
         <button>
             <a href="{{ url_for('members.block_member') }}">Block Member</a>
+        </button>
+        <button>
+            <a href="{{ url_for('members.unblock_member') }}">Unblock Member</a>
         </button>
         {% if current_user.group == 'Admin' %}
             <button>

@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, User
+from ..objects.user import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, UnblockMemberForm, User
 
 from ..dbmanager import get_db
 
@@ -107,10 +107,36 @@ def block_member():
             flash('Member Successfully Blocked!', category='valid')
             members = get_db().get_unblocked_members()
             form.members.choices = [member.email for member in members]
-            return render_template('block_member.html', form=form)
+
+            members = get_db().get_members()
+            return render_template('members.html', form=form, members=members)
     elif request.method == 'GET':
         members = get_db().get_members()
         return render_template('block_member.html', form=form)
+    
+@bp.route('/unblock/', methods=['GET', 'POST'])
+@login_required
+def unblock_member():
+    if current_user.group == 'Member':
+        flash("You Don't Have the Permissions to View This Page", category='invalid')
+        return redirect(url_for('members.list_members'))
+    form = UnblockMemberForm()
+    # assigns select options by looping through the members and adding the emails to the select
+    form.blocked_members.choices = [member.email for member in get_db().get_blocked_members()]
+
+    if request.method == 'POST' and form.validate_on_submit():
+        member = get_db().get_user(form.blocked_members.data)
+        if member:
+            get_db().unblock_member(member.email)
+            flash('Member Successfully Blocked!', category='valid')
+            members = get_db().get_blocked_members()
+            form.blocked_members.choices = [member.email for member in members]
+
+            members = get_db().get_members()
+            return render_template('members.html', form=form, members=members)
+    elif request.method == 'GET':
+        members = get_db().get_members()
+        return render_template('unblock_member.html', form=form)
 
 @bp.route('/move/', methods=['GET', 'POST'])
 @login_required

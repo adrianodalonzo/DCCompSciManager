@@ -44,18 +44,25 @@ class Database:
                            username=user.name, 
                            email=user.email, 
                            password=user.password)
+    
+    def fetch_blocked(result):
+        if result == '1':
+            return True
+        else:
+            return False
             
     def get_user(self, email):
         if not isinstance(email, str):
             raise TypeError('Email MUST be a string!')
 
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where email = :email""", email=email)
             for result in results:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = self.fetch_blocked(result[5])
                 return user
             
     def get_user_id(self, id):
@@ -63,12 +70,13 @@ class Database:
             raise TypeError('ID MUST be a number!!')
         
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where user_id = :id""", id=id)
             for result in results:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = self.fetch_blocked(result[5])
                 return user
             
     def update_user_password(self, email, password):
@@ -90,7 +98,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = result[5]
+                member.blocked = self.fetch_blocked(result[5])
                 members.append(member)
         return members
     
@@ -102,7 +110,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = result[5]
+                member.blocked = self.fetch_blocked(result[5])
                 members.append(member)
         return members
     
@@ -114,7 +122,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = result[5]
+                member.blocked = self.fetch_blocked(result[5])
                 members.append(member)
         return members
     

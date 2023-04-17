@@ -39,8 +39,8 @@ class Database:
                 raise oracledb.IntegrityError
         
         with self.__get_cursor() as cursor:
-            cursor.execute("""insert into courses_users (username, email, password, user_group) 
-                           values (:username, :email, :password, 'Member')""",
+            cursor.execute("""insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, 'Member', '0')""",
                            username=user.name, 
                            email=user.email, 
                            password=user.password)
@@ -85,11 +85,36 @@ class Database:
     def get_members(self):
         members = []
         with self.__get_cursor() as cursor:
-            results = cursor.execute("select email, password, user_id, username, user_group from courses_users where user_group = 'Member'")
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member'")
             for result in results:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
+                member.blocked = result[5]
+                members.append(member)
+        return members
+    
+    def get_unblocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '0'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = result[5]
+                members.append(member)
+        return members
+    
+    def get_blocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '1'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = result[5]
                 members.append(member)
         return members
     
@@ -99,6 +124,20 @@ class Database:
         
         with self.__get_cursor() as cursor:
             cursor.execute('delete from courses_users where email = :email', email=email)
+            
+    def block_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '1' where email = :email", email=email)
+            
+    def unblock_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '0' where email = :email", email=email)
 
     def __get_cursor(self):
             for i in range(3):

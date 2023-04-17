@@ -39,6 +39,8 @@ def make_blueprints(app):
     app.register_blueprint(domains_bp)
     from .blueprints.auth_views import bp as auth_bp
     app.register_blueprint(auth_bp)
+    from .blueprints.elements_view import bp as elements_bp
+    app.register_blueprint(elements_bp)
     
 def cleanup(value):
     get_db().close()

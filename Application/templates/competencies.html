@@ -6,6 +6,7 @@
 
 {% block content %}
     <h1 id="competencies_page_heading">Competencies</h1>
+    <a href="{{url_for('competencies.add_competency')}}"><input type="button" value="Add Competency" /></a>
     {% for competency in competencies %}
         <div>
             <h2>{{ competency.name | safe }}</h2>
@@ -14,11 +15,16 @@
             <h3>{{ competency.achievement | safe}}</h3>
         </div>
         <div class="competency-add-edit-del-buttons">
-            <a href="{{url_for('competencies.add_competency')}}"><input type="button" value="Add Competency" /></a>
             <a href="{{url_for('competencies.edit_competency', comp_id=competency.id)}}"><input type="button" value="Edit Competency" /></a>
             <a href="{{url_for('competencies.delete_competency', comp_id=competency.id)}}"><input type="button" value="Delete Competency" /></a>
         </div>
         
+        <br/>
+
+        {% if elements_array %}
+            <a href="{{url_for('elements.add_element')}}"><input type="button" value="Add Element" /></a>
+        {% endif %}
+
         {% for elements in elements_array %}
             {% for element in elements %}
                 {% if competency.id == element.competency_id %}
@@ -26,9 +32,8 @@
                     <h4> {{ element.name | safe }}</h4>
                     <p>{{ element.criteria | safe }}</p>
                     <div class="element-add-edit-del-buttons">
-                        <a href="{{url_for('')}}"><input type="button" value="Add Element" /></a>
-                        <a href="{{url_for('')}}"><input type="button" value="Edit Element" /></a>
-                        <a href="{{url_for('')}}"><input type="button" value="Delete Element" /></a>
+                        <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" value="Edit Element" /></a>
+                        <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" value="Delete Element" /></a>
                     </div>
                 {% endif %}
             {% endfor %}

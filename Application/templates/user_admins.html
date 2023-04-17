@@ -7,16 +7,16 @@
 {% block content %}
     <h1>List of User Admins</h1>
     <ul>
-        {% for member in members %}
-            <div class="member_info">
+        {% for user_admin in user_admins %}
+            <div class="user_admin_info">
                 <li>
-                    {{ member.email }}, {{ member.name }}
+                    {{ user_admin.email }}, {{ user_admin.name }}
                 </li>
             </div>
         {% endfor %}
     </ul>
     <button>
-        <a href="#">Add User Admin</a>
+        <a href="{{ url_for('user_admins.add_user_admin') }}">Add User Admin</a>
     </button>
     <button>
         <a href="#">Move User Admin</a>

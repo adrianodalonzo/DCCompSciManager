@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add User Admin
+{% endblock %}
+
+{% block content %}
+    <h2>Add User Admin Form</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.password.label }} {{ form.password() }}
+        {{ form.avatar.label }} {{ form.avatar() }}
+        <input type="submit" value="Add User Admin">
+    </form>
+{% endblock %}

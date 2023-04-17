@@ -29,7 +29,7 @@ class Database:
             self.__connection.close()
             self.__connection = None
             
-    def insert_user(self, user):
+    def insert_user(self, user, group=None):
         if not isinstance(user, User):
             raise TypeError('User passed in MUST be a User object!')
         
@@ -39,11 +39,16 @@ class Database:
                 raise oracledb.IntegrityError
         
         with self.__get_cursor() as cursor:
-            cursor.execute("""insert into courses_users (username, email, password, user_group, blocked) 
-                           values (:username, :email, :password, 'Member', '0')""",
-                           username=user.name, 
-                           email=user.email, 
-                           password=user.password)
+            query_string = ""
+            if group is None:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, 'Member', '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password)
+            else:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, :user_group, '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password, user_group=group)
+                
     
     def fetch_blocked(self, result):
         if result == '1':
@@ -100,6 +105,18 @@ class Database:
                 member.blocked = self.fetch_blocked(result[5])
                 members.append(member)
         return members
+    
+    def get_user_admins(self):
+        user_admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'User Admin'")
+            for result in results:
+                user_admin = User(result[0], result[3], result[1])
+                user_admin.id = result[2]
+                user_admin.group = result[4]
+                user_admin.blocked = self.fetch_blocked(result[5])
+                user_admins.append(user_admin)
+        return user_admins
     
     def get_unblocked_members(self):
         members = []

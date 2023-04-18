@@ -71,7 +71,7 @@ def login():
                 if check_password_hash(user.password, password):
                     login_user(user, remember=form.remember_me.data)
                     flash('Login Successful!', category='valid')
-                    return render_template('index.html')
+                    return redirect(url_for('index.index'))
                 else:
                     flash('Email or Password Entered are Invalid!', category='invalid')
                     return redirect(url_for('auth.login'))

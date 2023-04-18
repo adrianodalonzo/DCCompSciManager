@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Profile | {{ user.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="profile_info">
+        <img class="avatar" src="{{ url_for('auth.get_avatar', email=user.email) }}" alt="profile_picture">
+        <h1>{{ user.name }}</h1>
+        <h2>{{ user.email }}</h2>
+        <h3>{{ user.group }}</h3>
+    </div>
+{% endblock %}

@@ -6,12 +6,21 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('profile', __name__, url_prefix='/profile/')
 
+@bp.route('/')
+@login_required
+def profile():
+    return render_template('profile.html')
+
 @bp.route('/<email>/')
 @login_required
 def get_profile(email):
     if not isinstance(email, str):
-        raise Exception('Email MUST be a string!')
-    return render_template('profile.html')
+        return TypeError("Email MUST be a string!")
+    user = get_db().get_user(email)
+    if user:
+        return render_template('specific_profile.html', user=user)
+    flash("A User With That Email Doesn't Exist!", category='invalid')
+    return redirect(url_for('index.index'))
 
 @bp.route('/reset-password/', methods=['GET', 'POST'])
 @login_required

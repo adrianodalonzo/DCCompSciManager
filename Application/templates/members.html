@@ -10,11 +10,14 @@
         {% for member in members %}
             <div class="member_info">
                 <li>
-                    {{ member.email }}, {{ member.name }}. Status: 
-                    {% if member.blocked %}
-                        BLOCKED
-                    {% else %}
-                        NOT BLOCKED
+                    <a href="{{ url_for('profile.get_profile', email=member.email) }}">{{ member.email }}, {{ member.name }}.</a> 
+                    {% if current_user.group != 'Member' %}
+                        Status: 
+                        {% if member.blocked %}
+                            BLOCKED
+                        {% else %}
+                            NOT BLOCKED
+                        {% endif %}
                     {% endif %}
                 </li>
             </div>

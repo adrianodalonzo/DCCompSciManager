@@ -142,7 +142,7 @@ class Database:
                 members.append(member)
         return members
     
-    def delete_member(self, email):
+    def delete_user(self, email):
         if not isinstance(email, str):
             raise TypeError('Email MUST be a string!')
         

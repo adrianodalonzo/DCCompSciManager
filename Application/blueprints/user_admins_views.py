@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
 from ..dbmanager import get_db
-from ..objects.user import SignUpForm, User
+from ..objects.user import DeleteUserAdminForm, MoveUserAdminForm, SignUpForm, User
 
 bp = Blueprint('user_admins', __name__, url_prefix='/user_admins/')
 
@@ -62,3 +62,39 @@ def add_user_admin():
         
     elif request.method == 'GET':
         return render_template("add_user_admin.html", form=form)
+    
+@bp.route('/move/', methods=['GET', 'POST'])
+@login_required
+def move_user_admin():
+    form = MoveUserAdminForm()
+    form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
+    form.groups.choices = ['Member', 'Admin']
+
+    if request.method == 'POST' and form.validate_on_submit():
+        user_admin = get_db().get_user(form.user_admins.data)
+        if user_admin:
+            get_db().move_member(user_admin.email, form.groups.data)
+            flash(f'User Admin Successfully Moved to {form.groups.data} Group!', category='valid')
+            user_admins = get_db().get_user_admins()
+            form.user_admins.choices = [user_admin.email for user_admin in user_admins]
+            return render_template('user_admins.html', form=form, user_admins=user_admins)
+    elif request.method == 'GET':
+        return render_template('move_user_admin.html', form=form)
+    
+@bp.route('/delete/', methods=['GET', 'POST'])
+@login_required
+def delete_user_admin():
+    form = DeleteUserAdminForm()
+    # assigns select options by looping through the members and adding the emails to the select
+    form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
+
+    if request.method == 'POST' and form.validate_on_submit():
+        user_admin = get_db().get_user(form.user_admins.data)
+        if user_admin:
+            get_db().delete_user(user_admin.email)
+            flash('User Admin Successfully Deleted!', category='valid')
+            user_admins = get_db().get_user_admins()
+            return render_template('user_admins.html', user_admins=user_admins)
+    elif request.method == 'GET':
+        members = get_db().get_members()
+        return render_template('delete_user_admin.html', form=form)

@@ -15,6 +15,10 @@ nav ul li a {
     font-size: larger;
 }
 
+ul li a {
+    color: lightblue;
+}
+
 nav ul li a:hover, nav ul li a:visited {
     color: white;
 }

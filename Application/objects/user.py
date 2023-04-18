@@ -47,16 +47,22 @@ class ResetPasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     retype_new_password = PasswordField('Retype New Password', validators=[DataRequired(), Length(min=8)])
 
+# find way to use 1 class
 class DeleteMemberForm(FlaskForm):
     members = SelectField('Select a Member to Delete')
+class DeleteUserAdminForm(FlaskForm):
+    user_admins = SelectField('Select a User Admin to Delete')
 
 # find way to use 1 class
 class BlockMemberForm(FlaskForm):
     members = SelectField('Select a Member to Block')
-
 class UnblockMemberForm(FlaskForm):
     blocked_members = SelectField('Select a Member to Unblock')
 
+# find way to use 1 class
 class MoveMemberForm(FlaskForm):
     members = SelectField("Select a Member to Move")
     groups = SelectField("to")
+class MoveUserAdminForm(FlaskForm):
+    user_admins = SelectField('Select a User Admin to Move')
+    groups = SelectField('to')

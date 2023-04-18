@@ -10,7 +10,7 @@
         {% for user_admin in user_admins %}
             <div class="user_admin_info">
                 <li>
-                    {{ user_admin.email }}, {{ user_admin.name }}
+                    <a href="{{ url_for('profile.get_profile', email=user_admin.email) }}">{{ user_admin.email }}, {{ user_admin.name }}</a>
                 </li>
             </div>
         {% endfor %}
@@ -19,9 +19,9 @@
         <a href="{{ url_for('user_admins.add_user_admin') }}">Add User Admin</a>
     </button>
     <button>
-        <a href="#">Move User Admin</a>
+        <a href="{{ url_for('user_admins.move_user_admin') }}">Move User Admin</a>
     </button>
     <button>
-        <a href="#">Remove User Admin</a>
+        <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete User Admin</a>
     </button>
 {% endblock %}

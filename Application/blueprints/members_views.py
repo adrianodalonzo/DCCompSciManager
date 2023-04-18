@@ -82,7 +82,7 @@ def delete_member():
     if request.method == 'POST' and form.validate_on_submit():
         member = get_db().get_user(form.members.data)
         if member:
-            get_db().delete_member(member.email)
+            get_db().delete_user(member.email)
             flash('Member Successfully Deleted!', category='valid')
             members = get_db().get_members()
             return render_template('members.html', members=members)

@@ -22,3 +22,17 @@ def domains_api():
         return jsonify(json)
     except Exception:
         return ""
+    
+@bp.route('/<int:domain_id>', methods=['GET', 'POST'])
+def domains_api(domain_id):
+    try:
+        if request.method == 'POST':
+            domains_json = request.json
+            if domains_json:
+                domain = Domain.from_json(domains_json)
+                get_db().add_domain(domain)
+        elif request.method == 'GET':
+            domain = get_db().get_domain(domain_id)
+            return jsonify(domain.__dict__)
+    except Exception:
+        return "" 

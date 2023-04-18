@@ -22,3 +22,17 @@ def courses_api():
         return jsonify(json)
     except Exception:
         return ""
+    
+@bp.route('/<course_id>', methods=['GET', 'PUT'])
+def courses_api(course_id):
+    try:
+        if request.method == 'POST':
+            courses_json = request.json
+            if courses_json:
+                course = Course.from_json(courses_json)
+                get_db().add_course(course)
+        elif request.method == 'GET':
+            course = get_db().get_course(course_id)
+            return jsonify(course.__dict__)
+    except Exception:
+        return ""

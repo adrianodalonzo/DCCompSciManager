@@ -16,6 +16,8 @@ def profile():
 def get_profile(email):
     if not isinstance(email, str):
         return TypeError("Email MUST be a string!")
+    if current_user.email == email:
+        return redirect(url_for('profile.profile'))
     user = get_db().get_user(email)
     if user:
         return render_template('specific_profile.html', user=user)

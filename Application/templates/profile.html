@@ -7,6 +7,9 @@
 {% block content %}
     <div class="profile_info">
         <img class="avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="profile_picture">
+        {% if current_user.blocked %}
+            <h1>BLOCKED</h1>
+        {% endif %}
         <h1>{{ current_user.name }}</h1>
         <h2>{{ current_user.email }}</h2>
         <h3>{{ current_user.group }}</h3>

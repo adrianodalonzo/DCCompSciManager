@@ -7,7 +7,7 @@ bp = Blueprint('index', __name__, url_prefix='/')
 def index():
     try:
         if current_user.blocked:
-            flash('You Have Been Blocked by the User Admin, so Viewing This Page is Unavailable!', category='invalid')
+            flash('You Have Been Blocked by the User Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
         return render_template('index.html')
     except Exception:

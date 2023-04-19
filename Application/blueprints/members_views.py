@@ -75,6 +75,9 @@ def delete_member():
     if current_user.group == 'Member':
         flash("You Don't Have the Permissions to View This Page", category='invalid')
         return redirect(url_for('members.list_members'))
+    if not get_db().get_members():
+        flash('There Are No Members to Delete!', category='message')
+        return redirect(url_for('members.list_members'))
     form = DeleteMemberForm()
     # assigns select options by looping through the members and adding the emails to the select
     form.members.choices = [member.email for member in get_db().get_members()]
@@ -95,6 +98,9 @@ def delete_member():
 def block_member():
     if current_user.group == 'Member':
         flash("You Don't Have the Permissions to View This Page", category='invalid')
+        return redirect(url_for('members.list_members'))
+    if not get_db().get_unblocked_members():
+        flash('There Are No Members to Block!', category='message')
         return redirect(url_for('members.list_members'))
     form = BlockMemberForm()
     # assigns select options by looping through the members and adding the emails to the select
@@ -120,6 +126,9 @@ def unblock_member():
     if current_user.group == 'Member':
         flash("You Don't Have the Permissions to View This Page", category='invalid')
         return redirect(url_for('members.list_members'))
+    if not get_db().get_blocked_members():
+        flash('There Are No Members to Unblock!', category='message')
+        return redirect(url_for('members.list_members'))
     form = UnblockMemberForm()
     # assigns select options by looping through the members and adding the emails to the select
     form.blocked_members.choices = [member.email for member in get_db().get_blocked_members()]
@@ -144,6 +153,9 @@ def move_member():
     if current_user.group != 'Admin':
         flash("You Don't Have the Permissions to View this Page!", category='invalid')
         return redirect(url_for('index.index'))
+    if not get_db().get_members():
+        flash('There Are No Members to Move!', category='message')
+        return redirect(url_for('members.list_members'))
     form = MoveMemberForm()
     form.members.choices = [member.email for member in get_db().get_members()]
     form.groups.choices = ['User Admin', 'Admin']
@@ -155,6 +167,6 @@ def move_member():
             flash(f'Member Successfully Moved to {form.groups.data} Group!', category='valid')
             members = get_db().get_members()
             form.members.choices = [member.email for member in members]
-            return render_template('move_member.html', form=form)
+            return render_template('members.html', form=form)
     elif request.method == 'GET':
         return render_template('move_member.html', form=form)

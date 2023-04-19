@@ -66,6 +66,9 @@ def add_user_admin():
 @bp.route('/move/', methods=['GET', 'POST'])
 @login_required
 def move_user_admin():
+    if not get_db().get_user_admins():
+        flash('There Are No User Admins to Move!', category='message')
+        return redirect(url_for('user_admins.list_user_admins'))
     form = MoveUserAdminForm()
     form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
     form.groups.choices = ['Member', 'Admin']
@@ -84,6 +87,9 @@ def move_user_admin():
 @bp.route('/delete/', methods=['GET', 'POST'])
 @login_required
 def delete_user_admin():
+    if not get_db().get_user_admins():
+        flash('There Are No User Admins to Delete!', category='message')
+        return redirect(url_for('user_admins.list_user_admins'))
     form = DeleteUserAdminForm()
     # assigns select options by looping through the members and adding the emails to the select
     form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]

@@ -21,7 +21,16 @@ class Competency:
         return f'Competency(id:{self.id}, name:{self.name}, achievement:{self.achievement}, type:{self.type}, id:{self.id})'
     
     def __str__(self):
-        return f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'
+        to_return = f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'
+        return to_return
+        
+    def from_json(competency_dict):
+        if not isinstance(competency_dict, dict):
+            raise TypeError("Excepted dict")
+        return Competency(competency_dict['id'], competency_dict['name'], competency_dict['achievement'], competency_dict['type'])
+    
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'achievement': self.achievement, 'type': self.type}
         
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField

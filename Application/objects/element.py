@@ -24,6 +24,14 @@ class Element:
         to_return = f'Order: {self.order}, Name: {self.name}, ' + f'Criteria: {self.criteria}, Competency ID: {self.competency_id}'
         return to_return
     
+    def from_json(element_dict):
+        if not isinstance(element_dict, dict):
+            raise TypeError("Excepted dict")
+        return Element(element_dict['order'], element_dict['name'], element_dict['criteria'], element_dict['competency_id'])
+    
+    def to_json(self):
+        return {'order': self.order, 'name': self.name, 'criteria': self.criteria, 'competency_id': self.competency_id}
+    
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Length

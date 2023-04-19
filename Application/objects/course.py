@@ -41,6 +41,14 @@ class Course:
         to_return = f'Id:{self.id}, Title: {self.title}, Theory Hours: {self.theory_hours}, ' + f'Lab Hours: {self.lab_hours}, Work Hours: {self.work_hours}, ' + f'Description: {self.description}, Domain ID: {self.domain_id}, ' + f'Term ID: {self.term_id}'
         return to_return
     
+    def from_json(course_dict):
+        if not isinstance(course_dict, dict):
+            raise TypeError("Excepted dict")
+        return Course(course_dict['id'], course_dict['title'], course_dict['theory_hours'], course_dict['lab_hours'], course_dict['work_hours'], course_dict['description'], course_dict['domain_id'], course_dict['term_id'])
+        
+    def to_json(self):
+        return {'id': self.id, 'title': self.title, 'theory_hours': self.theory_hours, 'lab_hours': self.lab_hours, 'work_hours': self.work_hours, 'description': self.description, 'domain_id': self.domain_id, 'term_id': self.term_id}
+    
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length

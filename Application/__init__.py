@@ -37,6 +37,15 @@ def make_blueprints(app):
     app.register_blueprint(competencies_bp)
     app.register_blueprint(courses_bp)
     app.register_blueprint(domains_bp)
+
+    from .apis.competencies_api import bp as competencies_api_bp
+    from .apis.courses_api import bp as courses_api_bp
+    from .apis.domains_api import bp as domains_api_bp
+
+    app.register_blueprint(competencies_api_bp)
+    app.register_blueprint(courses_api_bp)
+    app.register_blueprint(domains_api_bp)
+
     from .blueprints.auth_views import bp as auth_bp
     app.register_blueprint(auth_bp)
     

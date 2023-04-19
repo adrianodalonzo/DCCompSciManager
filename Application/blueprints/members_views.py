@@ -167,6 +167,6 @@ def move_member():
             flash(f'Member Successfully Moved to {form.groups.data} Group!', category='valid')
             members = get_db().get_members()
             form.members.choices = [member.email for member in members]
-            return render_template('members.html', form=form)
+            return render_template('members.html', form=form, members=members)
     elif request.method == 'GET':
         return render_template('move_member.html', form=form)

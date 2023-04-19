@@ -93,3 +93,11 @@ ul.flashes {
 #add_member, #delete_member, #block_member {
     display: none;
 }
+
+#blocked {
+    color: red;
+}
+
+#not_blocked {
+    color: greenyellow;
+}

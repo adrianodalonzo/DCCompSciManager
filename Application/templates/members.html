@@ -14,9 +14,9 @@
                     {% if current_user.group != 'Member' %}
                         Status: 
                         {% if member.blocked %}
-                            BLOCKED
+                            <span id="blocked">BLOCKED</span>                            
                         {% else %}
-                            NOT BLOCKED
+                            <span id="not_blocked">NOT BLOCKED</span> 
                         {% endif %}
                     {% endif %}
                 </li>

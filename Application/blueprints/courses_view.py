@@ -64,8 +64,8 @@ def add_course():
 
 @bp.route("/edit/<string:course_id>/", methods=['GET', 'POST'])
 def edit_course(course_id):
-    form = CourseForm()
     course = get_db().get_course(course_id)
+    form = CourseForm(obj=course)
 
     if request.method == 'GET':
         return render_template('modify_course.html', form=form, course=course)
@@ -78,8 +78,8 @@ def edit_course(course_id):
             course_lab_hours = form.lab_hours.data
             course_work_hours = form.work_hours.data
             course_desc = form.description.data
-            course_dom_id = form.domain.data
-            course_term_id = form.term.data
+            course_dom_id = form.domain_id.data
+            course_term_id = form.term_id.data
 
             if course_title is None:
                 course_title = course.title

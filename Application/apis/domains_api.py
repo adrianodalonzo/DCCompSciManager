@@ -13,17 +13,17 @@ def domains_api():
                 get_db().add_domain(domain)
         elif request.method == 'GET':
             if request.args:
-                name = request.args.get("name")
-                domains = get_db().get_domains()
-                domain = [domain for domain in domains if domain.name == name]
+                id = int(request.args.get("id"))
+                domains = get_db().get_all_domains()
+                domain = [domain for domain in domains if domain.id == id]
                 return jsonify(domain[0].__dict__)
-        domains = get_db().get_domains()
+        domains = get_db().get_all_domains()
         json = [domain.__dict__ for domain in domains]
         return jsonify(json)
     except Exception:
         return ""
     
-@bp.route('/<int:domain_id>', methods=['GET', 'POST'])
+@bp.route('/<int:domain_id>', methods=['GET', 'PUT'])
 def domain_api(domain_id):
     try:
         if request.method == 'POST':

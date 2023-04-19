@@ -14,10 +14,10 @@ def courses_api():
         elif request.method == 'GET':
             if request.args:
                 id = request.args.get("id")
-                courses = get_db().get_courses()
+                courses = get_db().get_all_courses()
                 course = [course for course in courses if course.id == id]
                 return jsonify(course[0].__dict__)
-        courses = get_db().get_courses()
+        courses = get_db().get_all_courses()
         json = [course.__dict__ for course in courses]
         return jsonify(json)
     except Exception:

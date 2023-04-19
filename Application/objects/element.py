@@ -26,10 +26,10 @@ class Element:
     
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, NumberRange
 
 class ElementForm(FlaskForm):
-    order = IntegerField('Element Order', validators=[DataRequired()])
+    order = IntegerField('Element Order', validators=[DataRequired(), NumberRange(min=1)])
     name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
     criteria = StringField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])
     competency_id = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])

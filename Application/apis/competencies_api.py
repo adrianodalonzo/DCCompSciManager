@@ -48,8 +48,8 @@ def competency_elements_api(competency_id):
                 get_db().add_competency_element(element)
         elif request.method == 'GET':
             if request.args:
-                name = request.args.get("name")
-                element = get_db().get_element(name)
+                id = request.args.get("id")
+                element = get_db().get_element(id)
                 return jsonify(element.__dict__)
             elements = get_db().get_competency_elements(competency_id)
             json = [element.__dict__ for element in elements]
@@ -57,9 +57,8 @@ def competency_elements_api(competency_id):
     except Exception:
         return ""
     
-##NEED TO IMPLEMENT GET ELEMENT BY ID    
 @bp.route('/<competency_id>/elements/<int:element_id>', methods=['GET', 'PUT'])
-def competency_element_api(element_id):
+def competency_element_api(competency_id, element_id):
     try:
         if request.method == 'PUT':
             elements_json = request.json
@@ -67,7 +66,7 @@ def competency_element_api(element_id):
                 element = Element.from_json(elements_json)
                 get_db().add_competency_element(element)
         elif request.method == 'GET':
-            element = get_db().get_element(element_id)
+            element = get_db().get_competency_element(competency_id, element_id)
             return jsonify(element.__dict__)
     except Exception:
         return ""

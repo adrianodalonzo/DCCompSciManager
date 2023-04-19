@@ -41,11 +41,13 @@ def make_blueprints(app):
     from .apis.competencies_api import bp as competencies_api_bp
     from .apis.courses_api import bp as courses_api_bp
     from .apis.domains_api import bp as domains_api_bp
-
+    from .apis.elements_api import bp as elements_api_bp
+    
     app.register_blueprint(competencies_api_bp)
     app.register_blueprint(courses_api_bp)
     app.register_blueprint(domains_api_bp)
-
+    app.register_blueprint(elements_api_bp)
+    
     from .blueprints.auth_views import bp as auth_bp
     app.register_blueprint(auth_bp)
     

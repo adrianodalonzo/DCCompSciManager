@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
+from werkzeug.datastructures import MultiDict
 
 from Application.objects.competency import Competency, CompetencyForm
 from ..dbmanager import get_db
@@ -40,7 +41,7 @@ def show_competency_elements(comp_id):
     if competency:
         return render_template('competencies.html', competencies=competencies, elements_array=elements_array)
     flash('No Competency Found')
-    return redirect(url_for('show_all_competencies'))
+    return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/add/", methods=['GET', 'POST'])
 def add_competency():
@@ -63,12 +64,12 @@ def add_competency():
                                   form.achievement.data, form.type.data)
                 get_db().add_competency(comp)
     
-    return redirect(url_for('show_all_competencies'))
+    return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/edit/<string:comp_id>/", methods=['GET', 'POST'])
 def edit_competency(comp_id):
-    form = CompetencyForm()
     competency = get_db().get_competency(comp_id)
+    form = CompetencyForm(obj=competency)
 
     if request.method == 'GET':
         return render_template('modify_competency.html', form=form, competency=competency)
@@ -90,10 +91,10 @@ def edit_competency(comp_id):
             comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
             get_db().modify_competency(comp)
 
-    return redirect(url_for('show_all_competencies'))
+    return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/delete/<string:comp_id>/")
 def delete_competency(comp_id):
     get_db().delete_competency(comp_id)
     flash('Competency ' + comp_id + ' has been deleted, along with its elements')
-    return redirect(url_for('show_all_competencies'))
+    return redirect(url_for('competencies.show_all_competencies'))

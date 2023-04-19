@@ -267,7 +267,7 @@ class Database:
         competency_elements = self.get_competency_elements(element.competency_id)
         element_exist = False
         for competency_element in competency_elements:
-            if competency_element.name == element.name:
+            if competency_element.id == element.id:
                 element_exist = True
 
         if not element_exist:
@@ -275,8 +275,8 @@ class Database:
         
         with self.__connection.cursor() as cursor:
             cursor.execute("""UPDATE elements SET element_order=:element_order, element=:element, 
-            element_criteria=:element_criteria, competency_id:competency_id WHERE element=:element""", 
-            (element.order, element.name, element.criteria, element.competency_id, element.name))
+            element_criteria=:element_criteria, competency_id=:competency_id WHERE element_id=:element_id""", 
+            (element.order, element.name, element.criteria, element.competency_id, element.id))
 
     def delete_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)

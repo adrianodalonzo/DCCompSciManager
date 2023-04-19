@@ -29,7 +29,7 @@ from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Length
 
 class ElementForm(FlaskForm):
-    order = IntegerField('Element Order', validators=[DataRequired(), Length(min=1, max=25)])
+    order = IntegerField('Element Order', validators=[DataRequired()])
     name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
     criteria = StringField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])
-    competency = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])
+    competency_id = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])

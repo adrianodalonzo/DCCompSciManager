@@ -13,8 +13,8 @@
     {% endif %}
     {% for competency in competencies %}
         <div>
-            <h2>{{ competency.name | safe }}</h2>
-            <h3>{{ competency.id | safe }}</h3>
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
             <h3>{{ competency.type | safe }}</h3>
             <h3>{{ competency.achievement | safe}}</h3>
         </div>

@@ -55,3 +55,18 @@ ul.flashes {
     background-color: lightgreen;
     color: black;
 }
+
+a.invisible_link:link, a.invisible_link:visited {
+    color: white;
+    text-decoration: none;
+}
+
+a.invisible_link:hover {
+    color: lightgray;
+    text-decoration: underline;
+}
+
+a.invisible_link:active {
+    color: blue;
+    text-decoration: underline;
+}

@@ -67,7 +67,7 @@ def add_member():
             return redirect(url_for('members.list_members'))
         
     elif request.method == 'GET':
-        return render_template("add_member.html", form=form)
+        return render_template("add_user.html", form=form, user_type='Member')
     
 @bp.route('/delete/', methods=['GET', 'POST'])
 @login_required

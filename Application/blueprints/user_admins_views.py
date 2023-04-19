@@ -61,7 +61,7 @@ def add_user_admin():
             return redirect(url_for('user_admins.list_user_admins'))
         
     elif request.method == 'GET':
-        return render_template("add_user_admin.html", form=form)
+        return render_template("add_user.html", form=form, user_type='User Admin')
     
 @bp.route('/move/', methods=['GET', 'POST'])
 @login_required

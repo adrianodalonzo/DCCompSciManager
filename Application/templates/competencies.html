@@ -5,8 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h1 id="competencies_page_heading">Competencies</h1>
-    <a href="{{url_for('competencies.add_competency')}}"><input type="button" value="Add Competency" /></a>
+    {% if elements_array %}
+        <h1 id="competencies_page_heading">Competency</h1>
+    {% else %}
+        <h1 id="competencies_page_heading">Competencies</h1>
+        <a href="{{url_for('competencies.add_competency')}}"><input type="button" value="Add Competency" /></a>
+    {% endif %}
     {% for competency in competencies %}
         <div>
             <h2>{{ competency.name | safe }}</h2>

@@ -62,5 +62,5 @@ def edit_element(elem_nm):
 def delete_element(elem_nm):
     element = get_db().get_element(elem_nm)
     get_db().delete_competency_element(element)
-    flash("Deleted element " + elem_nm)
+    flash("Deleted element " + elem_nm, category='valid')
     return redirect(url_for('show_all_competencies'))

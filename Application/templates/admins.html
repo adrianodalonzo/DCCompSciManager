@@ -7,21 +7,21 @@
 {% block content %}
     <h1>List of Admins</h1>
     <ul>
-        {% for user_admin in user_admins %}
-            <div class="user_admin_info">
+        {% for admin in admins %}
+            <div class="admin_info">
                 <li>
-                    <a href="{{ url_for('profile.get_profile', email=user_admin.email) }}">{{ user_admin.email }}, {{ user_admin.name }}</a>
+                    <a href="{{ url_for('profile.get_profile', email=admin.email) }}">{{ admin.email }}, {{ admin.name }}</a>
                 </li>
             </div>
         {% endfor %}
     </ul>
     <button>
-        <a href="{{ url_for('user_admins.add_user_admin') }}">Add Admin</a>
+        <a href="{{ url_for('admins.add_admin') }}">Add Admin</a>
     </button>
     <button>
-        <a href="{{ url_for('user_admins.move_user_admin') }}">Move Admin</a>
+        <a href="{{ url_for('admins.move_admin') }}">Move Admin</a>
     </button>
     <button>
-        <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete Admin</a>
+        <a href="{{ url_for('admins.delete_admin') }}">Delete Admin</a>
     </button>
 {% endblock %}

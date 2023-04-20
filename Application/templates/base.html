@@ -42,7 +42,7 @@
                         <li><a href="{{ url_for('user_admins.list_user_admins') }}">User Admin Dashboard</a></li>
                     {% endif %}
                     {% if current_user.group == 'Admin' %}
-                        YOU ARE AN ADMIN!
+                        <li><a href="{{ url_for('admins.list_admins') }}">Admins Dashboard</a></li>
                     {% endif %}
                     <li>
                         <a id="small_avatar_a" href="{{ url_for('profile.profile') }}">

@@ -40,7 +40,7 @@ def add_user_admin():
 
             test_user = get_db().get_user(user.email)
             if test_user:
-                flash('A Member With That Email Already Exists!', category='invalid')
+                flash('A User With That Email Already Exists!', category='invalid')
                 return redirect(url_for('user_admins.list_user_admins'))
             else:
                 get_db().insert_user(user, 'User Admin')

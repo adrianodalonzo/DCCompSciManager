@@ -46,7 +46,7 @@ def add_member():
 
             test_user = get_db().get_user(user.email)
             if test_user:
-                flash('A Member With That Email Already Exists!', category='invalid')
+                flash('A User With That Email Already Exists!', category='invalid')
                 return redirect(url_for('members.list_members'))
             else:
                 get_db().insert_user(user)

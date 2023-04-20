@@ -118,6 +118,18 @@ class Database:
                 user_admins.append(user_admin)
         return user_admins
     
+    def get_admins(self):
+        admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Admin'")
+            for result in results:
+                admin = User(result[0], result[3], result[1])
+                admin.id = result[2]
+                admin.group = result[4]
+                admin.blocked = self.fetch_blocked(result[5])
+                admins.append(admin)
+        return admins
+    
     def get_unblocked_members(self):
         members = []
         with self.__get_cursor() as cursor:

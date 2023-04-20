@@ -52,6 +52,8 @@ class DeleteMemberForm(FlaskForm):
     members = SelectField('Select a Member to Delete')
 class DeleteUserAdminForm(FlaskForm):
     user_admins = SelectField('Select a User Admin to Delete')
+class DeleteAdminForm(FlaskForm):
+    admins = SelectField('Select an Admin to Delete')
 
 # find way to use 1 class
 class BlockMemberForm(FlaskForm):
@@ -65,4 +67,7 @@ class MoveMemberForm(FlaskForm):
     groups = SelectField("to")
 class MoveUserAdminForm(FlaskForm):
     user_admins = SelectField('Select a User Admin to Move')
+    groups = SelectField('to')
+class MoveAdminForm(FlaskForm):
+    admins = SelectField('Select an Admin to Move')
     groups = SelectField('to')

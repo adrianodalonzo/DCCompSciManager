@@ -8,7 +8,7 @@
     <h2>Move Admin Form</h2>
     <form method="POST">
         {{ form.csrf_token }}
-        {{ form.members.label }} {{ form.members() }}
+        {{ form.admins.label }} {{ form.admins() }}
         {{ form.groups.label }} {{ form.groups() }}
         <input type="submit" value="Move Admin">
     </form>

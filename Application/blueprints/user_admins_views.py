@@ -102,5 +102,4 @@ def delete_user_admin():
             user_admins = get_db().get_user_admins()
             return render_template('user_admins.html', user_admins=user_admins)
     elif request.method == 'GET':
-        members = get_db().get_members()
         return render_template('delete_user_admin.html', form=form)

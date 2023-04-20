@@ -79,8 +79,16 @@ def login():
                 flash("Email or Password Entered are Invalid!", category='invalid')
                 return redirect(url_for('auth.login'))
         else:
-            flash('Form Invalid!', category='invalid')
-            return redirect(url_for('auth.login'))
+            for error in form.errors:
+                if error == 'avatar':
+                    flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
+                else:
+                    if len(form.errors) == 1:
+                        flash(f"{error} is Invalid!", category='invalid')
+                    else:
+                        errors = ""
+                        errors += f"{error.capitalize()}, "
+                        flash(f"{errors} are Invalid!", category='invalid')
     elif request.method == 'GET':
         return render_template('login.html', form=form)
     
@@ -94,5 +102,8 @@ def logout():
 @bp.route('/avatar/<email>/avatar.png/')
 @login_required
 def get_avatar(email):
+    if current_user.blocked:
+        flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+        return redirect(url_for('profile.profile'))
     dir = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(dir, 'avatar.png')

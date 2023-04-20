@@ -49,6 +49,15 @@ def reset_password():
                 flash("The Password You Entered Doesn't Match Your Old Password!", category='invalid')
                 return redirect(url_for('profile.reset_password'))
         else:
-            flash('Form Is Invalid!', category='invalid')
+            for error in form.errors:
+                if error == 'avatar':
+                    flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
+                else:
+                    if len(form.errors) == 1:
+                        flash(f"{error} is Invalid!", category='invalid')
+                    else:
+                        errors = ""
+                        errors += f"{error.capitalize()}, "
+                        flash(f"{errors} are Invalid!", category='invalid')
     elif request.method == 'GET':
         return render_template('reset_password.html', form=form)

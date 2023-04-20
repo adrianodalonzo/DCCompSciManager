@@ -70,7 +70,10 @@ def move_admin():
         flash('There Are No Admins to Move!', category='message')
         return redirect(url_for('admins.list_admins'))
     form = MoveAdminForm()
-    form.admins.choices = [admin.email for admin in get_db().get_admins()]
+    form.admins.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
+    if not form.admins.choices:
+        flash('There Are No Admins to Move!', category='message')
+        return redirect(url_for('admins.list_admins'))
     form.groups.choices = ['Member', 'User Admin']
 
     if request.method == 'POST' and form.validate_on_submit():
@@ -92,8 +95,10 @@ def delete_admin():
         return redirect(url_for('admins.list_admins'))
     form = DeleteAdminForm()
     # assigns select options by looping through the members and adding the emails to the select
-    form.admins.choices = [admin.email for admin in get_db().get_admins()]
-
+    form.admins.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
+    if not form.admins.choices:
+            flash('There Are No Admins to Delete!', category='message')
+            return redirect(url_for('admins.list_admins'))
     if request.method == 'POST' and form.validate_on_submit():
         admin = get_db().get_user(form.admins.data)
         if admin:

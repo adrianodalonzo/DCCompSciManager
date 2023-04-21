@@ -260,7 +260,7 @@ class Database:
                 raise ValueError("Element already exist in this competency. Please change the element order.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO elements VALUES(:element_order, :element, :element_criteria, :competency_id)",
+            cursor.execute("INSERT INTO elements (element_order, element, element_criteria, competency_id) VALUES(:element_order, :element, :element_criteria, :competency_id)",
                            (element.order, element.name, element.criteria, element.competency_id))
 
     def modify_competency_element(self, element):

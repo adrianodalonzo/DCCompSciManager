@@ -64,7 +64,7 @@ def add_competency():
                                   form.achievement.data, form.type.data)
                 get_db().add_competency(comp)
     
-    return redirect(url_for('competencies.show_all_competencies'))
+    return redirect(url_for('elements.add_element'))
 
 @bp.route("/edit/<string:comp_id>/", methods=['GET', 'POST'])
 def edit_competency(comp_id):

@@ -26,7 +26,7 @@ def add_element():
                                form.criteria.data, form.competency_id.data)
                 get_db().add_competency_element(elem)
     
-    return redirect(url_for('competencies.show_all_competencies'))
+    return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 
 @bp.route("/edit/<string:elem_nm>/", methods=['GET', 'POST'])
 def edit_element(elem_nm):
@@ -57,11 +57,11 @@ def edit_element(elem_nm):
             element.id = elem.id
             get_db().modify_competency_element(element)
             
-    return redirect(url_for('competencies.show_all_competencies'))
+    return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 
 @bp.route("/delete/<string:elem_nm>")
 def delete_element(elem_nm):
     element = get_db().get_element(elem_nm)
     get_db().delete_competency_element(element)
     flash("Deleted element " + elem_nm, category='valid')
-    return redirect(url_for('competencies.show_all_competencies'))
+    return redirect(url_for('competencies.show_competency_elements', comp_id=element.competency_id))

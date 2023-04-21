@@ -10,7 +10,7 @@ def show_courses():
     courses = get_db().get_all_courses()
     if courses:
         return render_template('courses.html', courses=courses)
-    flash("No courses")
+    flash("No courses", category='invalid')
     return render_template('index.html')
 
 @bp.route("/<string:course_id>/", methods=['GET', 'POST'])
@@ -18,7 +18,7 @@ def show_course(course_id):
     course = get_db().get_course(course_id)
     if course:
         return render_template('course.html', course=course)
-    flash("The course does not exist.")
+    flash("The course does not exist.", category='invalid')
     return render_template('index.html') 
 
 @bp.route("/domain/<int:domain_id>/", methods=['GET', 'POST'])
@@ -27,7 +27,7 @@ def show_courses_by_domain(domain_id):
     if courses:
         domain = get_db().get_domain(domain_id)
         return render_template('courses.html', courses=courses, domain=domain)
-    flash("No courses by this domain")
+    flash("No courses by this domain", category='invalid')
     return render_template('index.html')
 
 @bp.route("/term/<int:term_id>/", methods=['GET', 'POST'])
@@ -35,7 +35,7 @@ def show_courses_by_term(term_id):
     courses = get_db().get_courses_by_term(term_id)
     if courses:
         return render_template('courses.html', courses=courses, term=term_id)
-    flash("No courses by this term")
+    flash("No courses by this term", category='invalid')
     return render_template('index.html')
 
 @bp.route("/add/", methods=['GET', 'POST'])
@@ -52,13 +52,14 @@ def add_course():
             for course in get_db().get_all_courses():
                 if course.id == form.id.data:
                     matchingCourse = True
-                    flash("A Course with the same number already exists!")
+                    flash("A Course with the same number already exists!", category='invalid')
             
             if not matchingCourse:
                 course = Course(form.id.data, form.title.data, form.theory_hours.data, 
                                 form.lab_hours.data, form.work_hours.data, 
                                 form.description.data, form.domain_id.data, form.term_id.data)
                 get_db().add_course(course)
+                flash("Added Course: " + course.title, category='valid')
     
     return redirect(url_for('show_courses'))
 
@@ -99,11 +100,12 @@ def edit_course(course_id):
             edited_course = Course(course_id, course_title, course_theo_hours, course_lab_hours,
                                    course_work_hours, course_desc, course_dom_id, course_term_id)
             get_db().modify_course(edited_course)
+            flash("Edited Course: " + course_title, category='valid')
 
     return redirect(url_for('show_courses'))
 
 @bp.route("/delete/<string:course_id>/")
 def delete_course(course_id):
     get_db().delete_course(course_id)
-    flash("Course " + course_id + " has been deleted")
+    flash("Course " + course_id + " has been deleted", category='valid')
     return redirect(url_for('show_courses'))

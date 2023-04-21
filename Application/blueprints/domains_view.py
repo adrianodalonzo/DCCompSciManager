@@ -9,7 +9,7 @@ def show_domains():
     if domains :
         return render_template('domains.html', domains=domains)
     
-    flash("No domains")
+    flash("No domains", category='invalid')
     return render_template('index.html')
 
 @bp.route("/<int:domain_id>", methods=['GET'])
@@ -17,5 +17,5 @@ def show_domain(domain_id):
     domain = get_db().get_domain(domain_id)
     if domain:
         return render_template('domains.html', domain=domain)
-    flash("No domain with this id")
+    flash("No domain with this id", category='invalid')
     return render_template('index.html')

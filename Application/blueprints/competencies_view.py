@@ -22,11 +22,11 @@ bp = Blueprint("competencies", __name__, url_prefix="/competencies/")
 
 @bp.route("/")
 def show_all_competencies():
-    competencies = get_db().get_all_competencies() # not implemented yet
+    competencies = get_db().get_all_competencies()
 
     if competencies:
         return render_template('competencies.html', competencies=competencies)
-    flash('No Competencies')
+    flash('No Competencies', category='invalid')
     return render_template('index.html')
 
 @bp.route("/<string:comp_id>/")
@@ -40,7 +40,7 @@ def show_competency_elements(comp_id):
 
     if competency:
         return render_template('competencies.html', competencies=competencies, elements_array=elements_array)
-    flash('No Competency Found')
+    flash('No Competency Found', category='invalid')
     return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/add/", methods=['GET', 'POST'])
@@ -57,12 +57,13 @@ def add_competency():
             for competency in get_db().get_all_competencies():
                 if competency.id == form.id.data:
                     matchingCompetency = True
-                    flash("A Competency with the same id already exists!")
+                    flash("A Competency with the same id already exists!", category='invalid')
             
             if not matchingCompetency:
                 comp = Competency(form.id.data, form.name.data,
                                   form.achievement.data, form.type.data)
                 get_db().add_competency(comp)
+                flash("Added Competency: " + comp.name, category='valid')
     
     return redirect(url_for('elements.add_element'))
 
@@ -90,11 +91,12 @@ def edit_competency(comp_id):
 
             comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
             get_db().modify_competency(comp)
+            flash("Edited Competency: " + comp_name, category='valid')
 
     return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/delete/<string:comp_id>/")
 def delete_competency(comp_id):
     get_db().delete_competency(comp_id)
-    flash('Competency ' + comp_id + ' has been deleted, along with its elements')
+    flash('Competency ' + comp_id + ' has been deleted, along with its elements', category='valid')
     return redirect(url_for('competencies.show_all_competencies'))

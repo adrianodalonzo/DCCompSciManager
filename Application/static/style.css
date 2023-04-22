@@ -66,9 +66,17 @@ ul.flashes {
 }
 
 .avatar {
-    border-radius: 50%;
     width: 150px;
     height: 150px;
+}
+
+#small_avatar {
+    width: 25px;
+    height: 25px;
+}
+
+.avatar, #small_avatar {
+    border-radius: 50%;
     object-fit: contain;
 }
 
@@ -86,10 +94,6 @@ ul.flashes {
     height: 50px;
 }
 
-#small_avatar {
-    width: 25px;
-    border-radius: 50%;
-}
 
 #small_avatar_a {
     display: flex;

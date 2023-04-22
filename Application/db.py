@@ -292,6 +292,24 @@ class Database:
             cursor.execute("DELETE FROM elements WHERE element_order=:element_order AND competency_id=:competency_id",
                            (element.order, element.competency_id))
 
+    def get_course_elements(self, course_id):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        
+        with self.__get_cursor() as cursor:
+            course_elements = []
+
+            elements = cursor.execute("""SELECT element_id, element_hours, element_order, element, element_criteria,
+              competency_id FROM view_courses_elements WHERE course_id=:course_id""", course_id=course_id)
+            
+            for row in elements:
+                element = Element(row[2], row[3], row[4], row[5])
+                element.id = row[0]
+                element.hours = row[1]
+                course_elements.append(element)
+            
+            return course_elements
+
     def get_courses_by_term(self, id):
         if not isinstance(id, int):
             raise TypeError("id must be an int")

@@ -14,8 +14,22 @@
     <p>Description</p>
     {{ course.description | safe}}
     
-    <div id="course-edit-del-buttons">
+    <div id="course_edit_del_buttons">
         <a href="{{url_for('courses.edit_course', course_id=course.id)}}"><input type="button" value="Edit" /></a>
         <a href="{{url_for('courses.delete_course', course_id=course.id)}}"><input type="button" value="Delete" /></a>
+    </div>
+
+    <br/>
+
+    <div id="course_elements">
+        <h2>This Course's Competency Elements</h2>
+        {% for element in elements %}
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><h3>Competency ID: {{ element.competency_id | safe }}</h3></a>
+            <h4>Order: {{ element.order | safe }}</h3>
+            <h4>Name: {{ element.name | safe }}</h4>
+            <h4>Hours: {{ element.hours | safe}}</h4>
+            <h4>Criteria:</h4>
+            <p>{{ element.criteria | safe }}</p>
+        {% endfor %}
     </div>
 {% endblock %}

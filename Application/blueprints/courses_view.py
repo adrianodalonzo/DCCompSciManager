@@ -16,8 +16,10 @@ def show_courses():
 @bp.route("/<string:course_id>/", methods=['GET', 'POST'])
 def show_course(course_id):
     course = get_db().get_course(course_id)
+    elements = get_db().get_course_elements(course_id)
+
     if course:
-        return render_template('course.html', course=course)
+        return render_template('course.html', course=course, elements=elements)
     flash("The course does not exist.", category='invalid')
     return render_template('index.html') 
 

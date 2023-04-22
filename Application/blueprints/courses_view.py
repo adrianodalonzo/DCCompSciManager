@@ -132,9 +132,9 @@ def add_course_element(course_id):
             matchingCourseElement = False
 
             for element in get_db().get_course_elements(course_id):
-                if form.id.data == element.id:
+                if form.id.data == str(element.id):
                     matchingCourseElement = True
-                    flash("Course " + course_id + " already has this element!", catgory='invalid')    
+                    flash("Course " + course_id + " already has this element!", category='invalid')    
 
             if not matchingCourseElement:
                 get_db().add_course_element(course_id, form.id.data, form.hours.data)

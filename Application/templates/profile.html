@@ -8,7 +8,11 @@
     <div class="profile_info">
         <img class="avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="profile_picture">
         {% if current_user.blocked %}
+        <div id="blocked_message">
+            <img src="{{ url_for('static', filename='images/warning.png') }}" alt="warning">
             <h1>BLOCKED</h1>
+            <img src="{{ url_for('static', filename='images/warning.png') }}" alt="warning">
+        </div>
         {% endif %}
         <h1>{{ current_user.name }}</h1>
         <h2>{{ current_user.email }}</h2>

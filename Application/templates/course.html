@@ -32,6 +32,7 @@
             <h4>Criteria:</h4>
             <p>{{ element.criteria | safe }}</p>
             <a href="{{url_for('courses.edit_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Edit Hours" /></a>
+            <a href="{{url_for('courses.delete_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Delete Course Element" /></a>
         {% endfor %}
     </div>
 {% endblock %}

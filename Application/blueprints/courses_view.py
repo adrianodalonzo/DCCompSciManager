@@ -165,3 +165,9 @@ def edit_course_element(course_id, elem_id):
             flash("Unsuccesfully Edited Course Element", category='invalid')
 
     return redirect(url_for('courses.show_course', course_id=course_id))
+
+@bp.route("/element/delete/<string:course_id>/<string:elem_id>")
+def delete_course_element(course_id, elem_id):
+    get_db().delete_course_element(course_id, elem_id)
+    flash("Deleted Course Element Succesfully", category='valid')
+    return redirect(url_for('courses.show_course', course_id=course_id))

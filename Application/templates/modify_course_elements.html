@@ -5,11 +5,25 @@
 {% endblock %}
 
 {% block content %}
+    <h2>Modifying Course Elements</h2>
+
+    {% if elem_id %}
+        <h3>Editing Element</h3>
+        <h4>ID: {{ elem_id }}</h4>
+    {% else %}
+        <h3>Adding Element</h3>
+    {% endif %}
+
     <form method="post">
         {{ form.csrf_token }}
 
         {{ form.hours.label }} {{ form.hours() }}
-        {{ form.id.label }} {{ form.id() }}
+
+        {% if elem_id %}
+            <p>ID cannot be changed while editing</p>
+        {% else %}
+            {{ form.id.label }} {{ form.id() }}
+        {% endif %}
 
         <input type="submit" value="submit" />
     </form>

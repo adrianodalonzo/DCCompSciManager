@@ -252,6 +252,27 @@ class Database:
                     return element
             except oracledb.Error:
                 pass
+    
+    def get_element_by_both_id(self, course_id, elem_id):
+        with self.__get_cursor() as cursor:
+            try:
+                hours_query = cursor.execute("""SELECT element_hours FROM courses_elements WHERE element_id=:elem_id
+                AND course_id=:course_id""", (elem_id, course_id))
+
+                for row in hours_query:
+                    hours = row[0]
+
+                result = cursor.execute("""SELECT element_order, element, element_criteria, competency_id 
+                    FROM view_competencies_elements WHERE element_id=:id""", id=elem_id)
+                
+                for row in result:
+                        element = Element(row[0], row[1], row[2], row[3])
+                        element.id = id
+                        element.hours = hours
+                        return element
+                
+            except oracledb.Error:
+                pass
 
     def add_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
@@ -298,15 +319,19 @@ class Database:
         
         with self.__get_cursor() as cursor:
             course_elements = []
+            try:
 
-            elements = cursor.execute("""SELECT element_id, element_hours, element_order, element, element_criteria,
-              competency_id FROM view_courses_elements WHERE course_id=:course_id""", course_id=course_id)
-            
-            for row in elements:
-                element = Element(row[2], row[3], row[4], row[5])
-                element.id = row[0]
-                element.hours = row[1]
-                course_elements.append(element)
+                elements = cursor.execute("""SELECT element_id, element_hours, element_order, element, element_criteria,
+                competency_id FROM view_courses_elements WHERE course_id=:course_id""", course_id=course_id)
+                
+                for row in elements:
+                    element = Element(row[2], row[3], row[4], row[5])
+                    element.id = row[0]
+                    element.hours = row[1]
+                    course_elements.append(element)
+
+            except oracledb.Error:
+                pass
             
             return course_elements
     
@@ -314,11 +339,15 @@ class Database:
         all_elements = []
 
         with self.__get_cursor() as cursor:
-            elements = cursor.execute("SELECT element_id, element FROM elements")
+            try:
+                elements = cursor.execute("SELECT element_id, element FROM elements")
 
-            for row in elements:
-                all_elements.append((row[0], row[1]))
-        
+                for row in elements:
+                    all_elements.append((row[0], row[1]))
+            
+            except oracledb.Error:
+                pass
+
         return all_elements
     
     def add_course_element(self, course_id, elem_id, hours):
@@ -330,8 +359,11 @@ class Database:
             raise TypeError("hours must be an int")
 
         with self.__get_cursor() as cursor:
-            cursor.execute("INSERT INTO courses_elements VALUES(:course_id, :element_id, :element_hours)",
-                           (course_id, elem_id, hours))
+            try:
+                cursor.execute("INSERT INTO courses_elements VALUES(:course_id, :element_id, :element_hours)",
+                                (course_id, elem_id, hours))
+            except oracledb.Error:
+                pass
     
     def edit_course_element(self, course_id, elem_id, hours):
         if not isinstance(course_id, str):
@@ -342,8 +374,11 @@ class Database:
             raise TypeError("hours must be an int")
         
         with self.__get_cursor() as cursor:
-            cursor.execute("""UPDATE courses_elements SET element_hours=:hours WHERE course_id=:course_id
-            AND element_id=:elem_id""", (hours, course_id, elem_id))
+            try:
+                cursor.execute("""UPDATE courses_elements SET element_hours=:hours WHERE course_id=:course_id
+                AND element_id=:elem_id""", (hours, course_id, elem_id))
+            except oracledb.Error:
+                pass
         
     def delete_course_element(self, course_id, elem_id):
         if not isinstance(course_id, str):
@@ -352,8 +387,11 @@ class Database:
             raise TypeError("elem_id must be a string")
         
         with self.__get_cursor() as cursor:
-            cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id AND element_id=:elem_id"
-                           , (course_id, elem_id))
+            try:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id AND element_id=:elem_id"
+                                , (course_id, elem_id))
+            except oracledb.Error:
+                pass
 
     def get_courses_by_term(self, id):
         if not isinstance(id, int):

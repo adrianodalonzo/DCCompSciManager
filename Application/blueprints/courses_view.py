@@ -4,6 +4,8 @@ from Application.objects.course import Course, CourseForm
 from Application.objects.element import CourseElementForm
 from ..dbmanager import get_db
 
+from werkzeug.datastructures import MultiDict
+
 bp = Blueprint("courses", __name__, url_prefix="/courses/")
 
 @bp.route("/", methods=['GET', 'POST'])
@@ -138,4 +140,28 @@ def add_course_element(course_id):
                 get_db().add_course_element(course_id, form.id.data, form.hours.data)
                 flash("Course Element Added Succesfully", category='valid')
     
+    return redirect(url_for('courses.show_course', course_id=course_id))
+
+@bp.route("/element/edit/<string:course_id>/<string:elem_id>", methods=['GET', 'POST'])
+def edit_course_element(course_id, elem_id):
+    if get_db().get_course(course_id) is None:
+        flash("Could not find course " + course_id, category='invalid')
+        return redirect(url_for('courses.show_course', course_id=course_id))
+    
+    element = get_db().get_element_by_both_id(course_id, elem_id)
+
+    form = CourseElementForm()
+    form.id.choices = [(elem_id, element.name)]
+
+    if request.method == 'GET':
+        return render_template('modify_course_elements.html', form=form, elem_id=elem_id)
+    
+    elif request.method == 'POST':
+        form.id.data = elem_id
+        if form.validate_on_submit():
+            get_db().edit_course_element(course_id, elem_id, form.hours.data)
+            flash("Edited Course Element Succesfully", category='valid')
+        else:
+            flash("Unsuccesfully Edited Course Element", category='invalid')
+
     return redirect(url_for('courses.show_course', course_id=course_id))

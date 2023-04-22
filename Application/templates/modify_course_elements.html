@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Modifying Course Elements
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {{ form.csrf_token }}
+
+        {{ form.hours.label }} {{ form.hours() }}
+        {{ form.id.label }} {{ form.id() }}
+
+        <input type="submit" value="submit" />
+    </form>
+{% endblock %}

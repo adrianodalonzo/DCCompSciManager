@@ -309,6 +309,51 @@ class Database:
                 course_elements.append(element)
             
             return course_elements
+    
+    def get_all_elements(self):
+        all_elements = []
+
+        with self.__get_cursor() as cursor:
+            elements = cursor.execute("SELECT element_id, element FROM elements")
+
+            for row in elements:
+                all_elements.append((row[0], row[1]))
+        
+        return all_elements
+    
+    def add_course_element(self, course_id, elem_id, hours):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        if not isinstance(hours, int):
+            raise TypeError("hours must be an int")
+
+        with self.__get_cursor() as cursor:
+            cursor.execute("INSERT INTO courses_elements VALUES(:course_id, :element_id, :element_hours)",
+                           (course_id, elem_id, hours))
+    
+    def edit_course_element(self, course_id, elem_id, hours):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        if not isinstance(hours, int):
+            raise TypeError("hours must be an int")
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("""UPDATE courses_elements SET element_hours=:hours WHERE course_id=:course_id
+            AND element_id=:elem_id""", (hours, course_id, elem_id))
+        
+    def delete_course_element(self, course_id, elem_id):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id AND element_id=:elem_id"
+                           , (course_id, elem_id))
 
     def get_courses_by_term(self, id):
         if not isinstance(id, int):

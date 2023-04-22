@@ -23,6 +23,7 @@
 
     <div id="course_elements">
         <h2>This Course's Competency Elements</h2>
+        <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" value="Add Element" /></a>
         {% for element in elements %}
             <a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><h3>Competency ID: {{ element.competency_id | safe }}</h3></a>
             <h4>Order: {{ element.order | safe }}</h3>

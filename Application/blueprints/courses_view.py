@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
 
 from Application.objects.course import Course, CourseForm
+from Application.objects.element import CourseElementForm
 from ..dbmanager import get_db
 
 bp = Blueprint("courses", __name__, url_prefix="/courses/")
@@ -111,3 +112,30 @@ def delete_course(course_id):
     get_db().delete_course(course_id)
     flash("Course " + course_id + " has been deleted", category='valid')
     return redirect(url_for('show_courses'))
+
+@bp.route("/element/add/<string:course_id>/", methods=['GET', 'POST'])
+def add_course_element(course_id):
+    if get_db().get_course(course_id) is None:
+        flash("Could not find course " + course_id, category='invalid')
+        return redirect(url_for('courses.show_course', course_id=course_id))
+    
+    form = CourseElementForm()
+    form.id.choices = get_db().get_all_elements()
+
+    if request.method == 'GET':
+        return render_template("modify_course_elements.html", form=form)
+    
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            matchingCourseElement = False
+
+            for element in get_db().get_course_elements(course_id):
+                if form.id.data == element.id:
+                    matchingCourseElement = True
+                    flash("Course " + course_id + " already has this element!", catgory='invalid')    
+
+            if not matchingCourseElement:
+                get_db().add_course_element(course_id, form.id.data, form.hours.data)
+                flash("Course Element Added Succesfully", category='valid')
+    
+    return redirect(url_for('courses.show_course', course_id=course_id))

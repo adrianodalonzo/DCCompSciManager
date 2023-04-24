@@ -70,7 +70,7 @@ class Database:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
-                user.blocked = self.fetch_blocked(result[5])
+                user.blocked = Database.fetch_blocked(result[5])
                 return user
             
     def get_user_id(self, id):
@@ -84,7 +84,7 @@ class Database:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
-                user.blocked = self.fetch_blocked(result[5])
+                user.blocked = Database.fetch_blocked(result[5])
                 return user
             
     def update_user_password(self, email, password):
@@ -106,7 +106,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = self.fetch_blocked(result[5])
+                member.blocked = Database.fetch_blocked(result[5])
                 members.append(member)
         return members
     
@@ -118,7 +118,7 @@ class Database:
                 user_admin = User(result[0], result[3], result[1])
                 user_admin.id = result[2]
                 user_admin.group = result[4]
-                user_admin.blocked = self.fetch_blocked(result[5])
+                user_admin.blocked = Database.fetch_blocked(result[5])
                 user_admins.append(user_admin)
         return user_admins
     
@@ -130,7 +130,7 @@ class Database:
                 admin = User(result[0], result[3], result[1])
                 admin.id = result[2]
                 admin.group = result[4]
-                admin.blocked = self.fetch_blocked(result[5])
+                admin.blocked = Database.fetch_blocked(result[5])
                 admins.append(admin)
         return admins
     
@@ -142,7 +142,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = self.fetch_blocked(result[5])
+                member.blocked = Database.fetch_blocked(result[5])
                 members.append(member)
         return members
     
@@ -154,7 +154,7 @@ class Database:
                 member = User(result[0], result[3], result[1])
                 member.id = result[2]
                 member.group = result[4]
-                member.blocked = self.fetch_blocked(result[5])
+                member.blocked = Database.fetch_blocked(result[5])
                 members.append(member)
         return members
     

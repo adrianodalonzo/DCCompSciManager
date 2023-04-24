@@ -63,6 +63,10 @@ body {
     align-items: center;
 }
 
+.white_line {
+    color: white;
+}
+
 .course_btns {
     width: 65px;
     font-size: 15px;
@@ -72,6 +76,17 @@ body {
 #course_info #description {
     width: 900px;
     text-align: center;
+}
+
+#course_elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.criteria {
+    width: 600px;
 }
 
 nav ul {

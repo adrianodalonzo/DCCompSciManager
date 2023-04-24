@@ -1,5 +1,124 @@
-#home_page_heading {
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#login_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#login_input {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    height: 200px;
+    width: 250px;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+#remember_me_input {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 175px;
+}
+
+#login_input input[type=email], #login_input input[type=password] {
+    border-radius: 10px;
     text-align: center;
+    width: 175px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#login_input input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+}
+
+#login_input input[type=submit], #login_input input[type=button] {
+    width: 100px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#home_page_heading, #course_page_heading {
+    text-align: center;
+}
+
+.underline {
+    text-decoration: underline;
+    font-size: 22px;
+    color: rgb(218, 243, 255);
+}
+
+#course_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.white_line {
+    color: white;
+}
+
+.course_btns {
+    background-color: white;
+    border-radius: 5px;
+    width: 65px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#add_element_btn {
+    background-color: white;
+    border-radius: 5px;
+    width: 120px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#course_info #description {
+    width: 900px;
+    text-align: center;
+}
+
+#course_elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.element {
+    border: 1px solid rgb(223, 223, 223);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    padding: 1em;
+    background-color: #003571;
+}
+
+.element .criteria {
+    width: 800px;
+    text-align: center;
+}
+
+.element input {
+    background-color: white;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 5px;
 }
 
 nav ul {
@@ -13,6 +132,10 @@ nav ul li a {
     color: rgb(197, 197, 197);
     text-decoration: none;
     font-size: larger;
+}
+
+ul li a {
+    color: lightblue;
 }
 
 nav ul li a:hover, nav ul li a:visited {
@@ -77,13 +200,34 @@ a.invisible_link:active {
 }
 
 .avatar {
-    border-radius: 50%;
+    width: 150px;
+    height: 150px;
 }
 
 #small_avatar {
     width: 25px;
-    border-radius: 50%;
+    height: 25px;
 }
+
+.avatar, #small_avatar {
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+#blocked_message {
+    display: flex;
+    justify-content:space-evenly;
+    align-items: center;
+    width: 300px;
+    background-color: #003571;
+    border-radius: 10px;
+}
+
+#blocked_message img {
+    width: 50px;
+    height: 50px;
+}
+
 
 #small_avatar_a {
     display: flex;
@@ -98,4 +242,25 @@ a.invisible_link:active {
     flex-direction: column;
     align-items: center;
     margin-top: 2em;
+}
+
+#courses_page_heading {
+    text-align: center;
+}
+
+#course_list {
+    display: flex;
+    justify-content: center;
+}
+
+#add_member, #delete_member, #block_member {
+    display: none;
+}
+
+#blocked {
+    color: red;
+}
+
+#not_blocked {
+    color: greenyellow;
 }

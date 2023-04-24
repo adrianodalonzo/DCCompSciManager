@@ -10,6 +10,7 @@
         {% endblock %}
     </title>
     <link rel="stylesheet" href="{{ url_for( 'static', filename='style.css' ) }}">
+    <script defer type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
 
@@ -25,17 +26,34 @@
 
     <nav>
         <ul>
-            <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
-            <li><a href="#">PlaceHolder</a></li>
-            <li><a href="#">PlaceHolder</a></li>
-            {% if current_user.is_authenticated %}
-                <li><a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">
-                    <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
-                </a></li>
+            {% if current_user.blocked %}
+                <li>
+                    <a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">
+                        <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
+                    </a>
+                </li>
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
-                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for( 'index.index' ) }}">Home</a></li>
+
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('members.list_members') }}">Members Dashboard</a></li>
+                    {% if current_user.group == 'Admin' %}
+                        <li><a href="{{ url_for('user_admins.list_user_admins') }}">User Admin Dashboard</a></li>
+                    {% endif %}
+                    {% if current_user.group == 'Admin' %}
+                        <li><a href="{{ url_for('admins.list_admins') }}">Admins Dashboard</a></li>
+                    {% endif %}
+                    <li>
+                        <a id="small_avatar_a" href="{{ url_for('profile.profile') }}">
+                            <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
+                        </a>
+                    </li>
+                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                {% endif %}
             {% endif %}
         </ul>
     </nav>

@@ -3,12 +3,16 @@
     Log In
 {% endblock %}
 {% block content %}
-<h1>Login</h1>
-<form method="post">
-    {{ form.csrf_token }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.password.label }} {{ form.password() }}
-    {{ form.remember_me.label }} {{ form.remember_me() }}
-    <input type="submit" value="Log In">
-</form>
+    <div id="login_div">
+        <h1>Login</h1>
+        <form method="post">
+            <div id="login_input">
+                {{ form.csrf_token }}
+                {{ form.email.label }} {{ form.email() }}
+                {{ form.password.label }} {{ form.password() }}
+                <div id="remember_me_input">{{ form.remember_me.label }} {{ form.remember_me() }}</div>
+                <input type="submit" id="login_submit" value="Log In">
+            </div>
+        </form>
+    </div>
 {% endblock %}

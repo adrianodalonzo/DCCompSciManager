@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Move User Admin
+{% endblock %}
+
+{% block content %}
+    <h2>Move User Admin Form</h2>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.user_admins.label }} {{ form.user_admins() }}
+        {{ form.groups.label }} {{ form.groups() }}
+        <input type="submit" value="Move User Admin">
+    </form>
+{% endblock %}

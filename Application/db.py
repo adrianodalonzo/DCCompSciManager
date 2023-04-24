@@ -370,7 +370,7 @@ class Database:
                 
             except oracledb.Error:
                 pass
-    
+
     def get_courses_by_domain(self, id):
         if not isinstance(id, int):
             raise TypeError("id must be an int")

@@ -46,8 +46,8 @@ class Course:
             raise TypeError("Excepted dict")
         return Course(course_dict['id'], course_dict['title'], course_dict['theory_hours'], course_dict['lab_hours'], course_dict['work_hours'], course_dict['description'], course_dict['domain_id'], course_dict['term_id'])
         
-    def to_json(self):
-        return {'id': self.id, 'title': self.title, 'theory_hours': self.theory_hours, 'lab_hours': self.lab_hours, 'work_hours': self.work_hours, 'description': self.description, 'domain_id': self.domain_id, 'term_id': self.term_id}
+    def to_json(self, url, domain_url):
+        return {'id': self.id, 'title': self.title, 'theory_hours': self.theory_hours, 'lab_hours': self.lab_hours, 'work_hours': self.work_hours, 'description': self.description, 'domain_id': self.domain_id, 'term_id': self.term_id, 'url':url, 'domain_url':domain_url}
     
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField

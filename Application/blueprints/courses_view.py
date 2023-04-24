@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
+from flask_login import current_user, login_required
 
 from Application.objects.course import Course, CourseForm
 from Application.objects.element import CourseElementForm
@@ -9,7 +10,11 @@ from werkzeug.datastructures import MultiDict
 bp = Blueprint("courses", __name__, url_prefix="/courses/")
 
 @bp.route("/", methods=['GET', 'POST'])
+@login_required
 def show_courses():
+    if current_user.blocked:
+        flash('You Have Been Blocked by an Admin!', category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     courses = get_db().get_all_courses()
     if courses:
         return render_template('courses.html', courses=courses)
@@ -17,6 +22,7 @@ def show_courses():
     return render_template('index.html')
 
 @bp.route("/<string:course_id>/", methods=['GET', 'POST'])
+@login_required
 def show_course(course_id):
     course = get_db().get_course(course_id)
     elements = get_db().get_course_elements(course_id)
@@ -27,6 +33,7 @@ def show_course(course_id):
     return render_template('index.html') 
 
 @bp.route("/domain/<int:domain_id>/", methods=['GET', 'POST'])
+@login_required
 def show_courses_by_domain(domain_id):
     courses = get_db().get_courses_by_domain(domain_id)
     if courses:
@@ -36,6 +43,7 @@ def show_courses_by_domain(domain_id):
     return render_template('index.html')
 
 @bp.route("/term/<int:term_id>/", methods=['GET', 'POST'])
+@login_required
 def show_courses_by_term(term_id):
     courses = get_db().get_courses_by_term(term_id)
     if courses:
@@ -44,6 +52,7 @@ def show_courses_by_term(term_id):
     return render_template('index.html')
 
 @bp.route("/add/", methods=['GET', 'POST'])
+@login_required
 def add_course():
     form = CourseForm()
 
@@ -69,6 +78,7 @@ def add_course():
     return redirect(url_for('show_courses'))
 
 @bp.route("/edit/<string:course_id>/", methods=['GET', 'POST'])
+@login_required
 def edit_course(course_id):
     course = get_db().get_course(course_id)
     form = CourseForm(obj=course)
@@ -110,12 +120,14 @@ def edit_course(course_id):
     return redirect(url_for('show_courses'))
 
 @bp.route("/delete/<string:course_id>/")
+@login_required
 def delete_course(course_id):
     get_db().delete_course(course_id)
     flash("Course " + course_id + " has been deleted", category='valid')
     return redirect(url_for('show_courses'))
 
 @bp.route("/element/add/<string:course_id>/", methods=['GET', 'POST'])
+@login_required
 def add_course_element(course_id):
     if get_db().get_course(course_id) is None:
         flash("Could not find course " + course_id, category='invalid')
@@ -143,6 +155,7 @@ def add_course_element(course_id):
     return redirect(url_for('courses.show_course', course_id=course_id))
 
 @bp.route("/element/edit/<string:course_id>/<string:elem_id>", methods=['GET', 'POST'])
+@login_required
 def edit_course_element(course_id, elem_id):
     if get_db().get_course(course_id) is None:
         flash("Could not find course " + course_id, category='invalid')
@@ -167,6 +180,7 @@ def edit_course_element(course_id, elem_id):
     return redirect(url_for('courses.show_course', course_id=course_id))
 
 @bp.route("/element/delete/<string:course_id>/<string:elem_id>")
+@login_required
 def delete_course_element(course_id, elem_id):
     get_db().delete_course_element(course_id, elem_id)
     flash("Deleted Course Element Succesfully", category='valid')

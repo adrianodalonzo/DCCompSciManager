@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
+from flask_login import current_user, login_required
 from werkzeug.datastructures import MultiDict
 
 from Application.objects.competency import Competency, CompetencyForm
@@ -21,7 +22,11 @@ bp = Blueprint("competencies", __name__, url_prefix="/competencies/")
 #     return render_template('index.html')
 
 @bp.route("/")
+@login_required
 def show_all_competencies():
+    if current_user.blocked:
+        flash('You Have Been Blocked by an Admin!', category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     competencies = get_db().get_all_competencies()
 
     if competencies:
@@ -30,6 +35,7 @@ def show_all_competencies():
     return render_template('index.html')
 
 @bp.route("/<string:comp_id>/")
+@login_required
 def show_competency_elements(comp_id):
     competency = get_db().get_competency(comp_id)
     competencies = []
@@ -44,6 +50,7 @@ def show_competency_elements(comp_id):
     return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/add/", methods=['GET', 'POST'])
+@login_required
 def add_competency():
     form = CompetencyForm()
 
@@ -68,6 +75,7 @@ def add_competency():
     return redirect(url_for('elements.add_element'))
 
 @bp.route("/edit/<string:comp_id>/", methods=['GET', 'POST'])
+@login_required
 def edit_competency(comp_id):
     competency = get_db().get_competency(comp_id)
     form = CompetencyForm(obj=competency)
@@ -96,6 +104,7 @@ def edit_competency(comp_id):
     return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/delete/<string:comp_id>/")
+@login_required
 def delete_competency(comp_id):
     get_db().delete_competency(comp_id)
     flash('Competency ' + comp_id + ' has been deleted, along with its elements', category='valid')

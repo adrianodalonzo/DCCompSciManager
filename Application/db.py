@@ -33,7 +33,7 @@ class Database:
             self.__connection.close()
             self.__connection = None
             
-    def insert_user(self, user):
+    def insert_user(self, user, group=None):
         if not isinstance(user, User):
             raise TypeError('User passed in MUST be a User object!')
         
@@ -43,23 +43,34 @@ class Database:
                 raise oracledb.IntegrityError
         
         with self.__get_cursor() as cursor:
-            cursor.execute("""insert into courses_users (username, email, password, user_group) 
-                           values (:username, :email, :password, 'Member')""",
-                           username=user.name, 
-                           email=user.email, 
-                           password=user.password)
+            query_string = ""
+            if group is None:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, 'Member', '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password)
+            else:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, :user_group, '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password, user_group=group)
+                
+    
+    def fetch_blocked(result):
+        if result == '1':
+            return True
+        return False
             
     def get_user(self, email):
         if not isinstance(email, str):
             raise TypeError('Email MUST be a string!')
 
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where email = :email""", email=email)
             for result in results:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = self.fetch_blocked(result[5])
                 return user
             
     def get_user_id(self, id):
@@ -67,12 +78,13 @@ class Database:
             raise TypeError('ID MUST be a number!!')
         
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where user_id = :id""", id=id)
             for result in results:
                 user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = self.fetch_blocked(result[5])
                 return user
             
     def update_user_password(self, email, password):
@@ -85,6 +97,97 @@ class Database:
         with self.__get_cursor() as cursor:
             user_id = self.get_user(email).id
             cursor.execute('update courses_users set password = :password where user_id = :id', password=password, id=user_id)
+
+    def get_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = self.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def get_user_admins(self):
+        user_admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'User Admin'")
+            for result in results:
+                user_admin = User(result[0], result[3], result[1])
+                user_admin.id = result[2]
+                user_admin.group = result[4]
+                user_admin.blocked = self.fetch_blocked(result[5])
+                user_admins.append(user_admin)
+        return user_admins
+    
+    def get_admins(self):
+        admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Admin'")
+            for result in results:
+                admin = User(result[0], result[3], result[1])
+                admin.id = result[2]
+                admin.group = result[4]
+                admin.blocked = self.fetch_blocked(result[5])
+                admins.append(admin)
+        return admins
+    
+    def get_unblocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '0'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = self.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def get_blocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '1'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = self.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def delete_user(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courses_users where email = :email', email=email)
+            
+    def block_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '1' where email = :email", email=email)
+            
+    def unblock_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '0' where email = :email", email=email)
+
+    def move_member(self, email, group):
+        if not isinstance(email, str):
+            raise TypeError("Email MUST be a string!")
+        
+        if not isinstance(group, str):
+            raise TypeError("Email MUST be a string!")
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('update courses_users set user_group = :user_group where email = :email', user_group=group, email=email)
 
     def __get_cursor(self):
             for i in range(3):

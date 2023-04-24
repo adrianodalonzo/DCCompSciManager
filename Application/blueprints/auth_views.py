@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app, send_from_directory
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 from ..objects.user import User, SignUpForm, LoginForm
@@ -9,6 +9,9 @@ bp = Blueprint("auth", __name__, url_prefix="/auth/")
 
 @bp.route("/signup/", methods=['GET', 'POST'])
 def signup():
+    if current_user.is_authenticated:
+        flash('You Already Have an Account Here!', category='message')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     form = SignUpForm()
 
     if request.method == 'POST':
@@ -54,6 +57,9 @@ def signup():
 
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        flash('You Are Already Logged In!', category='message')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     form = LoginForm()
     
     if request.method == 'POST':
@@ -65,7 +71,7 @@ def login():
                 if check_password_hash(user.password, password):
                     login_user(user, remember=form.remember_me.data)
                     flash('Login Successful!', category='valid')
-                    return render_template('index.html')
+                    return redirect(url_for('index.index'))
                 else:
                     flash('Email or Password Entered are Invalid!', category='invalid')
                     return redirect(url_for('auth.login'))
@@ -73,8 +79,16 @@ def login():
                 flash("Email or Password Entered are Invalid!", category='invalid')
                 return redirect(url_for('auth.login'))
         else:
-            flash('Form Invalid!', category='invalid')
-            return redirect(url_for('auth.login'))
+            for error in form.errors:
+                if error == 'avatar':
+                    flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
+                else:
+                    if len(form.errors) == 1:
+                        flash(f"{error} is Invalid!", category='invalid')
+                    else:
+                        errors = ""
+                        errors += f"{error.capitalize()}, "
+                        flash(f"{errors} are Invalid!", category='invalid')
     elif request.method == 'GET':
         return render_template('login.html', form=form)
     
@@ -88,5 +102,8 @@ def logout():
 @bp.route('/avatar/<email>/avatar.png/')
 @login_required
 def get_avatar(email):
+    # if current_user.blocked:
+    #     flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+    #     return redirect(url_for('profile.profile'))
     dir = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(dir, 'avatar.png')

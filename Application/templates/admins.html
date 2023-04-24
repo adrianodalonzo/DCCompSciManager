@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Admins Dashboard
+{% endblock %}
+
+{% block content %}
+    <h1>List of Admins</h1>
+    <ul>
+        {% for admin in admins %}
+            <div class="admin_info">
+                <li>
+                    <a href="{{ url_for('profile.get_profile', email=admin.email) }}">{{ admin.email }}, {{ admin.name }}</a>
+                </li>
+            </div>
+        {% endfor %}
+    </ul>
+    <button>
+        <a href="{{ url_for('admins.add_admin') }}">Add Admin</a>
+    </button>
+    <button>
+        <a href="{{ url_for('admins.move_admin') }}">Move Admin</a>
+    </button>
+    <button>
+        <a href="{{ url_for('admins.delete_admin') }}">Delete Admin</a>
+    </button>
+{% endblock %}

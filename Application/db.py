@@ -4,6 +4,7 @@ from Application.objects.competency import Competency
 from Application.objects.course import Course
 from Application.objects.domain import Domain
 from Application.objects.element import Element
+from Application.objects.term import Term
 from .objects.user import User
 
 class Database:
@@ -410,13 +411,13 @@ class Database:
                 results = cursor.execute("SELECT term_id, term_name FROM terms")
 
                 for row in results:
-                    term = row[1]
+                    term = Term(row[1])
                     term.id = row[0]
                     all_terms.append(term)
 
             except oracledb.Error:
                 pass
-            
+
             return all_terms
 
     def get_courses_by_term(self, id):

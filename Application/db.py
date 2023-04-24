@@ -403,6 +403,22 @@ class Database:
             except oracledb.Error:
                 pass
 
+    def get_all_terms(self):
+        with self.__get_cursor() as cursor:
+            all_terms = []
+            try:
+                results = cursor.execute("SELECT term_id, term_name FROM terms")
+
+                for row in results:
+                    term = row[1]
+                    term.id = row[0]
+                    all_terms.append(term)
+
+            except oracledb.Error:
+                pass
+            
+            return all_terms
+
     def get_courses_by_term(self, id):
         if not isinstance(id, int):
             raise TypeError("id must be an int")

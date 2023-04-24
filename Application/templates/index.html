@@ -6,4 +6,20 @@
 
 {% block content %}
     <h1 id="home_page_heading">Home</h1>
+
+    <a href="{{url_for('index.show_domains')}}" class="invisible_link">
+        <h2>Domains</h2>
+    </a>
+
+    <a href="{{url_for('courses.show_courses')}}" class="invisible_link">
+        <h2>Courses</h2>
+    </a>
+
+    <a href="{{url_for('competencies.show_all_competencies')}}" class="invisible_link">
+        <h2>Competencies</h2>
+    </a>
+
+    <a href="{{url_for('index.show_terms')}}" class="invisible_link">
+        <h2>Terms</h2>
+    </a>
 {% endblock %}

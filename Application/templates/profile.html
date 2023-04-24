@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Profile | {{ current_user.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="profile_info">
+        <img class="avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="profile_picture">
+        <h1>{{ current_user.name }}</h1>
+        <h2>{{ current_user.email }}</h2>
+        <a href="{{ url_for('profile.reset_password') }}">
+            <button>Reset Password</button>
+        </a>
+    </div>
+{% endblock %}

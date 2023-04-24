@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 import secrets
 from .dbmanager import get_db
@@ -5,7 +6,10 @@ from flask_login import LoginManager
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(SECRET_KEY=secrets.token_urlsafe(32))
+    app.config.from_mapping(
+        SECRET_KEY=secrets.token_urlsafe(32),
+        IMAGE_PATH=os.path.join(app.instance_path, 'images')
+    )
     
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -26,6 +30,8 @@ def create_app(test_config=None):
     def load_user(user_id):
         return get_db().get_user_id(int(user_id))
     
+    os.makedirs(app.config['IMAGE_PATH'], exist_ok=True)
+    
     return app
     
 def make_blueprints(app):
@@ -41,6 +47,8 @@ def make_blueprints(app):
     app.register_blueprint(auth_bp)
     from .blueprints.elements_view import bp as elements_bp
     app.register_blueprint(elements_bp)
+    from .blueprints.profile_views import bp as profile_bp
+    app.register_blueprint(profile_bp)
     
 def cleanup(value):
     get_db().close()

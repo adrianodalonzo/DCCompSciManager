@@ -50,7 +50,7 @@ class Database:
                 cursor.execute(query_string, username=user.name, email=user.email, password=user.password, user_group=group)
                 
     
-    def fetch_blocked(self, result):
+    def fetch_blocked(result):
         if result == '1':
             return True
         return False

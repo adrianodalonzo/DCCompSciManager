@@ -27,16 +27,20 @@
 
     <div id="course_elements">
         <h2>{{ course.title }}'s Competency Elements:</h2>
-        <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" value="Add Element" /></a>
+        <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" id="add_element_btn" value="Add Element" /></a>
         {% for element in elements %}
-            <a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><h3>Competency ID: {{ element.competency_id | safe }}</h3></a>
-            <h4><span class="underline">Order:</span> {{ element.order | safe }}</h3>
-            <h4><span class="underline">Name:</span> {{ element.name | safe }}</h4>
-            <h4><span class="underline">Hours:</span> {{ element.hours | safe}}</h4>
-            <h4><span class="underline">Criteria:</span></h4>
-            <p class="criteria">{{ element.criteria | safe }}</p>
-            <a href="{{url_for('courses.edit_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Edit Hours" /></a>
-            <a href="{{url_for('courses.delete_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Delete Course Element" /></a>
+            <div class="element">
+                <h3><a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><span class="underline">Competency ID:</span></a> {{ element.competency_id | safe }}</h3>
+                <h4><span class="underline">Order:</span> {{ element.order | safe }}</h4>
+                <h4><span class="underline">Name:</span> {{ element.name | safe }}</h4>
+                <h4><span class="underline">Hours:</span> {{ element.hours | safe}}</h4>
+                <h4><span class="underline">Criteria:</span></h4>
+                <p class="criteria">{{ element.criteria | safe }}</p>
+                <div class="element_btns">
+                    <a href="{{url_for('courses.edit_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Edit Hours" /></a>
+                    <a href="{{url_for('courses.delete_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Delete Course Element" /></a>
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

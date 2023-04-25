@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, flash
+from flask import Blueprint, jsonify, request, flash, url_for
 from ..dbmanager import get_db
 from Application.objects.domain import Domain
 bp = Blueprint('domains_api', __name__, url_prefix='/api/domains')
@@ -16,7 +16,7 @@ def domains_api():
                 id = int(request.args.get("id"))
                 domains = get_db().get_all_domains()
                 domain = [domain for domain in domains if domain.id == id]
-                return jsonify(domain[0].__dict__)
+                return jsonify(domain[0].to_json())
         domains = get_db().get_all_domains()
         json = [domain.__dict__ for domain in domains]
         return jsonify(json)
@@ -33,6 +33,7 @@ def domain_api(domain_id):
                 get_db().add_domain(domain)
         elif request.method == 'GET':
             domain = get_db().get_domain(domain_id)
-            return jsonify(domain.__dict__)
+            url = url_for('domains_api.domain_api', domain_id=domain_id)
+            return jsonify(domain.to_json(url))
     except Exception:
         return "" 

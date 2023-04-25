@@ -57,16 +57,32 @@ def competency_elements_api(competency_id):
     except Exception:
         return ""
     
-@bp.route('/<competency_id>/elements/<int:element_id>', methods=['GET', 'PUT'])
+@bp.route('/<competency_id>/elements/<int:element_id>', methods=['GET', 'PUT', 'DELETE'])
 def competency_element_api(competency_id, element_id):
     try:
         if request.method == 'PUT':
             elements_json = request.json
             if elements_json:
                 element = Element.from_json(elements_json)
+                if element:
+                    get_db().modify_competency_element(element)
+                    return "", 204
                 get_db().add_competency_element(element)
+                return "", 200
         elif request.method == 'GET':
+            try:
+                element = get_db().get_competency_element(competency_id, element_id)
+            except Exception as e:
+                error_infoset = {'id': 'Database Error',
+                        'description': 'Unable to connect to the database. Please try again later.'}
+                return make_response(jsonify(error_infoset), 500)
+            
+            if not element:
+                return {"Element Not Found"}, 404 
+            return jsonify(element.__dict__), 200
+        elif request.method == 'DELETE':
             element = get_db().get_competency_element(competency_id, element_id)
-            return jsonify(element.__dict__)
+            get_db().delete_competency_element()
+            return "", 200
     except Exception:
         return ""

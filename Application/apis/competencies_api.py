@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request, flash
+from flask import Blueprint, jsonify, request, flash, make_response
 from ..dbmanager import get_db
 from Application.objects.competency import Competency
 from Application.objects.element import Element
+import oracledb
 bp = Blueprint('competencies_api', __name__, url_prefix='/api/competencies')
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -24,7 +25,7 @@ def competencies_api():
     except Exception:
         return ""
     
-@bp.route('/<competency_id>', methods=['GET', 'PUT'])
+@bp.route('/<competency_id>', methods=['GET', 'PUT', 'DELETE'])
 def competency_api(competency_id):
     try:
         if request.method == 'PUT':
@@ -35,6 +36,9 @@ def competency_api(competency_id):
         elif request.method == 'GET':
             competency = get_db().get_competency(competency_id)
             return jsonify(competency.__dict__)
+        
+        elif request.method == 'DELETE':
+            pass
     except Exception:
         return ""
     
@@ -46,43 +50,75 @@ def competency_elements_api(competency_id):
             if elements_json:
                 element = Element.from_json(elements_json)
                 get_db().add_competency_element(element)
+                infoset = {'id': "Success", 'description': 'Successfully updated element'}
+                return make_response(infoset, 201)
+            
         elif request.method == 'GET':
-            if request.args:
-                id = request.args.get("id")
-                element = get_db().get_element(id)
-                return jsonify(element.__dict__)
-            elements = get_db().get_competency_elements(competency_id)
-            json = [element.__dict__ for element in elements]
-        return jsonify(json)
+            try:
+                if request.args:
+                    id = request.args.get("id")
+                    element = get_db().get_element(id)
+                    return jsonify(element.to_json())
+                elements = get_db().get_competency_elements(competency_id)
+                json = [element.__dict__ for element in elements]
+                return jsonify(json)
+            except Exception:
+                    error_infoset = {'id': 'Not Found',
+                            'description': 'Url not found on this server.'}
+                    return make_response(jsonify(error_infoset), 404)
+    
+    except oracledb.Error:
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(error_infoset, 500)
+    
     except Exception:
-        return ""
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(jsonify(error_infoset), 500)
     
 @bp.route('/<competency_id>/elements/<int:element_id>', methods=['GET', 'PUT', 'DELETE'])
 def competency_element_api(competency_id, element_id):
-    try:
+    try:   
         if request.method == 'PUT':
             elements_json = request.json
             if elements_json:
                 element = Element.from_json(elements_json)
-                if element:
+                existing_element = get_db().get_element(element.id)
+                if existing_element:
                     get_db().modify_competency_element(element)
-                    return "", 204
+                    infoset = {'id': "Success", 'description': 'Successfully updated element'}
+                    return make_response(jsonify(infoset), 200)
                 get_db().add_competency_element(element)
-                return "", 200
+                infoset = {'id': "Success", 'description': 'Successfully added element'}
+                return make_response(jsonify(infoset), 201)
+            
         elif request.method == 'GET':
             try:
                 element = get_db().get_competency_element(competency_id, element_id)
-            except Exception as e:
-                error_infoset = {'id': 'Database Error',
-                        'description': 'Unable to connect to the database. Please try again later.'}
-                return make_response(jsonify(error_infoset), 500)
-            
-            if not element:
-                return {"Element Not Found"}, 404 
-            return jsonify(element.__dict__), 200
+                return jsonify(element.to_json()), 200
+            except Exception:
+                error_infoset = {'id': 'Bad Request',
+                        'description': 'Element not found, please insert a valid element id.'}
+                return make_response(jsonify(error_infoset), 400)
+        
         elif request.method == 'DELETE':
-            element = get_db().get_competency_element(competency_id, element_id)
-            get_db().delete_competency_element()
-            return "", 200
+            try:
+                element = get_db().get_competency_element(competency_id, element_id)
+                get_db().delete_competency_element(element)
+                infoset = {'id': "Success", 'description': 'Successfully deleted element'}
+                return make_response(jsonify(infoset), 204)
+            except Exception:
+                error_infoset = {'id': 'Bad Request',
+                        'description': 'Element not found, please insert a valid element id.'}
+                return make_response(jsonify(error_infoset), 400)
+        
+    except oracledb.Error:
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(error_infoset, 500)
+    
     except Exception:
-        return ""
+        error_infoset = {'id': 'Not Found',
+                        'description': 'Url not found on this server.'}
+        return make_response(jsonify(error_infoset), 404)

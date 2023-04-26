@@ -153,6 +153,25 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+#courses_page_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#courses_page_content a, #courses_page_content input {
+    margin-bottom: 1em;
+}
+
+#courses_page_content input {
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    width: 130px;
+    font-family: 'Montserrat', sans-serif;
+}
+
 #courses_page_heading {
     text-align: center;
 }

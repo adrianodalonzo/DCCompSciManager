@@ -13,12 +13,18 @@
         {% endif %}
         Courses
     </h1>
-    <a href="{{url_for('courses.add_course')}}"><input type="button" value="Add Course" /></a>
-
-    {% for course in courses %}
-    <div id="course_list">
-       <a href="{{url_for('courses.show_course', course_id=course.id)}}" class="invisible_link">{{ course.title | safe }}</a>
+    <div id="courses_page_content">
+        {% if current_user.is_authenticated %}
+        <div id="add_course_btn">
+            <a href="{{url_for('courses.add_course')}}"><input type="button" value="Add Course" /></a>
+        </div>
+        {% endif %}
+        
+        {% for course in courses %}
+        <div id="course_list">
+        <a href="{{url_for('courses.show_course', course_id=course.id)}}" class="invisible_link">{{ course.title | safe }}</a>
+        </div>
+        <br/>
+        {% endfor %}
     </div>
-    <br/>
-    {% endfor %}
 {% endblock %}

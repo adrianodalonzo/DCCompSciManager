@@ -18,11 +18,10 @@ def courses_api():
         elif request.method == 'GET':
             if request.args:
                 id = request.args.get("id")
-                courses = get_db().get_all_courses()
-                course = [course for course in courses if course.id == id]
+                course = get_db().get_course(id)
                 url = url_for('courses_api.course_api', course_id=course.id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
-                return jsonify(course[0].to_json(url, domain_url))
+                return jsonify(course.to_json(url, domain_url)), 200
         courses = get_db().get_all_courses()
         json = [course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id)) for course in courses]
         return jsonify(json)
@@ -50,7 +49,7 @@ def course_api(course_id):
                 course = get_db().get_course(course_id)
                 url = url_for('courses_api.course_api', course_id=course_id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
-                return jsonify(course.to_json(url, domain_url))
+                return jsonify(course.to_json(url, domain_url)), 200
             except Exception:
                 error_infoset = {'id': 'Bad Request',
                         'description': 'Element not found, please insert a valid element id.'}

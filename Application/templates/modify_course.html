@@ -26,7 +26,7 @@
         {{ form.csrf_token }}
 
         {% if course %}
-            <p id="not_id_change_p">****ID cannot be changed****</p>
+            <p class="not_id_change_p">****ID cannot be changed****</p>
         {% else %}
             {{ form.id.label }} {{ form.id() }}
         {% endif %}

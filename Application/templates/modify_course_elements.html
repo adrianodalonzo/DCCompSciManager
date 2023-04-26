@@ -1,30 +1,32 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Modifying Course Elements
+    Modifying Course's Elements
 {% endblock %}
 
 {% block content %}
-    <h2>Modifying Course Elements</h2>
-
-    {% if elem_id %}
-        <h3>Editing Element</h3>
-        <h4>ID: {{ elem_id }}</h4>
-    {% else %}
-        <h3>Adding Element</h3>
-    {% endif %}
-
-    <form method="post">
-        {{ form.csrf_token }}
-
-        {{ form.hours.label }} {{ form.hours() }}
+    <div id="add_modify_course_element">
+        <h2>Modifying Course's Elements</h2>
 
         {% if elem_id %}
-            <p>ID cannot be changed while editing</p>
+            <h3>Editing Element</h3>
+            <h4>ID: {{ elem_id }}</h4>
         {% else %}
-            {{ form.id.label }} {{ form.id() }}
+            <h3>Adding Element</h3>
         {% endif %}
 
-        <input type="submit" value="submit" />
-    </form>
+        <form method="post">
+            {{ form.csrf_token }}
+
+            {{ form.hours.label }} {{ form.hours() }}
+
+            {% if elem_id %}
+                <p class="not_id_change_p">****ID cannot be changed while editing****</p>
+            {% else %}
+                {{ form.id.label }} {{ form.id() }}
+            {% endif %}
+
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
 {% endblock %}

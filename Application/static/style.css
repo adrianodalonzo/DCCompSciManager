@@ -161,7 +161,7 @@ body {
     flex-direction: column;
 }
 /* edit course page */
-#not_id_change_p {
+.not_id_change_p {
     color: black;
     background-color: rgb(214, 214, 0);
     padding: .5em;
@@ -181,6 +181,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
     margin-bottom: 1em;
+    border-radius: 50px;
 }
 
 #edit_course_form input[type=submit] {
@@ -290,6 +291,41 @@ body {
 .element-add-edit-del-buttons {
     display: flex;
     margin-bottom: 1em;
+}
+/* add elements pages */
+#add_modify_course_element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#add_modify_course_element form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#add_modify_course_element form input {
+    text-align: center;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#add_modify_course_element form label {
+    font-size: 20px;
+    margin-bottom: .5em;
+}
+
+#add_modify_course_element form input[type=submit] {
+    background-color: white;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding: .3em;
 }
 /* competencies page */
 #competencies_page_content {

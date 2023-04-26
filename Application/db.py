@@ -602,6 +602,15 @@ class Database:
 
             return all_domains
     
+    def get_domain_choices(self):
+        domains = self.get_all_domains()
+        domain_choices = []
+
+        for domain in domains:
+            domain_choices.append((domain.id, domain.name))
+        
+        return domain_choices
+    
     def add_domain(self, domain):
         if self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")

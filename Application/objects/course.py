@@ -52,5 +52,5 @@ class CourseForm(FlaskForm):
     lab_hours = IntegerField('Lab Hours', validators=[DataRequired(), NumberRange(min=0, max=3)])
     work_hours = IntegerField('Work Hours', validators=[DataRequired(), NumberRange(min=0, max=3)])
     description = StringField('Description', validators=[DataRequired(), Length(min=1, max=500)])
-    domain_id = StringField('Existing Domain', validators=[DataRequired(), Length(min=1, max=50)])
+    domain_id = SelectField('Existing Domain', validators=[DataRequired()])
     term_id = SelectField('Choose a term', choices=[('1', '1 Fall'), ('2', '2 Winter'), ('3', '3 Fall'), ('4', '4 Winter'), ('5', '5 Fall'), ('6', '6 Winter')])

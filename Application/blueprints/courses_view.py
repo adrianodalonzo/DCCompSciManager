@@ -55,6 +55,7 @@ def show_courses_by_term(term_id):
 @login_required
 def add_course():
     form = CourseForm()
+    form.domain_id.choices=get_db().get_domain_choices()
 
     if request.method == 'GET':
         return render_template('modify_course.html', form=form)
@@ -82,6 +83,7 @@ def add_course():
 def edit_course(course_id):
     course = get_db().get_course(course_id)
     form = CourseForm(obj=course)
+    form.domain_id.choices=get_db().get_domain_choices()
 
     if request.method == 'GET':
         return render_template('modify_course.html', form=form, course=course)

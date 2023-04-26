@@ -12,6 +12,9 @@ def courses_api():
             if courses_json:
                 course = Course.from_json(courses_json)
                 get_db().add_course(course)
+                infoset = {'id': "Success", 'description': 'Successfully added course.'}
+                return make_response(jsonify(infoset), 201)
+            
         elif request.method == 'GET':
             if request.args:
                 id = request.args.get("id")

@@ -160,16 +160,19 @@ body {
     flex-direction: column;
 }
 
-#courses_page_content a, #courses_page_content input {
+/* #courses_page_content a, #courses_page_content input {
     margin-bottom: 1em;
-}
+} */
 
 #courses_page_content input {
-    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
     font-size: 15px;
     width: 130px;
-    font-family: 'Montserrat', sans-serif;
+}
+
+.course {
+    margin-bottom: 1em;
 }
 
 #courses_page_heading {
@@ -224,6 +227,42 @@ body {
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
     border-radius: 5px;
+}
+/* competencies page */
+#competencies_page_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#add_course_btn {
+    margin-bottom: 1em;
+    background-color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#competency_info {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    width: 65%;
+    text-align: center;
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #003571;
+}
+
+#competency_info input {
+    background-color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
 }
 /* nav bar */
 nav ul {

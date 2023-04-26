@@ -5,43 +5,45 @@
 {% endblock %}
 
 {% block content %}
-    {% if elements_array %}
-        <h1 id="competencies_page_heading">Competency</h1>
-    {% else %}
-        <h1 id="competencies_page_heading">Competencies</h1>
-        <a href="{{url_for('competencies.add_competency')}}"><input type="button" value="Add Competency" /></a>
-    {% endif %}
-    {% for competency in competencies %}
-        <div>
-            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
-            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
-            <h3>{{ competency.type | safe }}</h3>
-            <h3>{{ competency.achievement | safe}}</h3>
-        </div>
-        <div class="competency-add-edit-del-buttons">
-            <a href="{{url_for('competencies.edit_competency', comp_id=competency.id)}}"><input type="button" value="Edit Competency" /></a>
-            <a href="{{url_for('competencies.delete_competency', comp_id=competency.id)}}"><input type="button" value="Delete Competency" /></a>
-        </div>
-        
-        <br/>
-
+    <div id="competencies_page_content">
         {% if elements_array %}
-            <a href="{{url_for('elements.add_element')}}"><input type="button" value="Add Element" /></a>
+            <h1 id="competencies_page_heading">Competency</h1>
+        {% else %}
+            <h1 id="competencies_page_heading">Competencies</h1>
+            <a href="{{url_for('competencies.add_competency')}}"><input type="button" id="add_course_btn" value="Add Competency" /></a>
         {% endif %}
+        {% for competency in competencies %}
+            <div id="competency_info">
+                <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
+                <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
+                <h3>{{ competency.type | safe }}</h3>
+                <h3>{{ competency.achievement | safe}}</h3>
+                <div class="competency-add-edit-del-buttons">
+                    <a href="{{url_for('competencies.edit_competency', comp_id=competency.id)}}"><input type="button" value="Edit Competency" /></a>
+                    <a href="{{url_for('competencies.delete_competency', comp_id=competency.id)}}"><input type="button" value="Delete Competency" /></a>
+                </div>
+            </div>
+            
+            <br/>
 
-        {% for elements in elements_array %}
-            {% for element in elements %}
-                {% if competency.id == element.competency_id %}
-                    <h3>Criteria {{ element.order | safe }}</h3>
-                    <h4> {{ element.name | safe }}</h4>
-                    <p>{{ element.criteria | safe }}</p>
-                    <div class="element-add-edit-del-buttons">
-                        <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" value="Edit Element" /></a>
-                        <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" value="Delete Element" /></a>
-                    </div>
-                {% endif %}
+            {% if elements_array %}
+                <a href="{{url_for('elements.add_element')}}"><input type="button" value="Add Element" /></a>
+            {% endif %}
+
+            {% for elements in elements_array %}
+                {% for element in elements %}
+                    {% if competency.id == element.competency_id %}
+                        <h3>Criteria {{ element.order | safe }}</h3>
+                        <h4> {{ element.name | safe }}</h4>
+                        <p>{{ element.criteria | safe }}</p>
+                        <div class="element-add-edit-del-buttons">
+                            <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" value="Edit Element" /></a>
+                            <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" value="Delete Element" /></a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock %}

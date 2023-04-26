@@ -11,17 +11,26 @@
 {% block content %}
     <div id="domain_page_content">
         <h1 id="domain_page_heading">
-        {% if domain %}    
-            Domain
-        {% else %}
-            Domains
-        {% endif %}
+            {% if domain %}    
+                Domain
+            {% else %}
+                Domains
+            {% endif %}
         </h1>
+        <a href="{{url_for('domains.add_domain')}}">
+            <input type="button" value="Add Domain" />
+        </a>
         
         {% for domain in domains %}
             <div class="domain">
                 <h2>{{ domain.name | safe }}</h2>
                 <p>{{ domain.description | safe }}</p>
+                <a href="{{url_for('domains.edit_domain', dom_id=domain.id)}}">
+                    <input type="button" value="Edit Domain" />
+                </a>
+                <a href="{{url_for('domains.delete_domain', dom_id=domain.id)}}">
+                    <input type="button" value="Delete Domain" />
+                </a>
             </div>
         {% endfor %}
 

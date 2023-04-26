@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if domain %}
+        Editing Domain
+    {% else %}         
+        Add Domain
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if domain %}
+        <h2>Editing Domain</h2>
+        <p>{{ domain }}</p>
+    {% else %}
+        <h2>Add Domain</h2>
+    {% endif %}
+
+    <form method="post">
+        {{ form.csrf_token }}
+
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.description.label }} {{ form.description() }}
+
+        <input type="submit" value="submit">
+    </form>
+{% endblock %}

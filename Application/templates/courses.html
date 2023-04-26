@@ -22,7 +22,7 @@
         
         {% for course in courses %}
         <div id="course_list">
-        <a href="{{url_for('courses.show_course', course_id=course.id)}}" class="invisible_link course">{{ course.title | safe }}</a>
+        <h2><a href="{{url_for('courses.show_course', course_id=course.id)}}" class="invisible_link course">{{ course.title | safe }}</a></h2>
         </div>
         <br/>
         {% endfor %}

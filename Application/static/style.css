@@ -185,12 +185,21 @@ body {
     justify-content: center;
 }
 
-#add_element_btn {
+.add_element_btn {
     background-color: white;
     border-radius: 5px;
     width: 120px;
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1em;
+}
+
+.edit_delete_element_btn {
+    background-color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1em;
 }
 
 #course_info #description {

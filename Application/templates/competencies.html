@@ -27,10 +27,8 @@
             <br/>
             <hr class="white_line">
 
-            <h2>{{ competency.id }} Elements</h2>
-
             {% if elements_array %}
-                <a href="{{url_for('elements.add_element')}}"><input type="button" value="Add Element" /></a>
+                <a href="{{url_for('elements.add_element')}}"><input type="button" class="add_element_btn" value="Add Element" /></a>
             {% endif %}
 
             {% for elements in elements_array %}
@@ -41,8 +39,8 @@
                             <h4> {{ element.name | safe }}</h4>
                             <p>{{ element.criteria | safe }}</p>
                             <div class="element-add-edit-del-buttons">
-                                <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" value="Edit Element" /></a>
-                                <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" value="Delete Element" /></a>
+                                <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" class="edit_delete_element_btn" value="Edit Element" /></a>
+                                <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" class="edit_delete_element_btn" value="Delete Element" /></a>
                             </div>
                         </div>
                     {% endif %}

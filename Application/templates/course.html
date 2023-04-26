@@ -27,7 +27,7 @@
 
     <div id="course_elements">
         <h2>{{ course.title }}'s Competency Elements:</h2>
-        <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" id="add_element_btn" value="Add Element" /></a>
+        <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" class="add_element_btn" value="Add Element" /></a>
         {% for element in elements %}
             <div class="element">
                 <h3><a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><span class="underline">Competency ID:</span></a> {{ element.competency_id | safe }}</h3>

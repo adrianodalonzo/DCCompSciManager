@@ -1,8 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: #002550;
+    color: white;
+    margin: 0;
+}
+/* signup page */
+#signup_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+#signup_input {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    height: 260px;
+    width: 275px;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+#signup_input input[type=email], #signup_input input[type=text], #signup_input input[type=password] {
+    border-radius: 10px;
+    text-align: center;
+    width: 175px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* need CSS to fix avatar input to center it. */
+
+#signup_input input[type=file] {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#signup_input input[type=submit] {
+    width: 130px;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+}
+/* login page */
 #login_div {
     display: flex;
     justify-content: center;
@@ -63,17 +104,62 @@ body {
     justify-content: center;
     align-items: center;
 }
+/* home page */
+#home_page_content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+/* domains */
+#domain_page_heading {
+    text-align: center;
+}
 
+#domain_page_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.domain {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    width: 70%;
+    background-color: #003571;
+}
+
+.domain p {
+    width: 90%;
+    text-align: center;
+}
+/* hr */
 .white_line {
     color: white;
 }
-
+/* courses page */
 .course_btns {
     background-color: white;
     border-radius: 5px;
     width: 65px;
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
+}
+
+#courses_page_heading {
+    text-align: center;
+}
+
+#course_list {
+    display: flex;
+    justify-content: center;
 }
 
 #add_element_btn {
@@ -120,7 +206,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     border-radius: 5px;
 }
-
+/* nav bar */
 nav ul {
     display: flex;
     justify-content: space-evenly;
@@ -151,13 +237,7 @@ nav {
     border-radius: 6px;
     padding: 8px;
 }
-
-body {
-    background-color: #002550;
-    color: white;
-    margin: 0;
-}
-
+/* flash messages */
 ul.flashes {
     padding: 0;
 }
@@ -198,7 +278,7 @@ a.invisible_link:active {
     color: blue;
     text-decoration: underline;
 }
-
+/* avatars */
 .avatar {
     width: 150px;
     height: 150px;
@@ -213,7 +293,7 @@ a.invisible_link:active {
     border-radius: 50%;
     object-fit: contain;
 }
-
+/* blocked status */
 #blocked_message {
     display: flex;
     justify-content:space-evenly;
@@ -233,6 +313,14 @@ a.invisible_link:active {
     display: flex;
 }
 
+#blocked {
+    color: red;
+}
+
+#not_blocked {
+    color: greenyellow;
+}
+/* profile */
 #profile_li {
     display: flex;
 }
@@ -242,25 +330,4 @@ a.invisible_link:active {
     flex-direction: column;
     align-items: center;
     margin-top: 2em;
-}
-
-#courses_page_heading {
-    text-align: center;
-}
-
-#course_list {
-    display: flex;
-    justify-content: center;
-}
-
-#add_member, #delete_member, #block_member {
-    display: none;
-}
-
-#blocked {
-    color: red;
-}
-
-#not_blocked {
-    color: greenyellow;
 }

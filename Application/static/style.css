@@ -113,6 +113,14 @@ body {
     flex-wrap: wrap;
 }
 /* domains */
+#add_domain_btn {
+    margin-bottom: 1em;
+    background-color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
 #domain_page_heading {
     text-align: center;
 }
@@ -139,6 +147,17 @@ body {
 .domain p {
     width: 90%;
     text-align: center;
+}
+
+#edit_delete_domain {
+    margin-bottom: 1em;
+}
+
+#edit_delete_domain input {
+    background-color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
 }
 /* hr */
 .white_line {

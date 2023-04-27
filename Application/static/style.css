@@ -327,6 +327,34 @@ body {
     margin-top: 1em;
     padding: .3em;
 }
+/* edit elements page */
+#edit_element_heading {
+    text-align: center;
+}
+
+#add_edit_element_form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    height: 300px;
+}
+
+#add_edit_element_form input {
+    text-align: center;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#add_edit_element_form input[type=submit] {
+    background-color: white;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding: .3em;
+}
 /* competencies page */
 #competencies_page_content {
     display: flex;
@@ -362,6 +390,34 @@ body {
     border-radius: 5px;
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
+}
+/* add/edit competency */
+#edit_competency_form {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
+}
+
+#edit_competency_form input {
+    text-align: center;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.edit_add_competency_heading {
+    text-align: center;
+}
+
+#edit_competency_form input[type=submit] {
+    background-color: white;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding: .3em;
 }
 /* nav bar */
 nav ul {

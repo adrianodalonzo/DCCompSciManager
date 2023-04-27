@@ -8,12 +8,18 @@ bp = Blueprint('courses_api', __name__, url_prefix='/api/courses')
 def courses_api():
     try:
         if request.method == 'POST':
-            courses_json = request.json
-            if courses_json:
-                course = Course.from_json(courses_json)
-                get_db().add_course(course)
-                infoset = {'id': "Success", 'description': 'Successfully added course.'}
-                return make_response(jsonify(infoset), 201)
+            try:
+                courses_json = request.json
+                if courses_json:
+                    course = Course.from_json(courses_json)
+                    get_db().add_course(course)
+                    infoset = {'id': "Success", 'description': 'Successfully added course.'}
+                    return make_response(jsonify(infoset), 201)
+                
+            except Exception:
+                error_infoset = {'id': 'Bad Request',
+                        'description': 'Course with this id already exists, please add a new course.'}
+                return make_response(jsonify(error_infoset), 400)
             
         elif request.method == 'GET':
             if request.args:
@@ -25,8 +31,16 @@ def courses_api():
         courses = get_db().get_all_courses()
         json = [course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id)) for course in courses]
         return jsonify(json)
+    
+    except oracledb.Error:
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(jsonify(error_infoset), 500)
+    
     except Exception:
-        return ""
+        error_infoset = {'id': 'Not Found',
+                        'description': 'Url not found on this server.'}
+        return make_response(jsonify(error_infoset), 404)
     
 @bp.route('/<course_id>', methods=['GET', 'PUT', 'DELETE'])
 def course_api(course_id):
@@ -56,15 +70,11 @@ def course_api(course_id):
                 return make_response(jsonify(error_infoset), 400)
         
         elif request.method == 'DELETE':
-            try:
-                course = get_db().get_course(course_id)
-                get_db().delete_course(course_id)
-                infoset = {'id': "Success", 'description': 'Successfully deleted course'}
-                return make_response(jsonify(infoset), 204)
-            except Exception:
-                error_infoset = {'id': 'Bad Request',
-                        'description': 'Course not found, please insert a valid course id.'}
-                return make_response(jsonify(error_infoset), 400)
+            course = get_db().get_course(course_id)
+            get_db().delete_course(course.id)
+            infoset = {'id': "Success", 'description': 'Successfully deleted course'}
+            return make_response(jsonify(infoset), 204)
+
     
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

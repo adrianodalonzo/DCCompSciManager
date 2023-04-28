@@ -1,39 +1,87 @@
-from flask import Blueprint, jsonify, request, flash, url_for
+from flask import Blueprint, jsonify, request, url_for, make_response, url_for
 from ..dbmanager import get_db
 from Application.objects.domain import Domain
+import oracledb
+
 bp = Blueprint('domains_api', __name__, url_prefix='/api/domains')
 
 @bp.route('/', methods=['GET', 'POST'])
 def domains_api():
     try:
         if request.method == 'POST':
-            domains_json = request.json
-            if domains_json:
-                domain = Domain.from_json(domains_json)
-                get_db().add_domain(domain)
+            try:
+                domains_json = request.json
+                if domains_json:
+                    domain = Domain.from_json(domains_json)
+                    get_db().add_domain(domain)
+                    infoset = {'id': "Success", 'description': 'Successfully added domain.'}
+                    return make_response(jsonify(infoset), 201)
+                    
+            except Exception:
+                error_infoset = {'id': 'Bad Request',
+                        'description': 'Domain with this id already exists, please add a new domain.'}
+                return make_response(jsonify(error_infoset), 400)
+            
         elif request.method == 'GET':
             if request.args:
                 id = int(request.args.get("id"))
-                domains = get_db().get_all_domains()
-                domain = [domain for domain in domains if domain.id == id]
-                return jsonify(domain[0].to_json())
+                domain = get_db.get_domain(id)
+                # url = url_for('domains_api.domain_api', domain_id=domain.domain.id)
+                # domain_url = url_for('courses_api.course_api', course_id=course.id)
+                return jsonify(domain.to_json("","")), 200
         domains = get_db().get_all_domains()
-        json = [domain.__dict__ for domain in domains]
-        return jsonify(json)
-    except Exception:
-        return ""
+        # json = [domain.to_json(url_for(""), url_for("")) for domain in domains]
+        return jsonify(json), 200
     
-@bp.route('/<int:domain_id>', methods=['GET', 'PUT'])
+    except oracledb.Error:
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(jsonify(error_infoset), 500)
+    
+    except Exception:
+        error_infoset = {'id': 'Not Found',
+                        'description': 'Url not found on this server.'}
+        return make_response(jsonify(error_infoset), 404)
+    
+@bp.route('/<int:domain_id>', methods=['GET', 'PUT', 'DELETE'])
 def domain_api(domain_id):
     try:
-        if request.method == 'POST':
+        if request.method == 'PUT':
             domains_json = request.json
             if domains_json:
                 domain = Domain.from_json(domains_json)
+                existing_domain = get_db().get_domain(domain.id)
+                if existing_domain:
+                    get_db().modify_domain(domain)
+                    infoset = {'id': "Success", 'description': 'Successfully updated domain.'}
+                    return make_response(jsonify(infoset), 200)
                 get_db().add_domain(domain)
+                infoset = {'id': "Success", 'description': 'Successfully added domain.'}
+                return make_response(jsonify(infoset), 201)
+            
         elif request.method == 'GET':
+            try:
+                domain = get_db().get_domain(domain_id)
+                url = url_for('domains_api.domain_api', domain_id=domain_id)
+                # courses_url = 
+                return jsonify(domain.to_json(url)), 200
+            except Exception:
+                error_infoset = {'id': 'Bad Request',
+                        'description': 'Domain not found, please insert a valid domain id.'}
+                return make_response(jsonify(error_infoset), 400)
+        
+        elif request.method == 'DELETE':
             domain = get_db().get_domain(domain_id)
-            url = url_for('domains_api.domain_api', domain_id=domain_id)
-            return jsonify(domain.to_json(url))
+            get_db().delete_course(domain.id)
+            infoset = {'id': "Success", 'description': 'Successfully deleted domain'}
+            return make_response(jsonify(infoset), 204)
+        
+    except oracledb.Error:
+        error_infoset = {'id': 'Internal Service Error',
+                        'description': 'There is problems in the database. Please try again later.'}
+        return make_response(jsonify(error_infoset), 500)
+    
     except Exception:
-        return "" 
+        error_infoset = {'id': 'Not Found',
+                        'description': 'Url not found on this server.'}
+        return make_response(jsonify(error_infoset), 404)

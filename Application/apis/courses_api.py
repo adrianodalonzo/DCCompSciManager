@@ -49,8 +49,8 @@ def course_api(course_id):
             courses_json = request.json
             if courses_json:
                 course = Course.from_json(courses_json)
-                existing_element = get_db().get_course(course.id)
-                if existing_element:
+                existing_course = get_db().get_course(course.id)
+                if existing_course:
                     get_db().modify_course(course)
                     infoset = {'id': "Success", 'description': 'Successfully updated course.'}
                     return make_response(jsonify(infoset), 200)
@@ -66,7 +66,7 @@ def course_api(course_id):
                 return jsonify(course.to_json(url, domain_url)), 200
             except Exception:
                 error_infoset = {'id': 'Bad Request',
-                        'description': 'Element not found, please insert a valid element id.'}
+                        'description': 'Course not found, please insert a valid course id.'}
                 return make_response(jsonify(error_infoset), 400)
         
         elif request.method == 'DELETE':

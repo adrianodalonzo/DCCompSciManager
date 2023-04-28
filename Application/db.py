@@ -149,7 +149,7 @@ class Database:
             raise ValueError("Course does not exist. Please choose an existing course to delete.") 
 
         with self.__connection.cursor() as cursor:
-            cursor.execute("DELETE FROM courses WHERE course_id=:course_id)", course_id=id)
+            cursor.execute("DELETE FROM courses WHERE course_id=:course_id", course_id=id)
 
     def get_course_competencies(self, id): 
         with self.__get_cursor() as cursor:

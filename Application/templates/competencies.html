@@ -13,11 +13,11 @@
             <a href="{{url_for('competencies.add_competency')}}"><input type="button" id="add_course_btn" value="Add Competency" /></a>
         {% endif %}
         {% for competency in competencies %}
-            <div id="competency_info">
+            <div class="competency_info">
                 <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
                 <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
                 <h3>{{ competency.type | safe }}</h3>
-                <h3>{{ competency.achievement | safe}}</h3>
+                <h3 class="competency_achievement">{{ competency.achievement | safe}}</h3>
                 <div class="competency-add-edit-del-buttons">
                     <a href="{{url_for('competencies.edit_competency', comp_id=competency.id)}}"><input type="button" value="Edit Competency" /></a>
                     <a href="{{url_for('competencies.delete_competency', comp_id=competency.id)}}"><input type="button" value="Delete Competency" /></a>

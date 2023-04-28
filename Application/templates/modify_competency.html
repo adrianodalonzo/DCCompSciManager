@@ -12,7 +12,7 @@
     {% if competency %}
         <h2 class="edit_add_competency_heading">Editing Competency</h2>
         <!-- <p>{{ competency }}</p> -->
-        <div id="competency_info">
+        <div class="competency_info">
             <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
             <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
             <h3>{{ competency.type | safe }}</h3>

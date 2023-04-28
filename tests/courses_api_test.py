@@ -44,6 +44,7 @@ class TestCoursesApi(flask_unittest.ClientTestCase):
         
     def test_modify_course_and_delete(self, client):
         course = Course("111-111-HI", "Hello", 3, 3, 3, "Hi, how are you?", 1, 1)
+       
         resp = client.post('/api/courses/', json=course.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         

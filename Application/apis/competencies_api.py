@@ -20,10 +20,10 @@ def competencies_api():
             if request.args:
                 id = request.args.get("id")
                 competency = get_db().get_competency(id)
-                return jsonify(competency.to_json())
+                return jsonify(competency.to_json()), 200
         competencies = get_db().get_all_competencies()
         json = [competency.__dict__ for competency in competencies]
-        return jsonify(json)
+        return jsonify(json), 200
 
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',
@@ -63,7 +63,7 @@ def competency_api(competency_id):
         elif request.method == 'DELETE':
             try:
                 competency = get_db().get_competency(competency_id)
-                get_db().delete_competency(competency)
+                get_db().delete_competency(competency.id)
                 infoset = {'id': "Success", 'description': 'Successfully deleted competency.'}
                 return make_response(jsonify(infoset), 204)
             except Exception:
@@ -96,10 +96,10 @@ def competency_elements_api(competency_id):
             if request.args:
                 id = request.args.get("id")
                 element = get_db().get_element(id)
-                return jsonify(element.to_json())
+                return jsonify(element.to_json()), 200
             elements = get_db().get_competency_elements(competency_id)
             json = [element.__dict__ for element in elements]
-            return jsonify(json)
+            return jsonify(json), 200
     
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

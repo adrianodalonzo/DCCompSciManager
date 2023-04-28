@@ -18,7 +18,7 @@ class Competency:
         self.type = type
         
     def __repr__(self):
-        return f'Competency(id:{self.id}, name:{self.name}, achievement:{self.achievement}, type:{self.type}, id:{self.id})'
+        return f'Competency(id:{self.id}, name:{self.name}, achievement:{self.achievement}, type:{self.type})'
     
     def __str__(self):
         to_return = f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'

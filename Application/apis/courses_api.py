@@ -30,7 +30,7 @@ def courses_api():
                 return jsonify(course.to_json(url, domain_url)), 200
         courses = get_db().get_all_courses()
         json = [course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id)) for course in courses]
-        return jsonify(json)
+        return jsonify(json), 200
     
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

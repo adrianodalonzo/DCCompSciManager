@@ -25,9 +25,9 @@ def domains_api():
         elif request.method == 'GET':
             if request.args:
                 id = int(request.args.get("id"))
-                domain = get_db.get_domain(id)
+                domain = get_db().get_domain(id)
                 courses = get_db().get_courses_by_domain(domain.id)
-                url = url_for('domains_api.domain_api', domain_id=domain.domain.id)
+                url = url_for('domains_api.domain_api', domain_id=domain.id)
                 all_course_urls = []
                 for course in courses:
                     all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))

@@ -112,6 +112,76 @@ body {
     align-items: center;
     flex-wrap: wrap;
 }
+/* members page */
+.users_toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.users_toolbar a, .users_toolbar button {
+    text-decoration: none;
+    color: black;
+    background-color: white;
+}
+
+.users_toolbar button {
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.users_toolbar a {
+    text-decoration: none;
+}
+
+#members_heading {
+    text-align: center;
+}
+
+.users_list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.users_list .member_info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.users_list .member_info a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.users_list .member_info li, .users_list .member_info a {
+    font-size: 20px;
+}
+
+.user_list_avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+.member_email {
+    font-size: 15px;
+}
+
+.member_info li {
+    list-style-type: none;
+}
+
+.user_list_photo {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    object-fit: contain;
+}
 /* domains */
 #add_domain_btn {
     margin-bottom: 1em;

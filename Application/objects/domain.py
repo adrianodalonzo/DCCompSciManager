@@ -22,8 +22,9 @@ class Domain:
             raise TypeError("Excepted dict")
         return Domain(domain_dict['name'], domain_dict['description'])
     
-    def to_json(self, url, course_url):
-        return {'name': self.name, 'description': self.description, 'url':url, 'course_url': course_url}
+    def to_json(self, current_url, url):          
+        return {'name': self.name, 'description': self.description, 'url':current_url, 'courses_url': url}
+        
     
 from flask_wtf import FlaskForm
 from wtforms import StringField

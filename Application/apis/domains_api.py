@@ -26,11 +26,23 @@ def domains_api():
             if request.args:
                 id = int(request.args.get("id"))
                 domain = get_db.get_domain(id)
-                # url = url_for('domains_api.domain_api', domain_id=domain.domain.id)
-                # domain_url = url_for('courses_api.course_api', course_id=course.id)
-                return jsonify(domain.to_json("","")), 200
+                courses = get_db().get_courses_by_domain(domain.id)
+                url = url_for('domains_api.domain_api', domain_id=domain.domain.id)
+                all_course_urls = []
+                for course in courses:
+                    all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))
+                return jsonify(domain.to_json(url, all_course_urls)), 200
+
         domains = get_db().get_all_domains()
-        # json = [domain.to_json(url_for(""), url_for("")) for domain in domains]
+        json = []
+        for domain in domains:
+            url = url_for('domains_api.domain_api', domain_id=domain.id)
+            courses = get_db().get_courses_by_domain(domain.id)
+            all_courses_url = []
+            for course in courses:
+                course_url = url_for('courses_api.course_api', course_id=course.id)
+                all_courses_url.append(course_url)
+            json.append(domain.to_json(url, all_courses_url))
         return jsonify(json), 200
     
     except oracledb.Error:
@@ -38,7 +50,7 @@ def domains_api():
                         'description': 'There is problems in the database. Please try again later.'}
         return make_response(jsonify(error_infoset), 500)
     
-    except Exception:
+    except Exception as e:
         error_infoset = {'id': 'Not Found',
                         'description': 'Url not found on this server.'}
         return make_response(jsonify(error_infoset), 404)
@@ -62,9 +74,12 @@ def domain_api(domain_id):
         elif request.method == 'GET':
             try:
                 domain = get_db().get_domain(domain_id)
+                courses = get_db().get_courses_by_domain(domain.id)
                 url = url_for('domains_api.domain_api', domain_id=domain_id)
-                # courses_url = 
-                return jsonify(domain.to_json(url)), 200
+                all_course_urls = []
+                for course in courses:
+                    all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))
+                return jsonify(domain.to_json(url, all_course_urls)), 200
             except Exception:
                 error_infoset = {'id': 'Bad Request',
                         'description': 'Domain not found, please insert a valid domain id.'}

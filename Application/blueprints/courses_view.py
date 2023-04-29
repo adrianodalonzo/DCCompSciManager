@@ -11,11 +11,11 @@ from werkzeug.datastructures import MultiDict
 bp = Blueprint("courses", __name__, url_prefix="/courses/")
 
 @bp.route("/", methods=['GET', 'POST'])
-@login_required
 def show_courses():
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
     courses = get_db().get_all_courses()
     if courses:
         return render_template('courses.html', courses=courses)
@@ -23,7 +23,6 @@ def show_courses():
     return render_template('index.html')
 
 @bp.route("/<string:course_id>/", methods=['GET', 'POST'])
-@login_required
 def show_course(course_id):
     course = get_db().get_course(course_id)
     elements = get_db().get_course_elements(course_id)
@@ -34,7 +33,6 @@ def show_course(course_id):
     return render_template('index.html') 
 
 @bp.route("/domain/<int:domain_id>/", methods=['GET', 'POST'])
-@login_required
 def show_courses_by_domain(domain_id):
     courses = get_db().get_courses_by_domain(domain_id)
     if courses:
@@ -44,7 +42,6 @@ def show_courses_by_domain(domain_id):
     return render_template('index.html')
 
 @bp.route("/term/<int:term_id>/", methods=['GET', 'POST'])
-@login_required
 def show_courses_by_term(term_id):
     courses = get_db().get_courses_by_term(term_id)
     if courses:

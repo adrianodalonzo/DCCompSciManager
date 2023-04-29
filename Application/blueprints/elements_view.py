@@ -3,8 +3,10 @@ from flask_login import current_user, login_required
 
 bp = Blueprint("elements", __name__, url_prefix="/elements/")
 
-from Application.objects.element import Element, ElementForm
+from ..objects.element import Element
 from ..dbmanager import get_db
+
+from ..objects.forms import ElementForm
 
 @bp.route("/add/", methods=['GET', 'POST'])
 @login_required

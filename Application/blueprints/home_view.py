@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user
 
-from Application.dbmanager import get_db
+from ..dbmanager import get_db
 
 bp = Blueprint('index', __name__, url_prefix='/')
 

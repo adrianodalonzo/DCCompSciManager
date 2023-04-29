@@ -4,7 +4,9 @@ from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
 from ..dbmanager import get_db
-from ..objects.user import DeleteUserAdminForm, MoveUserAdminForm, SignUpForm, User
+from ..objects.user import User
+
+from ..objects.forms import DeleteUserAdminForm, MoveUserAdminForm, SignUpForm
 
 bp = Blueprint('user_admins', __name__, url_prefix='/user_admins/')
 

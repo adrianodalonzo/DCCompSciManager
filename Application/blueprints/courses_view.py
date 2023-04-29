@@ -1,8 +1,9 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_login import current_user, login_required
 
-from Application.objects.course import Course, CourseForm
-from Application.objects.element import CourseElementForm
+from ..objects.forms import CourseForm, CourseElementForm
+from ..objects.course import Course
+
 from ..dbmanager import get_db
 
 from werkzeug.datastructures import MultiDict

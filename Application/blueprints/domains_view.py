@@ -1,8 +1,10 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_login import current_user, login_required
 
-from Application.objects.domain import Domain, DomainForm
+from ..objects.domain import Domain
 from ..dbmanager import get_db
+
+from ..objects.forms import DomainForm
 
 bp = Blueprint("domains", __name__, url_prefix="/domains/")
 

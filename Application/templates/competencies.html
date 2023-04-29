@@ -25,7 +25,9 @@
             </div>
             
             <br/>
-            <hr class="white_line">
+            {% if elements_array %}
+                <hr class="white_line">
+            {% endif %}
 
             {% if elements_array %}
                 <a href="{{url_for('elements.add_element')}}"><input type="button" class="add_element_btn" value="Add Element" /></a>

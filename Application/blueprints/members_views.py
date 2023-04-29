@@ -3,8 +3,8 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, UnblockMemberForm, User
-
+from ..objects.user import User
+from ..objects.forms import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, UnblockMemberForm
 from ..dbmanager import get_db
 
 bp = Blueprint('members', __name__, url_prefix='/members/')

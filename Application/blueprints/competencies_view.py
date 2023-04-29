@@ -2,7 +2,8 @@ from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_login import current_user, login_required
 from werkzeug.datastructures import MultiDict
 
-from Application.objects.competency import Competency, CompetencyForm
+from ..objects.competency import Competency
+from ..objects.forms import CompetencyForm
 from ..dbmanager import get_db
 
 bp = Blueprint("competencies", __name__, url_prefix="/competencies/")

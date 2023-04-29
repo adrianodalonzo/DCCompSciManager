@@ -40,17 +40,3 @@ class Course:
     def __str__(self):
         to_return = f'Id:{self.id}, Title: {self.title}, Theory Hours: {self.theory_hours}, ' + f'Lab Hours: {self.lab_hours}, Work Hours: {self.work_hours}, ' + f'Description: {self.description}, Domain ID: {self.domain_id}, ' + f'Term ID: {self.term_id}'
         return to_return
-    
-from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SelectField
-from wtforms.validators import DataRequired, Length, NumberRange
-
-class CourseForm(FlaskForm):
-    id = StringField('Course ID', validators=[DataRequired(), Length(min=10, max=100)])
-    title = StringField('Course Title', validators=[DataRequired(), Length(min=10, max=100)])
-    theory_hours = IntegerField('Theory Hours', validators=[DataRequired(), NumberRange(min=0, max=3)])
-    lab_hours = IntegerField('Lab Hours', validators=[DataRequired(), NumberRange(min=0, max=3)])
-    work_hours = IntegerField('Work Hours', validators=[DataRequired(), NumberRange(min=0, max=3)])
-    description = StringField('Description', validators=[DataRequired(), Length(min=1, max=500)])
-    domain_id = SelectField('Existing Domain', validators=[DataRequired()])
-    term_id = SelectField('Choose a term', choices=[('1', '1 Fall'), ('2', '2 Winter'), ('3', '3 Fall'), ('4', '4 Winter'), ('5', '5 Fall'), ('6', '6 Winter')])

@@ -23,11 +23,11 @@ bp = Blueprint("competencies", __name__, url_prefix="/competencies/")
 #     return render_template('index.html')
 
 @bp.route("/")
-@login_required
 def show_all_competencies():
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
     competencies = get_db().get_all_competencies()
 
     if competencies:
@@ -36,7 +36,6 @@ def show_all_competencies():
     return render_template('index.html')
 
 @bp.route("/<string:comp_id>/")
-@login_required
 def show_competency_elements(comp_id):
     competency = get_db().get_competency(comp_id)
     competencies = []

@@ -10,11 +10,13 @@ bp = Blueprint("domains", __name__, url_prefix="/domains/")
 
 @bp.route("/", methods=['GET', 'POST'])
 def show_domains():
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
+        
     domains = get_db().get_all_domains()
-    if domains :
+    if domains:
         return render_template('domains.html', domains=domains)
     
     flash("No domains", category='invalid')

@@ -7,13 +7,12 @@ bp = Blueprint('index', __name__, url_prefix='/')
 
 @bp.route('/')
 def index():
-    try:
+    if current_user.is_active:
         if current_user.blocked:
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
-        return render_template('index.html')
-    except Exception:
-        return render_template('index.html')
+        
+    return render_template('index.html')
 
 @bp.route('/terms/')
 def show_terms():

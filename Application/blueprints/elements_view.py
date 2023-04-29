@@ -11,9 +11,11 @@ from ..objects.forms import ElementForm
 @bp.route("/add/", methods=['GET', 'POST'])
 @login_required
 def add_element():
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
+    
     form = ElementForm()
 
     if request.method == 'GET':
@@ -39,9 +41,10 @@ def add_element():
 @bp.route("/edit/<string:elem_nm>/", methods=['GET', 'POST'])
 @login_required
 def edit_element(elem_nm):
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
     elem = get_db().get_element(elem_nm)
     form = ElementForm(obj=elem)
 
@@ -75,9 +78,10 @@ def edit_element(elem_nm):
 @bp.route("/delete/<string:elem_nm>")
 @login_required
 def delete_element(elem_nm):
-    if current_user.blocked:
-        flash('You Have Been Blocked by an Admin!', category='invalid')
-        return redirect(url_for('profile.get_profile', email=current_user.email))
+    if current_user.is_active:
+        if current_user.blocked:
+            flash('You Have Been Blocked by an Admin!', category='invalid')
+            return redirect(url_for('profile.get_profile', email=current_user.email))
     element = get_db().get_element(elem_nm)
     get_db().delete_competency_element(element)
     flash("Deleted element " + elem_nm, category='valid')

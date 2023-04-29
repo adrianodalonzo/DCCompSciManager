@@ -362,14 +362,14 @@ class Database:
             try:
                 result = cursor.execute("""SELECT domain, domain_description FROM domains
                 WHERE domain_id=:id""", id=id)
-
+                
                 for row in result:
                     domain = Domain(row[0], row[1])
                     domain.id = id
                     return domain
                 
             except oracledb.Error:
-                pass
+                return None
 
     def get_courses_by_domain(self, id):
         if not isinstance(id, int):
@@ -411,12 +411,12 @@ class Database:
             return all_domains
     
     def add_domain(self, domain):
-        if self.get_domain(domain.id):
+        if domain.id is None:
+            with self.__connection.cursor() as cursor:
+                cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
+                            (domain.name, domain.description))
+        elif self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")
-        
-        with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
-                           (domain.name, domain.description))
 
     def modify_domain(self, domain):
         if not self.get_domain(domain.id):

@@ -24,12 +24,12 @@
                 <button>
                     <a href="{{ url_for('members.move_member') }}">Move Member</a>
                 </button>
+            {% endif %}
         </div>
-        {% endif %}
     {% endif %}
     <ul class="users_list">
         {% for member in members %}
-            <div class="member_info">
+            <div class="user_info">
                 <a href="{{ url_for('profile.get_profile', email=member.email) }}" class="invisible_link user_info">
                     <img class="user_list_avatar" src="{{ url_for('auth.get_avatar', email=member.email) }}">
                     {{ member.name }} <span class="member_email">&nbsp;{{ member.email }}</span></a> 

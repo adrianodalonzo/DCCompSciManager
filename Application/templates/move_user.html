@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Move Member
+    Move {{ user_type }}
 {% endblock %}
 
 {% block content %}
-    <h2>Move Member Form</h2>
+    <h2>Move {{ user_type }} Form</h2>
     <form method="POST">
         {{ form.csrf_token }}
-        {{ form.members.label }} {{ form.members() }}
+        {{ form.users.label }} {{ form.users() }}
         {{ form.groups.label }} {{ form.groups() }}
-        <input type="submit" value="Move Member">
+        <input type="submit" value="Move {{ user_type }}">
     </form>
 {% endblock %}

@@ -70,22 +70,22 @@ def move_admin():
         flash('There Are No Admins to Move!', category='message')
         return redirect(url_for('admins.list_admins'))
     form = MoveAdminForm()
-    form.admins.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
-    if not form.admins.choices:
+    form.users.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
+    if not form.users.choices:
         flash('There Are No Admins to Move!', category='message')
         return redirect(url_for('admins.list_admins'))
     form.groups.choices = ['Member', 'User Admin']
 
     if request.method == 'POST' and form.validate_on_submit():
-        admin = get_db().get_user(form.admins.data)
+        admin = get_db().get_user(form.users.data)
         if admin:
             get_db().move_member(admin.email, form.groups.data)
             flash(f'Admin Successfully Moved to {form.groups.data} Group!', category='valid')
             admins = get_db().get_admins()
-            form.admins.choices = [admin.email for admin in admins]
+            form.users.choices = [admin.email for admin in admins]
             return render_template('admins.html', form=form, admins=admins)
     elif request.method == 'GET':
-        return render_template('move_admin.html', form=form)
+        return render_template('move_user.html', form=form, user_type='Admin')
     
 @bp.route('/delete/', methods=['GET', 'POST'])
 @login_required
@@ -95,12 +95,12 @@ def delete_admin():
         return redirect(url_for('admins.list_admins'))
     form = DeleteAdminForm()
     # assigns select options by looping through the members and adding the emails to the select
-    form.admins.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
-    if not form.admins.choices:
+    form.users.choices = [admin.email for admin in get_db().get_admins() if current_user.email != admin.email]
+    if not form.users.choices:
             flash('There Are No Admins to Delete!', category='message')
             return redirect(url_for('admins.list_admins'))
     if request.method == 'POST' and form.validate_on_submit():
-        admin = get_db().get_user(form.admins.data)
+        admin = get_db().get_user(form.users.data)
         if admin:
             get_db().delete_user(admin.email)
             flash('Admin Successfully Deleted!', category='valid')
@@ -108,5 +108,5 @@ def delete_admin():
             return render_template('admins.html', admins=admins)
     elif request.method == 'GET':
         admins = get_db().get_members()
-        return render_template('delete_admin.html', form=form)
+        return render_template('delete_user.html', form=form, user_type='Admin')
 

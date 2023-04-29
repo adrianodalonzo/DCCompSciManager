@@ -130,6 +130,10 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+button, input[type=submit], input[type=button] {
+    font-weight: bold;
+}
+
 .users_toolbar a {
     text-decoration: none;
 }
@@ -143,21 +147,22 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 0;
 }
 
-.users_list .member_info {
+.users_list .user_info {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.users_list .member_info a {
+.users_list .user_info a {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.users_list .member_info li, .users_list .member_info a {
+.users_list .user_info li, .users_list .user_info a {
     font-size: 20px;
 }
 
@@ -172,7 +177,7 @@ body {
     font-size: 15px;
 }
 
-.member_info li {
+.user_info li {
     list-style-type: none;
 }
 
@@ -181,6 +186,14 @@ body {
     height: 25px;
     border-radius: 50%;
     object-fit: contain;
+}
+/* user admins page */
+#user_admins_heading {
+    text-align: center;
+}
+/* admins page */
+#admins_heading {
+    text-align: center;
 }
 /* domains */
 #add_domain_btn {

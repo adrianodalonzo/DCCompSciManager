@@ -14,11 +14,13 @@
             <img src="{{ url_for('static', filename='images/warning.png') }}" alt="warning">
         </div>
         {% endif %}
-        <h1>{{ current_user.name }}</h1>
-        <h2>{{ current_user.email }}</h2>
-        <h3>{{ current_user.group }}</h3>
-        <a href="{{ url_for('profile.reset_password') }}">
-            <button>Reset Password</button>
-        </a>
+        <div id="profile_credentials">
+            <h1>{{ current_user.name }}</h1>
+            <h2>{{ current_user.email }}</h2>
+            <h3>{{ current_user.group }}</h3>
+            <a href="{{ url_for('profile.reset_password') }}">
+                <button>Reset Password</button>
+            </a>
+        </div>
     </div>
 {% endblock %}

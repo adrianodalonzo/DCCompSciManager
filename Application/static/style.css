@@ -130,8 +130,10 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-button, input[type=submit], input[type=button] {
+button, input, input[type=submit], input[type=button] {
     font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
 }
 
 .users_toolbar a {
@@ -241,6 +243,30 @@ button, input[type=submit], input[type=button] {
     border-radius: 5px;
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
+}
+/* add domain page */
+#add_domain_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#add_domain_content form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#add_domain_content form input,#add_domain_content form textarea {
+    margin-bottom: 1em;
+}
+
+textarea {
+    width: 500px;
+    height: 100px;
+    text-align: center;
 }
 /* hr */
 .white_line {
@@ -393,7 +419,7 @@ button, input[type=submit], input[type=button] {
 }
 
 .criteria_content p {
-    width: 750px;
+    width: 100%;
 }
 
 .element-add-edit-del-buttons {
@@ -684,7 +710,19 @@ a.invisible_link:active {
 
 .profile_info {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+}
+
+#profile_credentials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

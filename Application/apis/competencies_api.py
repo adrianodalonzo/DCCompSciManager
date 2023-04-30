@@ -98,7 +98,7 @@ def competency_elements_api(competency_id):
                 element = get_db().get_element(id)
                 return jsonify(element.to_json()), 200
             elements = get_db().get_competency_elements(competency_id)
-            json = [element.__dict__ for element in elements]
+            json = [element.to_json for element in elements]
             return jsonify(json), 200
     
     except oracledb.Error:

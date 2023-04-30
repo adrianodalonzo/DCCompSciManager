@@ -15,9 +15,9 @@
     </h1>
     <div id="courses_page_content">
         {% if current_user.is_authenticated %}
-        <div id="add_course_btn">
-            <a href="{{url_for('courses.add_course')}}"><input type="button" value="Add Course" /></a>
-        </div>
+            <div id="add_course_btn">
+                <a href="{{url_for('courses.add_course')}}"><input type="button" value="Add Course" /></a>
+            </div>
         {% endif %}
         
         {% for course in courses %}

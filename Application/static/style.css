@@ -257,6 +257,10 @@ button, input, input[type=submit], input[type=button] {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
 }
 
 #add_domain_content form input,#add_domain_content form textarea {
@@ -267,6 +271,7 @@ textarea {
     width: 500px;
     height: 100px;
     text-align: center;
+    margin-bottom: 1em;
 }
 /* hr */
 .white_line {
@@ -302,6 +307,14 @@ textarea {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    
 }
 
 #edit_course_form input {
@@ -439,6 +452,10 @@ textarea {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
 }
 
 #add_modify_course_element form input {
@@ -472,6 +489,12 @@ textarea {
     align-items: center;
     flex-direction: column;
     height: 300px;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #add_edit_element_form input {
@@ -563,6 +586,12 @@ textarea {
     flex-direction: column;
     align-items: center;
     height: 300px;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #edit_competency_form input {
@@ -725,4 +754,26 @@ a.invisible_link:active {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+/* reset password page */
+#reset_password_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#reset_password_content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+#reset_password_content form input {
+    margin-bottom: 1em;
 }

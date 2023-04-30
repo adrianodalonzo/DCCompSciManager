@@ -413,7 +413,7 @@ class Database:
     def add_domain(self, domain):
         if domain.id is None:
             with self.__connection.cursor() as cursor:
-                cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
+                cursor.execute("INSERT INTO domains (domain, domain_description) VALUES(:domain, :domain_description)",
                             (domain.name, domain.description))
         elif self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")
@@ -427,12 +427,12 @@ class Database:
                            (domain.name, domain.description))
 
     def delete_domain(self, domain):
-        if not self.get_domain(domain.id):
-            raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
-        
-        with self.__connection.cursor() as cursor:
-            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
+        if self.get_domain(domain.id):
+            with self.__connection.cursor() as cursor:
+                cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
 
+        raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
+        
 if __name__ == '__main__':
     print('Provide file to initialize database')
     file_path = input()

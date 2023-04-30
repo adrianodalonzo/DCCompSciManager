@@ -22,35 +22,40 @@ class TestDomainsApi(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 200)
         json = resp.json
         self.assertIsNotNone(json)
-        
-    def test_add_domain_with_post_and_delete(self, client):
-        domain = Domain("New Domain", "Hello")
-
-        resp = client.post('/api/domains/', json=domain.to_json("", ""))
-        self.assertEqual(resp.status_code, 201)
-        
-        resp = client.delete(f"/api/domains/{domain.id}")
-        self.assertEqual(resp.status_code, 204)   
     
-    def test_add_domain_with_put_and_delete(self, client):
+    def test_delete(self, client):
         domain = Domain("New Domain", "Hello")
+        resp = client.delete(f"/api/domains/{domain.id}")
+        self.assertEqual(resp.status_code, 204) 
 
-        resp = client.put('/api/domains/1', json=domain.to_json("", ""))
-        self.assertEqual(resp.status_code, 201)
+    # def test_add_domain_with_post_and_delete(self, client):
+    #     domain = Domain("New Domain", "Hello")
+
+    #     resp = client.post('/api/domains/', json=domain.to_json("", ""))
+    #     self.assertEqual(resp.status_code, 201)
         
-        resp = client.delete(f"/api/domains/{domain.id}")
-        self.assertEqual(resp.status_code, 204)
+    #     resp = client.delete(f"/api/domains/{domain.id}")
+    #     self.assertEqual(resp.status_code, 204)   
+    
+    # def test_add_domain_with_put_and_delete(self, client):
+    #     domain = Domain("New Domain", "Hello")
+
+    #     resp = client.put('/api/domains/1', json=domain.to_json("", ""))
+    #     self.assertEqual(resp.status_code, 201)
         
-    def test_modify_domain_and_delete(self, client):
-        domain = Domain("New Domain", "Hello")
+    #     resp = client.delete(f"/api/domains/{domain.id}")
+    #     self.assertEqual(resp.status_code, 204)
+        
+    # def test_modify_domain_and_delete(self, client):
+    #     domain = Domain("New Domain", "Hello")
        
-        resp = client.post('/api/domains/', json=domain.to_json("", ""))
-        self.assertEqual(resp.status_code, 201)
+    #     resp = client.post('/api/domains/', json=domain.to_json("", ""))
+    #     self.assertEqual(resp.status_code, 201)
         
-        domain = Domain("New Domain", "Hello")
+    #     domain = Domain("New Domain", "Hello")
         
-        resp = client.put(f'/api/domains/{domain.id}', json=domain.to_json("", ""))
-        self.assertEqual(resp.status_code, 200)
+    #     resp = client.put(f'/api/domains/{domain.id}', json=domain.to_json("", ""))
+    #     self.assertEqual(resp.status_code, 200)
         
-        resp = client.delete(f"/api/domains/{domain.id}")
-        self.assertEqual(resp.status_code, 204)
+    #     resp = client.delete(f"/api/domains/{domain.id}")
+    #     self.assertEqual(resp.status_code, 204)

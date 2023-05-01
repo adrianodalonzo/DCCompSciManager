@@ -54,6 +54,10 @@ def edit_element(elem_nm):
     elif request.method == 'POST':
         if form.validate_on_submit():
 
+            if form.name.data.isnumeric() or form.criteria.data.isnumeric() or form.competency_id.data.isnumeric():
+                flash("Unsuccesfully Edited Element", category='invalid')
+                return redirect(url_for('competencies.show_competency_elements', comp_id=elem.competency_id))
+
             elem_order = form.order.data
             elem_name = form.name.data
             elem_crit = form.criteria.data

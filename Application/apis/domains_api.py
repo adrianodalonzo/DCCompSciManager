@@ -5,7 +5,7 @@ import oracledb
 
 bp = Blueprint('domains_api', __name__, url_prefix='/api/domains')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('', methods=['GET', 'POST'])
 def domains_api():
     try:
         if request.method == 'POST':
@@ -67,9 +67,8 @@ def domain_api(domain_id):
                     get_db().modify_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully updated domain.'}
                     return make_response(jsonify(infoset), 200)
-                get_db().add_domain(domain)
-                infoset = {'id': "Success", 'description': 'Successfully added domain.'}
-                return make_response(jsonify(infoset), 201)
+                infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}
+                return make_response(jsonify(infoset), 404)
             
         elif request.method == 'GET':
             try:
@@ -87,7 +86,7 @@ def domain_api(domain_id):
         
         elif request.method == 'DELETE':
             domain = get_db().get_domain(domain_id)
-            get_db().delete_course(domain.id)
+            get_db().delete_domain(domain)
             infoset = {'id': "Success", 'description': 'Successfully deleted domain'}
             return make_response(jsonify(infoset), 204)
         

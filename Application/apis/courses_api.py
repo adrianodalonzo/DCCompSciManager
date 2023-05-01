@@ -1,10 +1,11 @@
-from flask import Blueprint, jsonify, request, flash, make_response, url_for
+from flask import Blueprint, jsonify, request, make_response, url_for
 from ..dbmanager import get_db
 from Application.objects.course import Course
 import oracledb
+
 bp = Blueprint('courses_api', __name__, url_prefix='/api/courses')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('', methods=['GET', 'POST'])
 def courses_api():
     try:
         if request.method == 'POST':

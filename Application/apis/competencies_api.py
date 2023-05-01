@@ -5,7 +5,7 @@ from Application.objects.element import Element
 import oracledb
 bp = Blueprint('competencies_api', __name__, url_prefix='/api/competencies')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('', methods=['GET', 'POST'])
 def competencies_api():
     try:
         if request.method == 'POST':
@@ -123,9 +123,8 @@ def competency_element_api(competency_id, element_id):
                     get_db().modify_competency_element(element)
                     infoset = {'id': "Success", 'description': 'Successfully updated element'}
                     return make_response(jsonify(infoset), 200)
-                get_db().add_competency_element(element)
-                infoset = {'id': "Success", 'description': 'Successfully added element'}
-                return make_response(jsonify(infoset), 201)
+                infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}
+                return make_response(jsonify(infoset), 404)
             
         elif request.method == 'GET':
             try:

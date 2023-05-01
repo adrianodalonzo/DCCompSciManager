@@ -427,11 +427,13 @@ class Database:
                            (domain.name, domain.description))
 
     def delete_domain(self, domain):
-        if self.get_domain(domain.id):
-            with self.__connection.cursor() as cursor:
-                cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
+        if not self.get_domain(domain.id):
+            raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
 
-        raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
+        
         
 if __name__ == '__main__':
     print('Provide file to initialize database')

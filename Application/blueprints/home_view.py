@@ -18,3 +18,13 @@ def index():
 def show_terms():
     terms = get_db().get_all_terms()
     return render_template('terms.html', terms=terms)
+
+@bp.route("/terms/<int:term_id>/", methods=['GET', 'POST'])
+def show_courses_by_term(term_id):
+    courses = get_db().get_courses_by_term(term_id)
+
+    if courses:
+        return render_template('terms.html', courses=courses, term=term_id)
+    
+    flash("No courses by this term", category='invalid')
+    return redirect(url_for('index.show_terms'))

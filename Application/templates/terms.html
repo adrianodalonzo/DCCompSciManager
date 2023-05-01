@@ -5,26 +5,43 @@
 {% endblock %}
 
 {% block content %}
-    <div id="term_page">
-        <h1>Terms</h1>
-        <h2 class="term_title">Fall Terms:</h2>
-        <div id="fall_terms">
-            {% for term in terms %}
-                {% if term.name == 'Fall  ' %}
-                    <h2>{{ term.id }}</h2>
-                {% endif %}
+    {% if terms %}
+        <div id="term_page">
+            <h1>Terms</h1>
+            <h2 class="term_title">Fall Terms:</h2>
+            <div id="fall_terms">
+                {% for term in terms %}
+                    {% if term.name == 'Fall  ' %}
+                        <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=term.id)}}">
+                            <h2>{{ term.id | safe }}</h2>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <h2 class="term_title">Winter Terms:</h2>
+            <div id="winter_terms">
+                {% for term in terms %}
+                    {% if term.name == 'Winter' %}
+                        <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=term.id)}}">
+                            <h2>{{ term.id | safe }}</h2>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <!-- {% for term in terms %}
+                <h2>{{ term.id | safe }}: {{ term.name | safe }}</h2>
+            {% endfor %} -->
+        </div>
+    {% else %}
+        <div id="term_page">
+            <h1>Term {{ term | safe }}</h1>
+            <h2>Courses In This Term</h2>
+
+            {% for course in courses %}
+                <a class="invisible_link" href="{{url_for('courses.show_course', course_id=course.id)}}">
+                    <p>{{ course.id | safe }}</p>
+                </a>
             {% endfor %}
         </div>
-        <h2 class="term_title">Winter Terms:</h2>
-        <div id="winter_terms">
-            {% for term in terms %}
-                {% if term.name == 'Winter' %}
-                    <h2>{{ term.id }}</h2>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <!-- {% for term in terms %}
-            <h2>{{ term.id | safe }}: {{ term.name | safe }}</h2>
-        {% endfor %} -->
-    </div>
+    {% endif %}
 {% endblock %}

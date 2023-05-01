@@ -15,7 +15,9 @@ def courses_api():
                     course = Course.from_json(courses_json)
                     get_db().add_course(course)
                     infoset = {'id': "Success", 'description': 'Successfully added course.'}
-                    return make_response(jsonify(infoset), 201)
+                    response = make_response(jsonify(infoset), 201)
+                    response.headers['Location'] = url_for('courses_api.course_api', course_id=course.id)
+                    return response
                 
             except Exception:
                 error_infoset = {'id': 'Bad Request',
@@ -29,6 +31,7 @@ def courses_api():
                 url = url_for('courses_api.course_api', course_id=course.id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
                 return jsonify(course.to_json(url, domain_url)), 200
+        
         courses = get_db().get_all_courses()
         json = [course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id)) for course in courses]
         return jsonify(json), 200
@@ -51,13 +54,19 @@ def course_api(course_id):
             if courses_json:
                 course = Course.from_json(courses_json)
                 existing_course = get_db().get_course(course.id)
+                
                 if existing_course:
                     get_db().modify_course(course)
                     infoset = {'id': "Success", 'description': 'Successfully updated course.'}
-                    return make_response(jsonify(infoset), 200)
+                    response = make_response(jsonify(infoset), 200)
+                    response.headers['Location'] = url_for('courses_api.course_api', course_id=course.id)
+                    return response
+                
                 get_db().add_course(course)
                 infoset = {'id': "Success", 'description': 'Successfully added course.'}
-                return make_response(jsonify(infoset), 201)
+                response = make_response(jsonify(infoset), 201)
+                response.headers['Location'] = url_for('courses_api.course_api', course_id=course.id)
+                return response
             
         elif request.method == 'GET':
             try:
@@ -65,6 +74,7 @@ def course_api(course_id):
                 url = url_for('courses_api.course_api', course_id=course_id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
                 return jsonify(course.to_json(url, domain_url)), 200
+            
             except Exception:
                 error_infoset = {'id': 'Bad Request',
                         'description': 'Course not found, please insert a valid course id.'}
@@ -75,7 +85,6 @@ def course_api(course_id):
             get_db().delete_course(course.id)
             infoset = {'id': "Success", 'description': 'Successfully deleted course'}
             return make_response(jsonify(infoset), 204)
-
     
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

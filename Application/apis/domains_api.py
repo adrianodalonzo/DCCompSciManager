@@ -15,7 +15,9 @@ def domains_api():
                     domain = Domain.from_json(domains_json)
                     get_db().add_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully added domain.'}
-                    return make_response(jsonify(infoset), 201)
+                    response = make_response(jsonify(infoset), 201)
+                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain.id)
+                    return response
                     
             except Exception:
                 error_infoset = {'id': 'Bad Request',
@@ -63,10 +65,14 @@ def domain_api(domain_id):
             if domains_json:
                 domain = Domain.from_json(domains_json)
                 existing_domain = get_db().get_domain(domain.id)
+                
                 if existing_domain:
                     get_db().modify_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully updated domain.'}
-                    return make_response(jsonify(infoset), 200)
+                    response = make_response(jsonify(infoset), 200)
+                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain.id)
+                    return response
+                
                 infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}
                 return make_response(jsonify(infoset), 404)
             
@@ -79,6 +85,7 @@ def domain_api(domain_id):
                 for course in courses:
                     all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))
                 return jsonify(domain.to_json(url, all_course_urls)), 200
+            
             except Exception:
                 error_infoset = {'id': 'Bad Request',
                         'description': 'Domain not found, please insert a valid domain id.'}

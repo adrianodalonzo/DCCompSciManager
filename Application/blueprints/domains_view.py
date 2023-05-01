@@ -54,7 +54,7 @@ def add_domain():
 
     return redirect(url_for('domains.show_domains'))
 
-@bp.route("/edit/<int:dom_id>/")
+@bp.route("/edit/<int:dom_id>/", methods=['GET', 'POST'])
 @login_required
 def edit_domain(dom_id):
     dom = get_db().get_domain(dom_id)
@@ -65,6 +65,11 @@ def edit_domain(dom_id):
     
     elif request.method == 'POST':
         if form.validate_on_submit():
+
+            if form.name.data.isnumeric() or form.description.data.isnumeric():
+                flash("Unsuccesfully Edited Domain", category='invalid')
+                return redirect(url_for('domains.show_domains'))
+            
             dom_name = form.name.data
             dom_desc = form.description.data
 

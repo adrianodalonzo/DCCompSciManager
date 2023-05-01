@@ -755,6 +755,12 @@ a.invisible_link:active {
     align-items: center;
     flex-direction: column;
 }
+
+#blocked_message {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+}
 /* reset password page */
 #reset_password_content {
     display: flex;

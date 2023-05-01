@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 import secrets
 from .dbmanager import get_db
 from flask_login import LoginManager
@@ -21,6 +21,11 @@ def create_app(test_config=None):
     
     from .dbmanager import init_db_command
     app.cli.add_command(init_db_command)
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return render_template('custom404.html'), 404
+
     
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

@@ -729,6 +729,36 @@ a.invisible_link:active {
     display: flex;
 }
 
+#profile_li {
+    display: flex;
+}
+
+.profile_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2em;
+}
+/* custom 404 */
+#custom_404_area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#custom_404_area h1 {
+    margin-top: 10vh;
+    margin-bottom: 0;
+}
+
+#custom_404_area h3 {
+    margin-top: 1em;
+}
+
+#not_found {
+    color: rgb(0, 140, 255);
+}
+
 #blocked {
     color: red;
 }

@@ -74,7 +74,7 @@ def add_course():
                 get_db().add_course(course)
                 flash("Added Course: " + course.title, category='valid')
     
-    return redirect(url_for('show_courses'))
+    return redirect(url_for('courses.show_courses'))
 
 @bp.route("/edit/<string:course_id>/", methods=['GET', 'POST'])
 @login_required
@@ -88,6 +88,10 @@ def edit_course(course_id):
     
     elif request.method == 'POST':
         if form.validate_on_submit():
+
+            if form.title.data.isnumeric() or form.description.data.isnumeric() or not form.domain_id.data.isnumeric() or not form.term_id.data.isnumeric():
+                flash("Unsuccesfully Edited Course", category='invalid')
+                return redirect(url_for('courses.show_courses'))
             
             course_title = form.title.data
             course_theo_hours = form.theory_hours.data
@@ -113,18 +117,18 @@ def edit_course(course_id):
                 course_term_id = course.term_id
             
             edited_course = Course(course_id, course_title, course_theo_hours, course_lab_hours,
-                                   course_work_hours, course_desc, course_dom_id, course_term_id)
+                                   course_work_hours, course_desc, int(course_dom_id), int(course_term_id))
             get_db().modify_course(edited_course)
             flash("Edited Course: " + course_title, category='valid')
 
-    return redirect(url_for('show_courses'))
+    return redirect(url_for('courses.show_courses'))
 
 @bp.route("/delete/<string:course_id>/")
 @login_required
 def delete_course(course_id):
     get_db().delete_course(course_id)
     flash("Course " + course_id + " has been deleted", category='valid')
-    return redirect(url_for('show_courses'))
+    return redirect(url_for('courses.show_courses'))
 
 @bp.route("/element/add/<string:course_id>/", methods=['GET', 'POST'])
 @login_required

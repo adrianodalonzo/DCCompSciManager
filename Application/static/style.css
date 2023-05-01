@@ -5,8 +5,12 @@ body {
     color: white;
     margin: 0;
 }
+
+select {
+    text-align-last: center;
+}
 /* signup page */
-#signup_div {
+#signup_div{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -782,4 +786,85 @@ a.invisible_link:active {
 
 #reset_password_content form input {
     margin-bottom: 1em;
+}
+/* add user page */
+#add_user_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#add_user_content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+#add_user_content form input[type=email], #add_user_content form input[type=text], #add_user_content form input[type=password] {
+    width: 275px;
+    margin-bottom: 1em;
+}
+
+#add_user_content form input[type=submit] {
+    margin-top: 1em;
+}
+
+#add_user_content form input {
+    border-radius: 10px;
+}
+/* delete user /block and unblock page */
+#delete_user_content, #block_unblock_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#delete_user_content form, #block_unblock_content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+#delete_user_content form select, #block_unblock_content form select {
+    width: 275px;
+    margin-bottom: 1em;
+}
+/* move user page */
+#move_user_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#move_user_content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid lightskyblue;
+    padding: 1em;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+#move_user_content form select {
+    width: 275px;
+    margin-bottom: 1em;
+}
+
+#to {
+    margin-bottom: 0.5em;
 }

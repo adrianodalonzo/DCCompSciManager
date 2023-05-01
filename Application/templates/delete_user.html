@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Delete {{ user_type }} Form</h2>
-    <form method="POST">
-        {{ form.csrf_token }}
-        {{ form.users.label }} {{ form.users() }}
-        <input type="submit" value="Delete {{ user_type }}">
-    </form>
+    <div id="delete_user_content">
+        <h2>Delete {{ user_type }} Form</h2>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.users.label }} {{ form.users() }}
+            <input type="submit" value="Delete {{ user_type }}">
+        </form>
+    </div>
 {% endblock %}

@@ -5,11 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Move {{ user_type }} Form</h2>
-    <form method="POST">
-        {{ form.csrf_token }}
-        {{ form.users.label }} {{ form.users() }}
-        {{ form.groups.label }} {{ form.groups() }}
-        <input type="submit" value="Move {{ user_type }}">
-    </form>
+    <div id="move_user_content">
+        <h2>Move {{ user_type }} Form</h2>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.users.label }} {{ form.users() }}
+            <span id="to">{{ form.groups.label }}</span> {{ form.groups() }}
+            <input type="submit" value="Move {{ user_type }}">
+        </form>
+    </div>
 {% endblock %}

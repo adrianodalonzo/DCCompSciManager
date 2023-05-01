@@ -33,15 +33,6 @@ def show_course(course_id):
     flash("The course does not exist.", category='invalid')
     return render_template('index.html') 
 
-@bp.route("/domain/<int:domain_id>/", methods=['GET', 'POST'])
-def show_courses_by_domain(domain_id):
-    courses = get_db().get_courses_by_domain(domain_id)
-    if courses:
-        domain = get_db().get_domain(domain_id)
-        return render_template('courses.html', courses=courses, domain=domain)
-    flash("No courses by this domain", category='invalid')
-    return render_template('index.html')
-
 @bp.route("/term/<int:term_id>/", methods=['GET', 'POST'])
 def show_courses_by_term(term_id):
     courses = get_db().get_courses_by_term(term_id)

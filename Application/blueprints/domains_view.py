@@ -25,10 +25,13 @@ def show_domains():
 @bp.route("/<int:domain_id>/", methods=['GET'])
 def show_domain(domain_id):
     domain = get_db().get_domain(domain_id)
+    courses = get_db().get_courses_by_domain(domain_id)
+
     if domain:
-        return render_template('domains.html', domain=domain)
+        return render_template('domains.html', domain=domain, courses=courses)
+    
     flash("No domain with this id", category='invalid')
-    return render_template('index.html')
+    return redirect(url_for('domains.show_domains'))
 
 @bp.route('/add/', methods=['GET', 'POST'])
 @login_required

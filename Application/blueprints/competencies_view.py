@@ -72,6 +72,10 @@ def edit_competency(comp_id):
     elif request.method == 'POST':
         if form.validate_on_submit():
 
+            if not form.name.data.isalnum() or not form.achivement.data.isalnum() or not form.type.data:
+                flash("Unsuccesfully Edited Competency")
+                return redirect(url_for('competencies.show_all_competencies'))
+            
             comp_name = form.name.data
             comp_achieve = form.achievement.data
             comp_type = form.type.data

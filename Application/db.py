@@ -4,6 +4,7 @@ from Application.objects.competency import Competency
 from Application.objects.course import Course
 from Application.objects.domain import Domain
 from Application.objects.element import Element
+from Application.objects.term import Term
 from .objects.user import User
 
 class Database:
@@ -33,7 +34,7 @@ class Database:
             self.__connection.close()
             self.__connection = None
             
-    def insert_user(self, user):
+    def insert_user(self, user, group=None):
         if not isinstance(user, User):
             raise TypeError('User passed in MUST be a User object!')
         
@@ -43,24 +44,34 @@ class Database:
                 raise oracledb.IntegrityError
         
         with self.__get_cursor() as cursor:
-            cursor.execute("""insert into courses_users (username, email, password, user_group, avatar_path) 
-                           values (:username, :email, :password, 'Member', :avatar_path)""",
-                           username=user.name, 
-                           email=user.email, 
-                           password=user.password,
-                           avatar_path=user.avatarlink)
+            query_string = ""
+            if group is None:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, 'Member', '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password)
+            else:
+                query_string = """insert into courses_users (username, email, password, user_group, blocked) 
+                           values (:username, :email, :password, :user_group, '0')"""
+                cursor.execute(query_string, username=user.name, email=user.email, password=user.password, user_group=group)
+                
+    
+    def fetch_blocked(result):
+        if result == '1':
+            return True
+        return False
             
     def get_user(self, email):
         if not isinstance(email, str):
             raise TypeError('Email MUST be a string!')
 
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where email = :email""", email=email)
             for result in results:
-                user = User(result[0], result[3], result[1], result[5])
+                user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = Database.fetch_blocked(result[5])
                 return user
             
     def get_user_id(self, id):
@@ -68,13 +79,116 @@ class Database:
             raise TypeError('ID MUST be a number!!')
         
         with self.__get_cursor() as cursor:
-            results = cursor.execute("""select email, password, user_id, username, user_group, avatar_path from courses_users
+            results = cursor.execute("""select email, password, user_id, username, user_group, blocked from courses_users
                                      where user_id = :id""", id=id)
             for result in results:
-                user = User(result[0], result[3], result[1], result[5])
+                user = User(result[0], result[3], result[1])
                 user.id = result[2]
                 user.group = result[4]
+                user.blocked = Database.fetch_blocked(result[5])
                 return user
+            
+    def update_user_password(self, email, password):
+        if not isinstance(password, str):
+            raise TypeError('Password MUST be a string!')
+        
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            user_id = self.get_user(email).id
+            cursor.execute('update courses_users set password = :password where user_id = :id', password=password, id=user_id)
+
+    def get_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = Database.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def get_user_admins(self):
+        user_admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'User Admin'")
+            for result in results:
+                user_admin = User(result[0], result[3], result[1])
+                user_admin.id = result[2]
+                user_admin.group = result[4]
+                user_admin.blocked = Database.fetch_blocked(result[5])
+                user_admins.append(user_admin)
+        return user_admins
+    
+    def get_admins(self):
+        admins = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Admin'")
+            for result in results:
+                admin = User(result[0], result[3], result[1])
+                admin.id = result[2]
+                admin.group = result[4]
+                admin.blocked = Database.fetch_blocked(result[5])
+                admins.append(admin)
+        return admins
+    
+    def get_unblocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '0'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = Database.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def get_blocked_members(self):
+        members = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute("select email, password, user_id, username, user_group, blocked from courses_users where user_group = 'Member' and blocked = '1'")
+            for result in results:
+                member = User(result[0], result[3], result[1])
+                member.id = result[2]
+                member.group = result[4]
+                member.blocked = Database.fetch_blocked(result[5])
+                members.append(member)
+        return members
+    
+    def delete_user(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('delete from courses_users where email = :email', email=email)
+            
+    def block_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '1' where email = :email", email=email)
+            
+    def unblock_member(self, email):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute("update courses_users set blocked = '0' where email = :email", email=email)
+
+    def move_member(self, email, group):
+        if not isinstance(email, str):
+            raise TypeError("Email MUST be a string!")
+        
+        if not isinstance(group, str):
+            raise TypeError("Email MUST be a string!")
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('update courses_users set user_group = :user_group where email = :email', user_group=group, email=email)
 
     def __get_cursor(self):
             for i in range(3):
@@ -104,8 +218,7 @@ class Database:
                 work_hours, description, domain_id, term_id FROM courses""")
 
                 for row in results:
-                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                    course.id = row[0]
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     all_courses.append(course)
 
             except oracledb.Error:
@@ -113,27 +226,46 @@ class Database:
 
             return all_courses
 
-    def get_course(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
-        
+    def get_course(self, id):  
         with self.__get_cursor() as cursor:
             try:
                 result = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
                 work_hours, description, domain_id, term_id FROM courses WHERE course_id=:id""", id=id)
                 
                 for row in result:
-                    course = Course(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                    course.id = row[0]
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     return course
                 
             except oracledb.Error:
                 pass
+    
+    def add_course(self, course):
+        if self.get_course(course.id):
+            raise ValueError("Course already exist. Please change to a valid course ID.") 
+            
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO courses VALUES(:id, :title, :theory_hours, :lab_hours, :work_hours, :description, :domain_id, :term_id)",
+                    (course.id, course.title, course.theory_hours, course.lab_hours, course.work_hours, 
+                     course.description, course.domain_id, course.term_id))
+    
+    def modify_course(self, course):
+        if not self.get_course(course.id):
+            raise ValueError("Course does not exist. Please modify an existing course.") 
+            
+        with self.__connection.cursor() as cursor:
+            cursor.execute("""UPDATE courses SET course_title=:course_title, theory_hours=:theory_hours, lab_hours=:lab_hours, work_hours=:work_hours, 
+            description=:description, domain_id=:domain_id, term_id=:term_id WHERE course_id=:course_id""",
+                    (course.title, course.theory_hours, course.lab_hours, course.work_hours, 
+                     course.description, course.domain_id, course.term_id, course.id))
 
-    def get_course_competencies(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
-        
+    def delete_course(self, id):
+        if not self.get_course(id):
+            raise ValueError("Course does not exist. Please choose an existing course to delete.") 
+
+        with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM courses WHERE course_id=:course_id)", course_id=id)
+
+    def get_course_competencies(self, id): 
         with self.__get_cursor() as cursor:
             all_course_competencies = []
 
@@ -142,8 +274,7 @@ class Database:
                 competency_type FROM view_courses_elements_competencies WHERE course_id=:id""", id=id)
 
                 for row in results:
-                    competency = Competency(row[1], row[2], row[3])
-                    competency.id = row[0]
+                    competency = Competency(row[0], row[1], row[2], row[3])
                     all_course_competencies.append(competency)
 
             except oracledb.Error:
@@ -151,10 +282,61 @@ class Database:
 
             return all_course_competencies
 
-    def get_competency_elements(self, id):
-        # if not isinstance(id, int):
-        #     raise TypeError("id must be an int")
+    def get_competency(self, id):
+         with self.__get_cursor() as cursor:
+
+            try:
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE competency_id=:id""", id=id)
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    return competency
+            
+            except oracledb.Error:
+                pass
+    
+    def get_all_competencies(self):
+        with self.__get_cursor() as cursor:
+            all_competencies = []
+
+            try:
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies""")
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    all_competencies.append(competency)
+                
+            except oracledb.Error:
+                pass
+
+        return all_competencies
+
+    def add_competency(self, competency):
+        if self.get_competency(competency.id):
+            raise ValueError("Competency already exist. Please modify an existing competency.")
         
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO competencies VALUES(:competency_id, :competency, :competency_achievement, :competency_type)",
+                           (competency.id, competency.name, competency.achievement, competency.type))
+          
+    def modify_competency(self, competency):
+        if not self.get_competency(competency.id):
+            raise ValueError("Competency does not exist. Please change to a valid competency id.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("UPDATE competencies SET competency=:competency, competency_achievement=:competency_achievement, competency_type=:competency_type WHERE competency_id=:competency_id",
+                           (competency.name, competency.achievement, competency.type, competency.id))
+    
+    def delete_competency(self, id):
+        if not self.get_competency(id):
+            raise ValueError("Competency does not exist. Please choose an existing competency to delete.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM competencies WHERE competency_id=:competency_id", competency_id=id)
+
+    def get_competency_elements(self, id):
         with self.__get_cursor() as cursor:
             all_competency_elements = []
 
@@ -171,6 +353,175 @@ class Database:
                 pass
 
             return all_competency_elements
+
+    def get_element(self, name):
+        with self.__get_cursor() as cursor:
+            try:
+                result = cursor.execute("""SELECT element_id, element_order, element_criteria, competency_id 
+                FROM view_competencies_elements WHERE element=:name""", name=name)
+
+                for row in result:
+                    element = Element(row[1], name, row[2], row[3])
+                    element.id = row[0]
+                    return element
+            except oracledb.Error:
+                pass
+    
+    def get_element_by_both_id(self, course_id, elem_id):
+        with self.__get_cursor() as cursor:
+            try:
+                hours_query = cursor.execute("""SELECT element_hours FROM courses_elements WHERE element_id=:elem_id
+                AND course_id=:course_id""", (elem_id, course_id))
+
+                for row in hours_query:
+                    hours = row[0]
+
+                result = cursor.execute("""SELECT element_order, element, element_criteria, competency_id 
+                    FROM view_competencies_elements WHERE element_id=:id""", id=elem_id)
+                
+                for row in result:
+                        element = Element(row[0], row[1], row[2], row[3])
+                        element.id = id
+                        element.hours = hours
+                        return element
+                
+            except oracledb.Error:
+                pass
+
+    def add_competency_element(self, element):
+        competency_elements = self.get_competency_elements(element.competency_id)
+        for competency_element in competency_elements:
+            if competency_element.name == element.name:
+                raise ValueError("Element already exist in this competency. Please change the element order.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO elements (element_order, element, element_criteria, competency_id) VALUES(:element_order, :element, :element_criteria, :competency_id)",
+                           (element.order, element.name, element.criteria, element.competency_id))
+
+    def modify_competency_element(self, element):
+        competency_elements = self.get_competency_elements(element.competency_id)
+        element_exist = False
+        for competency_element in competency_elements:
+            if competency_element.id == element.id:
+                element_exist = True
+
+        if not element_exist:
+            raise ValueError("Element does not exist in this competency. Please modify an existing competency element.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("""UPDATE elements SET element_order=:element_order, element=:element, 
+            element_criteria=:element_criteria, competency_id=:competency_id WHERE element_id=:element_id""", 
+            (element.order, element.name, element.criteria, element.competency_id, element.id))
+
+    def delete_competency_element(self, element):
+        competency_elements = self.get_competency_elements(element.competency_id)
+        element_exist = False
+        for competency_element in competency_elements:
+            if competency_element.name == element.name:
+                element_exist = True
+
+        if not element_exist:
+            raise ValueError("Element does not exist in this competency. Please choose an existing competency element to delete.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM elements WHERE element_order=:element_order AND competency_id=:competency_id",
+                           (element.order, element.competency_id))
+
+    def get_course_elements(self, course_id):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        
+        with self.__get_cursor() as cursor:
+            course_elements = []
+            try:
+
+                elements = cursor.execute("""SELECT element_id, element_hours, element_order, element, element_criteria,
+                competency_id FROM view_courses_elements WHERE course_id=:course_id""", course_id=course_id)
+                
+                for row in elements:
+                    element = Element(row[2], row[3], row[4], row[5])
+                    element.id = row[0]
+                    element.hours = row[1]
+                    course_elements.append(element)
+
+            except oracledb.Error:
+                pass
+            
+            return course_elements
+    
+    def get_all_elements(self):
+        all_elements = []
+
+        with self.__get_cursor() as cursor:
+            try:
+                elements = cursor.execute("SELECT element_id, element FROM elements")
+
+                for row in elements:
+                    all_elements.append((row[0], row[1]))
+            
+            except oracledb.Error:
+                pass
+
+        return all_elements
+    
+    def add_course_element(self, course_id, elem_id, hours):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        if not isinstance(hours, int):
+            raise TypeError("hours must be an int")
+
+        with self.__get_cursor() as cursor:
+            try:
+                cursor.execute("INSERT INTO courses_elements VALUES(:course_id, :element_id, :element_hours)",
+                                (course_id, elem_id, hours))
+            except oracledb.Error:
+                pass
+    
+    def edit_course_element(self, course_id, elem_id, hours):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        if not isinstance(hours, int):
+            raise TypeError("hours must be an int")
+        
+        with self.__get_cursor() as cursor:
+            try:
+                cursor.execute("""UPDATE courses_elements SET element_hours=:hours WHERE course_id=:course_id
+                AND element_id=:elem_id""", (hours, course_id, elem_id))
+            except oracledb.Error:
+                pass
+        
+    def delete_course_element(self, course_id, elem_id):
+        if not isinstance(course_id, str):
+            raise TypeError("course_id must be a string")
+        if not isinstance(elem_id, str):
+            raise TypeError("elem_id must be a string")
+        
+        with self.__get_cursor() as cursor:
+            try:
+                cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id AND element_id=:elem_id"
+                                , (course_id, elem_id))
+            except oracledb.Error:
+                pass
+
+    def get_all_terms(self):
+        with self.__get_cursor() as cursor:
+            all_terms = []
+            try:
+                results = cursor.execute("SELECT term_id, term_name FROM terms")
+
+                for row in results:
+                    term = Term(row[1])
+                    term.id = row[0]
+                    all_terms.append(term)
+
+            except oracledb.Error:
+                pass
+
+            return all_terms
 
     def get_courses_by_term(self, id):
         if not isinstance(id, int):
@@ -250,7 +601,38 @@ class Database:
                 pass
 
             return all_domains
+    
+    def get_domain_choices(self):
+        domains = self.get_all_domains()
+        domain_choices = []
 
+        for domain in domains:
+            domain_choices.append((domain.id, domain.name))
+        
+        return domain_choices
+    
+    def add_domain(self, domain):
+        if self.get_domain(domain.id):
+            raise ValueError("Domain already exist. Please change the domain id.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
+                           (domain.name, domain.description))
+
+    def modify_domain(self, domain):
+        if not self.get_domain(domain.id):
+            raise ValueError("Domain does not exist. Please modify an existing domain.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description",
+                           (domain.name, domain.description))
+
+    def delete_domain(self, domain):
+        if not self.get_domain(domain.id):
+            raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
+        
+        with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
 
 if __name__ == '__main__':
     print('Provide file to initialize database')

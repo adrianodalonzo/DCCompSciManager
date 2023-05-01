@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Terms
+{% endblock %}
+
+{% block content %}
+    <div id="term_page">
+        <h1>Terms</h1>
+        <h2 class="term_title">Fall Terms:</h2>
+        <div id="fall_terms">
+            {% for term in terms %}
+                {% if term.name == 'Fall  ' %}
+                    <h2>{{ term.id }}</h2>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <h2 class="term_title">Winter Terms:</h2>
+        <div id="winter_terms">
+            {% for term in terms %}
+                {% if term.name == 'Winter' %}
+                    <h2>{{ term.id }}</h2>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- {% for term in terms %}
+            <h2>{{ term.id | safe }}: {{ term.name | safe }}</h2>
+        {% endfor %} -->
+    </div>
+{% endblock %}

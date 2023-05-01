@@ -21,14 +21,4 @@ class Competency:
         return f'Competency(id:{self.id}, name:{self.name}, achievement:{self.achievement}, type:{self.type}, id:{self.id})'
     
     def __str__(self):
-        to_return = f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'
-        
-from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
-from wtforms.validators import DataRequired, Length
-
-class CompetencyForm(FlaskForm):
-    id = StringField('Competency ID', validators=[DataRequired(), Length(min=4, max=4)])
-    name = StringField('Competency Name', validators=[DataRequired(), Length(min=10, max=100)])
-    achievement = StringField('Achievement', validators=[DataRequired(), Length(min=10, max=100)])
-    type = SelectField('Choose an type', choices=[('Mandatory'), ('Complementary')])
+        return f'Id:{self.id}, Name: {self.name}, Achievement: {self.achievement}, Type: {self.type}'

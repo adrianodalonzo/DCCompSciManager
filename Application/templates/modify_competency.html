@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if competency %}
+        Editing Competency
+    {% else %}         
+        Add Competency
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if competency %}
+        <h2 class="edit_add_competency_heading">Editing Competency</h2>
+        <!-- <p>{{ competency }}</p> -->
+        <div class="competency_info">
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
+            <h3>{{ competency.type | safe }}</h3>
+            <h3>{{ competency.achievement | safe}}</h3>
+        </div>
+    {% else %}
+        <h2 class="edit_add_competency_heading">Add Competency</h2>
+    {% endif %}
+
+    <form id="edit_competency_form" method="post">
+        {{ form.csrf_token }}
+
+        {% if competency %}
+            <p class="not_id_change_p">****ID cannot be changed****</p>
+        {% else %}
+            {{ form.id.label }} {{ form.id() }}
+        {% endif %}
+
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.achievement.label }} {{ form.achievement() }}
+        {{ form.type.label }} {{ form.type() }}
+
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

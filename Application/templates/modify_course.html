@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if course %}
+        Editing Course
+    {% else %}
+        Add Course
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if course %}
+    <div id="course_info">
+            <h1>Editing {{ course.title }}</h1>
+            <p><span class="underline">Term:</span> {{ course.term_id | safe}}</p>
+            <p><span class="underline">Domain:</span> need to make a get domain method in db.py</p>
+            <p><span class="underline">Theory Hours:</span> {{ course.theory_hours | safe}}</p>
+            <p><span class="underline">Lab Hours:</span> {{ course.lab_hours | safe}}</p>
+            <p><span class="underline">Work Hours:</span> {{ course.work_hours | safe}}</p>
+            <p><span class="underline">Description:</span></p>
+            <p id="description">{{ course.description | safe}}</p>
+        </div>
+    {% endif %}
+
+    <form id="edit_course_form" method="post">
+        {{ form.csrf_token }}
+
+        {% if course %}
+            <p class="not_id_change_p">****ID cannot be changed****</p>
+        {% else %}
+            <h2>Add Course</h2>
+            {{ form.id.label }} {{ form.id() }}
+        {% endif %}
+
+        {{ form.title.label }} {{ form.title() }}
+        {{ form.theory_hours.label }} {{ form.theory_hours() }}
+        {{ form.lab_hours.label }} {{ form.lab_hours() }}
+        {{ form.work_hours.label }} {{ form.work_hours() }}
+        {{ form.description.label }} {{ form.description() }}
+        {{ form.domain_id.label }} {{ form.domain_id() }}
+        {{ form.term_id.label }} {{ form.term_id() }}
+
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -15,6 +15,7 @@ class Element:
         self.competency_id = competency_id
 
         self.id = None
+        self.hours = None
 
     def __repr__(self):
         to_return = f'Element(order:{self.order}, name:{self.name}, ' + f'criteria:{self.criteria}, competency_id:{self.competency_id})'
@@ -23,13 +24,3 @@ class Element:
     def __str__(self):
         to_return = f'Order: {self.order}, Name: {self.name}, ' + f'Criteria: {self.criteria}, Competency ID: {self.competency_id}'
         return to_return
-    
-from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, Length
-
-class CompetencyForm(FlaskForm):
-    order = IntegerField('Element Order', validators=[DataRequired(), Length(min=1, max=25)])
-    name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
-    criteria = StringField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])
-    competency = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])

@@ -8,7 +8,7 @@
     <h1 id="course_page_heading">{{ course.title | safe }}</h1>
     <div id="course_info">
         <p><span class="underline">Term:</span> {{ course.term_id | safe}}</p>
-        <p><span class="underline">Domain:</span> need to make a get domain method in db.py</p>
+        <p><span class="underline">Domain:</span> {{ domain.name | safe }}</p>
         <p><span class="underline">Theory Hours:</span> {{ course.theory_hours | safe}}</p>
         <p><span class="underline">Lab Hours:</span> {{ course.lab_hours | safe}}</p>
         <p><span class="underline">Work Hours:</span> {{ course.work_hours | safe}}</p>

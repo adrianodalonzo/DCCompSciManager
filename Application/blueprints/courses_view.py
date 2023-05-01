@@ -26,9 +26,10 @@ def show_courses():
 def show_course(course_id):
     course = get_db().get_course(course_id)
     elements = get_db().get_course_elements(course_id)
+    domain = get_db().get_domain(course.domain_id)
 
     if course:
-        return render_template('course.html', course=course, elements=elements)
+        return render_template('course.html', course=course, elements=elements, domain=domain)
     flash("The course does not exist.", category='invalid')
     return render_template('index.html') 
 

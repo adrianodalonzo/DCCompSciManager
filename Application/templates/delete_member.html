@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Delete Member
+{% endblock %}
+
+{% block content %}
+    <h2>Delete Member Form</h2>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.members.label }} {{ form.members() }}
+        <input type="submit" value="Delete Member">
+    </form>
+{% endblock %}

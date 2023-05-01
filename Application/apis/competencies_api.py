@@ -109,7 +109,7 @@ def competency_elements_api(competency_id):
                 
         elif request.method == 'GET':
             if request.args:
-                id = request.args.get("id")
+                id = int(request.args.get("id"))
                 element = get_db().get_element(id)
                 return jsonify(element.to_json()), 200
             

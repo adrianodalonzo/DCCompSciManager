@@ -7,8 +7,12 @@
 {% block content %}
     <h1 id="course_page_heading">{{ course.title | safe }}</h1>
     <div id="course_info">
-        <p><span class="underline">Term:</span> {{ course.term_id | safe}}</p>
-        <p><span class="underline">Domain:</span> {{ domain.name | safe }}</p>
+        <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=course.term_id)}}">
+            <p><span class="underline">Term:</span> {{ course.term_id | safe}}</p>
+        </a>
+        <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=course.domain_id)}}">
+            <p><span class="underline">Domain:</span> {{ domain.name | safe }}</p>
+        </a>
         <p><span class="underline">Theory Hours:</span> {{ course.theory_hours | safe}}</p>
         <p><span class="underline">Lab Hours:</span> {{ course.lab_hours | safe}}</p>
         <p><span class="underline">Work Hours:</span> {{ course.work_hours | safe}}</p>

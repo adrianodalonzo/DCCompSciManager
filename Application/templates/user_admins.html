@@ -11,13 +11,16 @@
             <a href="{{ url_for('user_admins.add_user_admin') }}">Add User Admin</a>
         </button>
         <button>
-            <a href="{{ url_for('user_admins.move_user_admin') }}">Move User Admin</a>
+            <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete User Admin</a>
         </button>
         <button>
-            <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete User Admin</a>
+            <a href="{{ url_for('user_admins.move_user_admin') }}">Move User Admin</a>
         </button>
     </div>
     <ul class="users_list">
+        {% if user_admins|length == 0 %}
+            <h1>There Aren't Any User Admins Created!</h1>
+        {% endif %}
         {% for user_admin in user_admins %}
             <div class="member_info">
                 <a href="{{ url_for('profile.get_profile', email=user_admin.email) }}" class="invisible_link user_info">

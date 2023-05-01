@@ -28,6 +28,9 @@
         </div>
     {% endif %}
     <ul class="users_list">
+        {% if members|length == 0 %}
+            <h1>There Aren't Any Members Created!</h1>
+        {% endif %}
         {% for member in members %}
             <div class="user_info">
                 <a href="{{ url_for('profile.get_profile', email=member.email) }}" class="invisible_link user_info">

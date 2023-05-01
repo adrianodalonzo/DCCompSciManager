@@ -733,12 +733,12 @@ a.invisible_link:active {
     display: flex;
 }
 
-.profile_info {
-    display: flex;
-    flex-direction: column;
+/* .profile_info {
+    /* display: flex; */
+    /* flex-direction: column;
     align-items: center;
-    margin-top: 2em;
-}
+    margin-top: 2em; */
+
 /* custom 404 */
 #custom_404_area {
     display: flex;

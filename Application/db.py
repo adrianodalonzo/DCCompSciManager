@@ -95,22 +95,29 @@ class Database:
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                              host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
 
-    def get_all_courses(self):
+    def get_all_courses(self, page_num=1, page_size=50):
+        all_courses = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1)*page_size
         with self.__get_cursor() as cursor:
-            all_courses = []
-
             try:
                 results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
-                work_hours, description, domain_id, term_id FROM courses""")
+                work_hours, description, domain_id, term_id FROM courses ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     all_courses.append(course)
+                
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_courses) > 0 and (len(all_courses) >= page_size):
+                    next_page = page_num + 1
+                
+                return all_courses, prev_page, next_page
 
-            except oracledb.Error:
-                pass
-
-            return all_courses
+                    except oracledb.Error:
+                        pass
 
     def get_course(self, id):  
         with self.__get_cursor() as cursor:
@@ -182,22 +189,29 @@ class Database:
             except oracledb.Error:
                 pass
     
-    def get_all_competencies(self):
+    def get_all_competencies(self, page_num=1, page_size=50):
+        all_competencies = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1) * page_size
         with self.__get_cursor() as cursor:
-            all_competencies = []
-
             try:
                 results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
-                competency_type FROM competencies""")
+                competency_type FROM competencies ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     competency = Competency(row[0], row[1], row[2], row[3])
                     all_competencies.append(competency)
+                    
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_competencies) > 0 and (len(all_competencies) >= page_size):
+                    next_page = page_num + 1
                 
+                return all_competencies, prev_page, next_page
+                        
             except oracledb.Error:
                 pass
-
-        return all_competencies
 
     def add_competency(self, competency):
         if self.get_competency(competency.id):
@@ -399,23 +413,30 @@ class Database:
 
             return courses_by_domain
         
-    def get_all_domains(self):
+    def get_all_domains(self, page_num=1, page_size=50):
+        all_domains = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1) * page_size
         with self.__get_cursor() as cursor:
-            all_domains = []
-
             try:
                 results = cursor.execute("""SELECT domain_id, domain, domain_description 
-                FROM domains""")
+                FROM domains ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     domain = Domain(row[1], row[2])
                     domain.id = row[0]
                     all_domains.append(domain)
-
+                    
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_domains) > 0 and (len(all_domains) >= page_size):
+                    next_page = page_num + 1
+                
+                return all_domains, prev_page, next_page
+                        
             except oracledb.Error:
                 pass
-
-            return all_domains
     
     def add_domain(self, domain):
         if domain.id is None:

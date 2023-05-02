@@ -79,7 +79,7 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_add_competency_element_with_post_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.put('/api/competencies/2O23', json=competency.to_json())
+        resp = client.post('/api/competencies', json=competency.to_json())
         self.assertEqual(resp.status_code, 201)
         
         element = Element(1, "Hello", "Criteria", "2O23")
@@ -88,7 +88,7 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
         self.assertEqual(resp.status_code, 201)
         
         json = resp.json
-        url = json['location']
+        url = json['Location'][0]
 
         resp = client.delete(f"{url}")
         self.assertEqual(resp.status_code, 204) 

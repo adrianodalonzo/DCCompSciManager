@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ course.title | safe }}
+    {{ course.title }}
 {% endblock %}
 
 {% block content %}
-    <h1 id="course_page_heading">{{ course.title | safe }}</h1>
+    <h1 id="course_page_heading">{{ course.title }}</h1>
     <div id="course_info">
         <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=course.term_id)}}">
-            <p><span class="underline">Term:</span> {{ course.term_id | safe}}</p>
+            <p><span class="underline">Term:</span> {{ course.term_id }}</p>
         </a>
         <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=course.domain_id)}}">
-            <p><span class="underline">Domain:</span> {{ domain.name | safe }}</p>
+            <p><span class="underline">Domain:</span> {{ domain.name }}</p>
         </a>
-        <p><span class="underline">Theory Hours:</span> {{ course.theory_hours | safe}}</p>
-        <p><span class="underline">Lab Hours:</span> {{ course.lab_hours | safe}}</p>
-        <p><span class="underline">Work Hours:</span> {{ course.work_hours | safe}}</p>
+        <p><span class="underline">Theory Hours:</span> {{ course.theory_hours }}</p>
+        <p><span class="underline">Lab Hours:</span> {{ course.lab_hours }}</p>
+        <p><span class="underline">Work Hours:</span> {{ course.work_hours }}</p>
         <p><span class="underline">Description:</span></p>
-        <p id="description">{{ course.description | safe}}</p>
+        <p id="description">{{ course.description }}</p>
         
         {% if current_user.is_authenticated %}
             <div id="course_edit_del_buttons">

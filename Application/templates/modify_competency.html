@@ -13,10 +13,10 @@
         <h2 class="edit_add_competency_heading">Editing Competency</h2>
         <!-- <p>{{ competency }}</p> -->
         <div class="competency_info">
-            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name | safe }}</h2></a>
-            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id | safe }}</h3></a>
-            <h3>{{ competency.type | safe }}</h3>
-            <h3>{{ competency.achievement | safe}}</h3>
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h2>{{ competency.name }}</h2></a>
+            <a href="{{url_for('competencies.show_competency_elements', comp_id=competency.id)}}" class="invisible_link"><h3>{{ competency.id }}</h3></a>
+            <h3>{{ competency.type }}</h3>
+            <h3>{{ competency.achievement }}</h3>
         </div>
     {% else %}
         <h2 class="edit_add_competency_heading">Add Competency</h2>

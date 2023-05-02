@@ -12,10 +12,9 @@
     <div id="add_domain_content">
         {% if domain %}
             <h2>Editing Domain</h2>
-            <!-- <p>{{ domain }}</p> -->
             <div class="domain">
-                <h2>{{ domain.name | safe }}</h2>
-                <p>{{ domain.description | safe }}</p>
+                <h2>{{ domain.name }}</h2>
+                <p>{{ domain.description }}</p>
             </div>
         {% else %}
             <h2>Add Domain</h2>

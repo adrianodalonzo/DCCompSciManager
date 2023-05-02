@@ -2,7 +2,7 @@
 
 {% block title %}
     {% if domain %}    
-        {{ domain.name | safe}}
+        {{ domain.name }}
     {% else %}
         Domains
     {% endif %}
@@ -26,9 +26,9 @@
         {% for domain in domains %}
             <div class="domain">
                 <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=domain.id)}}">
-                    <h2>{{ domain.name | safe }}</h2>
+                    <h2>{{ domain.name }}</h2>
                 </a>
-                <p>{{ domain.description | safe }}</p>
+                <p>{{ domain.description }}</p>
                 {% if current_user.is_authenticated %}
                     <div id="edit_delete_domain">
                         <a href="{{url_for('domains.edit_domain', dom_id=domain.id)}}">
@@ -44,8 +44,8 @@
 
         {% if domain -%}
             <div class="domain">
-                <h2>{{ domain.name | safe }}</h2>
-                <p>{{ domain.description | safe }}</p>
+                <h2>{{ domain.name }}</h2>
+                <p>{{ domain.description }}</p>
             </div>
 
             <div id="domain_courses_div">

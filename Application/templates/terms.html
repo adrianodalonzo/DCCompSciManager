@@ -13,7 +13,7 @@
                 {% for term in terms %}
                     {% if term.name == 'Fall  ' %}
                         <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=term.id)}}">
-                            <h2>{{ term.id | safe }}</h2>
+                            <h2>{{ term.id }}</h2>
                         </a>
                     {% endif %}
                 {% endfor %}
@@ -23,23 +23,20 @@
                 {% for term in terms %}
                     {% if term.name == 'Winter' %}
                         <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=term.id)}}">
-                            <h2>{{ term.id | safe }}</h2>
+                            <h2>{{ term.id }}</h2>
                         </a>
                     {% endif %}
                 {% endfor %}
             </div>
-            <!-- {% for term in terms %}
-                <h2>{{ term.id | safe }}: {{ term.name | safe }}</h2>
-            {% endfor %} -->
         </div>
     {% else %}
         <div id="term_page">
-            <h1>Term {{ term | safe }}</h1>
+            <h1>Term {{ term }}</h1>
             <h2>Courses In This Term</h2>
 
             {% for course in courses %}
                 <a class="invisible_link" href="{{url_for('courses.show_course', course_id=course.id)}}">
-                    <p>{{ course.id | safe }}</p>
+                    <p>{{ course.id }}</p>
                 </a>
             {% endfor %}
         </div>

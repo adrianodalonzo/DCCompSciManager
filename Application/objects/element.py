@@ -30,7 +30,7 @@ class Element:
         return Element(element_dict['order'], element_dict['name'], element_dict['criteria'], element_dict['competency_id'])
     
     def to_json(self):
-        return {'id': self.id, 'order': self.order, 'name': self.name, 'criteria': self.criteria, 'competency_id': self.competency_id}
+        return {'order': self.order, 'name': self.name, 'criteria': self.criteria, 'competency_id': self.competency_id}
     
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField

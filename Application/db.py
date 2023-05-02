@@ -292,6 +292,13 @@ class Database:
                 
             except oracledb.Error:
                 pass
+    
+    def get_last_element_id(self):
+        with self.__get_cursor() as cursor:
+            result = cursor.execute("SELECT element_id FROM elements WHERE element_id = (SELECT MAX(element_id) FROM elements)")
+            for row in result:
+                element_id = int(row[0])
+                return element_id
 
     def add_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
@@ -300,7 +307,7 @@ class Database:
                 raise ValueError("Element already exist in this competency. Please change the element order.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO elements VALUES(:element_order, :element, :element_criteria, :competency_id)",
+            cursor.execute("INSERT INTO elements (element_order, element, element_criteria, competency_id) VALUES(:element_order, :element, :element_criteria, :competency_id)",
                            (element.order, element.name, element.criteria, element.competency_id))
 
     def modify_competency_element(self, element):

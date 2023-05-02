@@ -77,15 +77,31 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
         self.assertIsNotNone(json)
         
     def test_add_competency_element_with_post_and_delete(self, client):
-        element = Element(1, "Hello", "Criteria", "2O23")
+        competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.post('/api/competencies/2O23', json=element.to_json())
+        resp = client.put('/api/competencies/2O23', json=competency.to_json())
         self.assertEqual(resp.status_code, 201)
         
-        resp = client.delete("/api/competencies/2O23/1")
+        element = Element(1, "Hello", "Criteria", "2O23")
+
+        resp = client.post('/api/competencies/2O23/elements', json=element.to_json())
+        self.assertEqual(resp.status_code, 201)
+        
+        json = resp.json
+        url = json['location']
+
+        resp = client.delete(f"{url}")
         self.assertEqual(resp.status_code, 204) 
     
+        resp = client.delete("/api/competencies/2O23")
+        self.assertEqual(resp.status_code, 204)
+
     def test_add_competency_element_with_put_and_delete(self, client):
+        competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
+
+        resp = client.put('/api/competencies/2O23', json=competency.to_json())
+        self.assertEqual(resp.status_code, 201)
+        
         element = Element(1, "Hello", "Criteria", "2O23")
 
         resp = client.post('/api/competencies/2O23/elements', json=element.to_json())
@@ -100,7 +116,12 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
         resp = client.delete("/api/competencies/2O23")
         self.assertEqual(resp.status_code, 204)
         
-    def test_modify_competency_with_put_and_delete(self, client):
+    def test_modify_competency_element_with_put_and_delete(self, client):
+        competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
+
+        resp = client.put('/api/competencies/2O23', json=competency.to_json())
+        self.assertEqual(resp.status_code, 201)
+        
         element = Element(1, "Hello", "Criteria", "2O23")
         
         resp = client.post('/api/competencies', json=element.to_json())

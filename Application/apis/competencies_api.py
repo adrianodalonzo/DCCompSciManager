@@ -104,7 +104,7 @@ def competency_elements_api(competency_id):
                 get_db().add_competency_element(element)
                 infoset = {'id': "Success", 'description': 'Successfully added element'}
                 response = make_response(jsonify(infoset), 201)
-                response.headers['Location'] = url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element.id)
+                response.headers['Location'] = url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=get_db().get_last_element_id())
                 return response
                 
         elif request.method == 'GET':
@@ -122,7 +122,7 @@ def competency_elements_api(competency_id):
                         'description': 'There is problems in the database. Please try again later.'}
         return make_response(jsonify(error_infoset), 500)
     
-    except Exception:
+    except Exception as e:
         error_infoset = {'id': 'Not Found',
                         'description': 'Url not found on this server.'}
         return make_response(jsonify(error_infoset), 404)

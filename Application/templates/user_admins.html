@@ -5,23 +5,28 @@
 {% endblock %}
 
 {% block content %}
-    <h1>List of User Admins</h1>
-    <ul>
+    <h1 id="user_admins_heading">List of User Admins</h1>
+    <div class="users_toolbar">
+        <button>
+            <a href="{{ url_for('user_admins.add_user_admin') }}">Add User Admin</a>
+        </button>
+        <button>
+            <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete User Admin</a>
+        </button>
+        <button>
+            <a href="{{ url_for('user_admins.move_user_admin') }}">Move User Admin</a>
+        </button>
+    </div>
+    <ul class="users_list">
+        {% if user_admins|length == 0 %}
+            <h1>There Aren't Any User Admins Created!</h1>
+        {% endif %}
         {% for user_admin in user_admins %}
-            <div class="user_admin_info">
-                <li>
-                    <a href="{{ url_for('profile.get_profile', email=user_admin.email) }}">{{ user_admin.email }}, {{ user_admin.name }}</a>
-                </li>
+            <div class="member_info">
+                <a href="{{ url_for('profile.get_profile', email=user_admin.email) }}" class="invisible_link user_info">
+                    <img class="user_list_avatar" src="{{ url_for('auth.get_avatar', email=user_admin.email) }}">
+                    {{ user_admin.name }} <span class="member_email">&nbsp;{{ user_admin.email }}</span></a>
             </div>
         {% endfor %}
     </ul>
-    <button>
-        <a href="{{ url_for('user_admins.add_user_admin') }}">Add User Admin</a>
-    </button>
-    <button>
-        <a href="{{ url_for('user_admins.move_user_admin') }}">Move User Admin</a>
-    </button>
-    <button>
-        <a href="{{ url_for('user_admins.delete_user_admin') }}">Delete User Admin</a>
-    </button>
 {% endblock %}

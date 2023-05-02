@@ -4,7 +4,9 @@ from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
 from ..dbmanager import get_db
-from ..objects.user import DeleteUserAdminForm, MoveUserAdminForm, SignUpForm, User
+from ..objects.user import User
+
+from ..objects.forms import DeleteUserAdminForm, MoveUserAdminForm, SignUpForm
 
 bp = Blueprint('user_admins', __name__, url_prefix='/user_admins/')
 
@@ -70,19 +72,19 @@ def move_user_admin():
         flash('There Are No User Admins to Move!', category='message')
         return redirect(url_for('user_admins.list_user_admins'))
     form = MoveUserAdminForm()
-    form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
+    form.users.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
     form.groups.choices = ['Member', 'Admin']
 
     if request.method == 'POST' and form.validate_on_submit():
-        user_admin = get_db().get_user(form.user_admins.data)
+        user_admin = get_db().get_user(form.users.data)
         if user_admin:
             get_db().move_member(user_admin.email, form.groups.data)
             flash(f'User Admin Successfully Moved to {form.groups.data} Group!', category='valid')
             user_admins = get_db().get_user_admins()
-            form.user_admins.choices = [user_admin.email for user_admin in user_admins]
+            form.users.choices = [user_admin.email for user_admin in user_admins]
             return render_template('user_admins.html', form=form, user_admins=user_admins)
     elif request.method == 'GET':
-        return render_template('move_user_admin.html', form=form)
+        return render_template('move_user.html', form=form, user_type='User Admin')
     
 @bp.route('/delete/', methods=['GET', 'POST'])
 @login_required
@@ -92,14 +94,14 @@ def delete_user_admin():
         return redirect(url_for('user_admins.list_user_admins'))
     form = DeleteUserAdminForm()
     # assigns select options by looping through the members and adding the emails to the select
-    form.user_admins.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
+    form.users.choices = [user_admin.email for user_admin in get_db().get_user_admins()]
 
     if request.method == 'POST' and form.validate_on_submit():
-        user_admin = get_db().get_user(form.user_admins.data)
+        user_admin = get_db().get_user(form.users.data)
         if user_admin:
             get_db().delete_user(user_admin.email)
             flash('User Admin Successfully Deleted!', category='valid')
             user_admins = get_db().get_user_admins()
             return render_template('user_admins.html', user_admins=user_admins)
     elif request.method == 'GET':
-        return render_template('delete_user_admin.html', form=form)
+        return render_template('delete_user.html', form=form, user_type='User Admin')

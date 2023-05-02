@@ -28,7 +28,7 @@ create table courses (course_id varchar2(10) PRIMARY KEY,
 create table competencies (competency_id char(4) PRIMARY KEY, 
                             competency varchar2(250) NOT NULL,
                             competency_achievement varchar2(500) NOT NULL ,
-                            competency_type varchar2(10) NOT NULL);
+                            competency_type varchar2(15) NOT NULL);
                         
 --Element
 create table elements (element_id number generated always as identity PRIMARY KEY, 

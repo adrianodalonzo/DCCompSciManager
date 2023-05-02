@@ -3,8 +3,8 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 
-from ..objects.user import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, UnblockMemberForm, User
-
+from ..objects.user import User
+from ..objects.forms import BlockMemberForm, DeleteMemberForm, MoveMemberForm, SignUpForm, UnblockMemberForm
 from ..dbmanager import get_db
 
 bp = Blueprint('members', __name__, url_prefix='/members/')
@@ -80,10 +80,10 @@ def delete_member():
         return redirect(url_for('members.list_members'))
     form = DeleteMemberForm()
     # assigns select options by looping through the members and adding the emails to the select
-    form.members.choices = [member.email for member in get_db().get_members()]
+    form.users.choices = [member.email for member in get_db().get_members()]
 
     if request.method == 'POST' and form.validate_on_submit():
-        member = get_db().get_user(form.members.data)
+        member = get_db().get_user(form.users.data)
         if member:
             get_db().delete_user(member.email)
             flash('Member Successfully Deleted!', category='valid')
@@ -91,7 +91,7 @@ def delete_member():
             return render_template('members.html', members=members)
     elif request.method == 'GET':
         members = get_db().get_members()
-        return render_template('delete_member.html', members=members, form=form)
+        return render_template('delete_user.html', members=members, form=form, user_type='Member')
     
 @bp.route('/block/', methods=['GET', 'POST'])
 @login_required
@@ -104,15 +104,15 @@ def block_member():
         return redirect(url_for('members.list_members'))
     form = BlockMemberForm()
     # assigns select options by looping through the members and adding the emails to the select
-    form.members.choices = [member.email for member in get_db().get_unblocked_members()]
+    form.unblocked_members.choices = [member.email for member in get_db().get_unblocked_members()]
 
     if request.method == 'POST' and form.validate_on_submit():
-        member = get_db().get_user(form.members.data)
+        member = get_db().get_user(form.unblocked_members.data)
         if member:
             get_db().block_member(member.email)
             flash('Member Successfully Blocked!', category='valid')
             members = get_db().get_unblocked_members()
-            form.members.choices = [member.email for member in members]
+            form.unblocked_members.choices = [member.email for member in members]
 
             members = get_db().get_members()
             return render_template('members.html', form=form, members=members)
@@ -157,16 +157,16 @@ def move_member():
         flash('There Are No Members to Move!', category='message')
         return redirect(url_for('members.list_members'))
     form = MoveMemberForm()
-    form.members.choices = [member.email for member in get_db().get_members()]
+    form.users.choices = [member.email for member in get_db().get_members()]
     form.groups.choices = ['User Admin', 'Admin']
 
     if request.method == 'POST' and form.validate_on_submit():
-        member = get_db().get_user(form.members.data)
+        member = get_db().get_user(form.users.data)
         if member:
             get_db().move_member(member.email, form.groups.data)
             flash(f'Member Successfully Moved to {form.groups.data} Group!', category='valid')
             members = get_db().get_members()
-            form.members.choices = [member.email for member in members]
+            form.users.choices = [member.email for member in members]
             return render_template('members.html', form=form, members=members)
     elif request.method == 'GET':
-        return render_template('move_member.html', form=form)
+        return render_template('move_user.html', form=form, user_type='Member')

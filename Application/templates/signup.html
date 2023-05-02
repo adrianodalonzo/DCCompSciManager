@@ -3,13 +3,17 @@
     Sign Up
 {% endblock %}
 {% block content %}
-<h1>Sign Up</h1>
-<form method="POST" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.name.label }} {{ form.name() }}
-    {{ form.password.label }} {{ form.password() }}
-    {{ form.avatar.label }} {{ form.avatar() }}
-    <input type="submit" value="Sign Up!">
-</form>
+<div id="signup_div">
+    <h1>Sign Up</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div id="signup_input">
+            {{ form.csrf_token }}
+            {{ form.email.label }} {{ form.email() }}
+            {{ form.name.label }} {{ form.name() }}
+            {{ form.password.label }} {{ form.password() }}
+            {{ form.avatar.label }}<div id="avatar_input">{{ form.avatar() }}</div>
+            <input type="submit" value="Sign Up!">
+        </div>
+    </form>
+</div>
 {% endblock %}

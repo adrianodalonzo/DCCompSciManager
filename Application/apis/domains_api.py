@@ -35,17 +35,24 @@ def domains_api():
                     all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))
                 return jsonify(domain.to_json(url, all_course_urls)), 200
 
-        domains = get_db().get_all_domains()
-        json = []
-        for domain in domains:
-            url = url_for('domains_api.domain_api', domain_id=domain.id)
-            courses = get_db().get_courses_by_domain(domain.id)
-            all_courses_url = []
-            for course in courses:
-                course_url = url_for('courses_api.course_api', course_id=course.id)
-                all_courses_url.append(course_url)
-            json.append(domain.to_json(url, all_courses_url))
-        return jsonify(json), 200
+            if request.args.get("page"):
+                    page = request.args.get("page")
+                    if page:
+                        page_num = int(page)
+                        
+            domains, prev_page, next_page = get_db().get_all_domains(page_num=page_num, page_size=10)
+            for domain in domains:
+                url = url_for('domains_api.domain_api', domain_id=domain.id)
+                courses = get_db().get_courses_by_domain(domain.id)
+                all_courses_url = []
+                for course in courses:
+                    course_url = url_for('courses_api.course_api', course_id=course.id)
+                    all_courses_url.append(course_url)
+            
+            json = {'prev_page': prev_page, 
+                    'next_page': next_page, 
+                    'results':[domain.to_json(url, all_courses_url) for domain in domains]}
+            return jsonify(json), 200
     
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

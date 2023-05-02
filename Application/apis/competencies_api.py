@@ -20,14 +20,20 @@ def competencies_api():
                 return response
             
         elif request.method == 'GET':
-            if request.args:
+            if request.args.get("id"):
                 id = request.args.get("id")
                 competency = get_db().get_competency(id)
                 return jsonify(competency.to_json()), 200
-        
-        competencies = get_db().get_all_competencies()
-        json = [competency.__dict__ for competency in competencies]
-        return jsonify(json), 200
+            if request.args.get("page"):
+                    page = request.args.get("page")
+                    if page:
+                        page_num = int(page)
+            
+            competencies, prev_page, next_page = get_db().get_all_competencies(page_num=page_num, page_size=10)
+            json = {'prev_page': prev_page, 
+                    'next_page': next_page, 
+                    'results':[competency.to_json() for competency in competencies]}
+            return jsonify(json), 200
 
     except oracledb.Error:
         error_infoset = {'id': 'Internal Service Error',

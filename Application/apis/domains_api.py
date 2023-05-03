@@ -42,17 +42,10 @@ def domains_api():
                         page_num = int(page)
                         
             domains, prev_page, next_page = get_db().get_all_domains(page_num=page_num, page_size=10)
-            for domain in domains:
-                url = url_for('domains_api.domain_api', domain_id=domain.id)
-                courses = get_db().get_courses_by_domain(domain.id)
-                all_courses_url = []
-                for course in courses:
-                    course_url = url_for('courses_api.course_api', course_id=course.id)
-                    all_courses_url.append(course_url)
             
             json = {'prev_page': prev_page, 
                     'next_page': next_page, 
-                    'results':[domain.to_json(url, all_courses_url) for domain in domains]}
+                    'results':[domain.to_json(url_for('domains_api.domain_api', domain_id=domain.id), [url_for('courses_api.course_api', course_id=course.id) for course in get_db().get_courses_by_domain(domain.id)]) for domain in domains]}
             return jsonify(json), 200
     
     except oracledb.Error:
@@ -73,10 +66,10 @@ def domain_api(domain_id):
             if domains_json:
                 domain = Domain.from_json(domains_json)
                 existing_domain = get_db().get_domain(domain_id)
-                existing_domain.id = domain_id
+                domain.id = existing_domain.id
                 
                 if existing_domain:
-                    get_db().modify_domain(existing_domain)
+                    get_db().modify_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully updated domain.'}
                     response = make_response(jsonify(infoset), 200)
                     response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain_id)

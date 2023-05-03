@@ -23,7 +23,12 @@ def competencies_api():
             if request.args.get("id"):
                 id = request.args.get("id")
                 competency = get_db().get_competency(id)
-                return jsonify(competency.to_json()), 200
+                elements = get_db().get_competency_elements(competency.id)
+                url = url_for('competencies_api.competency_api', competency_id=competency.id)
+                all_elements_urls = []
+                for element in elements:
+                    all_elements_urls.append(url_for('competencies_api.competency_element_api', competency_id=competency.id, element_id=element.id))
+                return jsonify(competency.to_json(url, all_elements_urls)), 200
             
             page_num = 1
             if request.args.get("page"):
@@ -32,9 +37,10 @@ def competencies_api():
                         page_num = int(page)
                         
             competencies, prev_page, next_page = get_db().get_all_competencies(page_num=page_num, page_size=10)
+            
             json = {'prev_page': prev_page, 
                     'next_page': next_page, 
-                    'results':[competency.to_json() for competency in competencies]}
+                    'results':[competency.to_json(url_for('competencies_api.competency_api', competency_id=competency.id), [url_for('competencies_api.competency_element_api', competency_id=competency.id, element_id=element.id) for element in get_db().get_competency_elements(competency.id)]) for competency in competencies]}
             return jsonify(json), 200
 
     except oracledb.Error:
@@ -72,7 +78,12 @@ def competency_api(competency_id):
         elif request.method == 'GET':
             try:
                 competency = get_db().get_competency(competency_id)
-                return jsonify(competency.to_json())
+                elements = get_db().get_competency_elements(competency.id)
+                url = url_for('competencies_api.competency_api', competency_id=competency.id)
+                all_elements_urls = []
+                for element in elements:
+                    all_elements_urls.append(url_for('competencies_api.competency_element_api', competency_id=competency.id, element_id=element.id))
+                return jsonify(competency.to_json(url, all_elements_urls))
             
             except Exception:
                 error_infoset = {'id': 'Bad Request',
@@ -119,10 +130,10 @@ def competency_elements_api(competency_id):
             if request.args:
                 id = int(request.args.get("id"))
                 element = get_db().get_element(id)
-                return jsonify(element.to_json()), 200
+                return jsonify(element.to_json(url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element.id))), 200
             
             elements = get_db().get_competency_elements(competency_id)
-            json = [element.to_json() for element in elements]
+            json = [element.to_json(url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element.id)) for element in elements]
             return jsonify(json), 200
     
     except oracledb.Error:
@@ -158,7 +169,7 @@ def competency_element_api(competency_id, element_id):
         elif request.method == 'GET':
             try:
                 element = get_db().get_competency_element(competency_id, element_id)
-                return jsonify(element.to_json()), 200
+                return jsonify(element.to_json(url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element.id))), 200
             
             except Exception:
                 error_infoset = {'id': 'Bad Request',

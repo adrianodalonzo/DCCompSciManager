@@ -29,8 +29,8 @@ class Element:
             raise TypeError("Excepted dict")
         return Element(element_dict['order'], element_dict['name'], element_dict['criteria'], element_dict['competency_id'])
     
-    def to_json(self):
-        return {'order': self.order, 'name': self.name, 'criteria': self.criteria, 'competency_id': self.competency_id}
+    def to_json(self, current_url):
+        return {'order': self.order, 'name': self.name, 'criteria': self.criteria, 'competency_id': self.competency_id, 'url': current_url}
     
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField

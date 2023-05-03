@@ -458,8 +458,8 @@ class Database:
             raise ValueError("Domain does not exist. Please modify an existing domain.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description",
-                           (domain.name, domain.description))
+            cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description WHERE domain_id=:domain_id",
+                           (domain.name, domain.description, domain.id))
 
     def delete_domain(self, domain):
         if not self.get_domain(domain.id):

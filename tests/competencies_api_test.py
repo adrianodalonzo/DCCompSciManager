@@ -27,7 +27,7 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_add_competency_with_post_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.post('/api/competencies', json=competency.to_json())
+        resp = client.post('/api/competencies', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         
         resp = client.delete("/api/competencies/2O23")
@@ -36,7 +36,7 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_add_competency_with_put_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.put('/api/competencies/2O23', json=competency.to_json())
+        resp = client.put('/api/competencies/2O23', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         
         resp = client.delete("/api/competencies/2O23")
@@ -45,12 +45,12 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_modify_competency_with_put_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
         
-        resp = client.post('/api/competencies', json=competency.to_json())
+        resp = client.post('/api/competencies', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         
         competency = Competency("2O23", "HIIIIII", "Hi, how are you?", "Mandatory")
         
-        resp = client.put('/api/competencies/2O23', json=competency.to_json())
+        resp = client.put('/api/competencies/2O23', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 200)
         
         resp = client.delete("/api/competencies/2O23")
@@ -79,12 +79,12 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_add_competency_element_with_post_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.post('/api/competencies', json=competency.to_json())
+        resp = client.post('/api/competencies', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         
         element = Element(1, "Hello", "Criteria", "2O23")
 
-        resp = client.post('/api/competencies/2O23/elements', json=element.to_json())
+        resp = client.post('/api/competencies/2O23/elements', json=element.to_json(""))
         self.assertEqual(resp.status_code, 201)
         
         url = resp.headers['Location']
@@ -98,19 +98,19 @@ class TestCompetenciesApi(flask_unittest.ClientTestCase):
     def test_modify_competency_element_with_put_and_delete(self, client):
         competency = Competency("2O23", "Hello", "Hi, how are you?", "Mandatory")
 
-        resp = client.post('/api/competencies', json=competency.to_json())
+        resp = client.post('/api/competencies', json=competency.to_json("", ""))
         self.assertEqual(resp.status_code, 201)
         
         element = Element(1, "Hello", "Criteria", "2O23")
         
-        resp = client.post('/api/competencies/2O23/elements', json=element.to_json())
+        resp = client.post('/api/competencies/2O23/elements', json=element.to_json(""))
         self.assertEqual(resp.status_code, 201)
         
         url = resp.headers['Location']
         
         element = Element(2, "Hiiiii", "Criteria", "2O23")
         
-        resp = client.put(f'{url}', json=element.to_json())
+        resp = client.put(f'{url}', json=element.to_json(""))
         self.assertEqual(resp.status_code, 200)
         
         resp = client.delete(f"{url}")

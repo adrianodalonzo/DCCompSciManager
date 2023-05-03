@@ -29,8 +29,8 @@ class Competency:
             raise TypeError("Excepted dict")
         return Competency(competency_dict['id'], competency_dict['name'], competency_dict['achievement'], competency_dict['type'])
     
-    def to_json(self):
-        return {'id': self.id, 'name': self.name, 'achievement': self.achievement, 'type': self.type}
+    def to_json(self, current_url, urls):
+        return {'id': self.id, 'name': self.name, 'achievement': self.achievement, 'type': self.type, 'url':current_url, 'element_urls': urls}
         
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField

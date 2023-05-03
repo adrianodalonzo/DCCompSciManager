@@ -74,3 +74,6 @@ class MoveUserAdminForm(FlaskForm):
 class MoveAdminForm(FlaskForm):
     users = SelectField('Select an Admin to Move')
     groups = SelectField('to')
+
+class SearchForm(FlaskForm):
+    query = StringField("Enter Search Query", validators=[DataRequired()])

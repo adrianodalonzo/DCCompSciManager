@@ -22,5 +22,17 @@
         <a href="{{url_for('index.show_terms')}}" class="invisible_link">
             <h2>Terms</h2>
         </a>
+
+        {% if form %}
+            <div id="home_page_search">
+                <form method="post">
+                    {{ form.csrf_token }}
+
+                    {{ form.query.label }} {{ form.query() }}
+
+                    <input type="submit" value="Search" />
+                </form>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

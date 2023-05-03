@@ -636,11 +636,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_id) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
-                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_id) LIKE :search"""
-                                         , search=search_text.lower())
+                results = cursor.execute(sql)
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
@@ -655,11 +655,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_title) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
-                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_title) LIKE :search"""
-                                         , search=search_text.lower())
+                results = cursor.execute(sql)
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
@@ -674,11 +674,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(description) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
-                work_hours, description, domain_id, term_id FROM courses WHERE lower(description) LIKE :search"""
-                                         , search=search_text.lower())
+                results = cursor.execute(sql)
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
@@ -693,11 +693,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE lower(competency) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
-                competency_type FROM competencies WHERE lower(competency) LIKE :search"""
-                                         , search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     competency = Competency(row[0], row[1], row[2], row[3])
@@ -712,11 +712,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE lower(competency_achievement) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
-                competency_type FROM competencies WHERE lower(competency_achievement) LIKE :search"""
-                                         , search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     competency = Competency(row[0], row[1], row[2], row[3])
@@ -731,11 +731,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM view_competencies_elements WHERE lower(element) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
-                FROM view_competencies_elements WHERE lower(element) LIKE :search"""
-                                         , search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     element = Element(row[1], row[2], row[3], row[4])
@@ -751,11 +751,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM view_competencies_elements WHERE lower(element_criteria) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
-                FROM view_competencies_elements WHERE lower(element_criteria) LIKE :search"""
-                                         , search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     element = Element(row[1], row[2], row[3], row[4])
@@ -771,10 +771,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT domain, domain_description, domain_id FROM domains
+                WHERE lower(domain) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT domain, domain_description, domain_id FROM domains
-                WHERE lower(domain) LIKE :search""", search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     domain = Domain(row[0], row[1])
@@ -790,10 +791,11 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 matches = []
-                search_text = f'\'%{search_text}%\''
+                search_text = f'\'%{search_text.lower()}%\''
+                sql = """SELECT domain, domain_description, domain_id FROM domains
+                WHERE lower(domain_description) LIKE """ + search_text
 
-                results = cursor.execute("""SELECT domain, domain_description, domain_id FROM domains
-                WHERE lower(domain_description) LIKE :search""", search=search_text)
+                results = cursor.execute(sql)
 
                 for row in results:
                     domain = Domain(row[0], row[1])
@@ -822,15 +824,6 @@ class Database:
         element_results = element_names + element_criterias
         domain_results = domain_names + domain_descriptions
 
-        if len(course_results) == 0:
-            course_results = None
-        if len(competency_results) == 0:
-            competency_results = None
-        if len(element_results) == 0:
-            element_results = None
-        if len(domain_results) == 0:
-            domain_results = None
-        
         return course_results, competency_results, element_results, domain_results
 
 if __name__ == '__main__':

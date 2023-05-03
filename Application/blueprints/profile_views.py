@@ -31,9 +31,13 @@ def get_profile(email):
 def edit_profile(email):
     if not isinstance(email, str):
         flash("Email Passed MUST be a string!", category='invalid')
-        return redirect(url_for('profile.get_profile', email=email))
+        return redirect(url_for('index.index'))
     if get_db().get_user(email) not in get_db().get_users():
         flash("Can't Edit Profile of User which Doesn't Exist!", category='invalid')
+        return redirect(url_for('index.index'))
+    # fix this
+    if current_user.group != 'Admin' or current_user.email == email:
+        flash("You Don't Have Permissions to Edit Other User's Profiles!", category='invalid')
         return redirect(url_for('index.index'))
     user = get_db().get_user(email)
     form = EditProfileForm(obj=user)
@@ -70,12 +74,15 @@ def edit_profile(email):
                 if error == 'avatar':
                     flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
                 else:
-                    if len(form.errors) == 1:   
+                    if error == 'name':
+                        flash("Username Can't Contain any Spaces!", category='invalid')
+                    elif len(form.errors) == 1:   
                         flash(f"{error} is Invalid!", category='invalid')
                     else:
                         errors = ""
                         errors += f"{error.capitalize()}, "
                         flash(f"{errors} are Invalid!", category='invalid')  
+            return redirect(url_for('profile.get_profile', email=email))
     elif request.method == 'GET':
         return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=True, form=form)
 

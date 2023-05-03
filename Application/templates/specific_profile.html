@@ -23,7 +23,7 @@
                     <button>Reset Password</button>
                 </a>
                 {% if current_user.group == 'Admin' or is_my_profile %}
-                    <a href="{{ url_for('profile.edit_profile', email=current_user.email) }}">
+                    <a href="{{ url_for('profile.edit_profile', email=user.email) }}">
                         <button>Edit Profile</button>
                     </a>
                 {% endif %}

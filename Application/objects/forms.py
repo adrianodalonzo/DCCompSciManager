@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, EmailField, PasswordField, BooleanField, SelectField, IntegerField, TextAreaField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, Regexp
 
 class SignUpForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
-    name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100)])
+    name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100), Regexp(r'^[\w.@+-]+$')])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     avatar = FileField('Avatar', validators=[FileAllowed(['png'])])
     
@@ -51,7 +51,7 @@ class CourseElementForm(FlaskForm):
     id = SelectField('Element', validators=[DataRequired()])
 
 class EditProfileForm(FlaskForm):
-    name = StringField("Username", validators=[DataRequired()])
+    name = StringField("Username", validators=[DataRequired(), Regexp(r'^[\w.@+-]+$')])
     avatar = FileField('Avatar', validators=[FileAllowed(['png'])])
 
 # find way to use 1 class

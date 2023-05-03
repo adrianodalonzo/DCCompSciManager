@@ -7,6 +7,18 @@
 {% block content %}
     <h1 id="home_page_heading">Home</h1>
     <div id="home_page_content">
+        {% if form %}
+            <div id="home_page_search">
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div id="search_bar">
+                        <img src="{{ url_for('static', filename='images/search.png') }}" alt="search_icon">
+                        {{ form.query() }}
+                        <input type="submit" value="Search" />
+                    </div>
+                </form>
+            </div>
+        {% endif %}
         <a href="{{url_for('domains.show_domains')}}" class="invisible_link">
             <h2>Domains</h2>
         </a>
@@ -22,17 +34,5 @@
         <a href="{{url_for('index.show_terms')}}" class="invisible_link">
             <h2>Terms</h2>
         </a>
-
-        {% if form %}
-            <div id="home_page_search">
-                <form method="post">
-                    {{ form.csrf_token }}
-
-                    {{ form.query.label }} {{ form.query() }}
-
-                    <input type="submit" value="Search" />
-                </form>
-            </div>
-        {% endif %}
     </div>
 {% endblock %}

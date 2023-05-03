@@ -76,4 +76,4 @@ class MoveAdminForm(FlaskForm):
     groups = SelectField('to')
 
 class SearchForm(FlaskForm):
-    query = StringField("Enter Search Query", validators=[DataRequired()])
+    query = StringField(validators=[DataRequired()], render_kw={"placeholder": "Enter Search Query"})

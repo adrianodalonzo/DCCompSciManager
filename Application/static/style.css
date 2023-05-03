@@ -116,6 +116,21 @@ select {
     align-items: center;
     flex-wrap: wrap;
 }
+
+#home_page_search {
+    width: 18%;
+}
+
+#search_bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#search_bar img {
+    width: 30px;
+    height: 30px;
+}
 /* members page */
 .users_toolbar {
     display: flex;
@@ -247,6 +262,13 @@ button, input, input[type=submit], input[type=button] {
     border-radius: 5px;
     font-size: 15px;
     font-family: 'Montserrat', sans-serif;
+}
+
+#domain_courses_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 /* add domain page */
 #add_domain_content {
@@ -897,4 +919,15 @@ a.invisible_link:active {
 
 #to {
     margin-bottom: 0.5em;
+}
+/* search results page */
+.search_results_heading {
+    text-align: center;
+}
+
+#search_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

@@ -16,7 +16,7 @@ def domains_api():
                     get_db().add_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully added domain.'}
                     response = make_response(jsonify(infoset), 201)
-                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain.id)
+                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=get_db().get_last_element_id())
                     return response
                     
             except Exception:
@@ -35,6 +35,7 @@ def domains_api():
                     all_course_urls.append(url_for('courses_api.course_api', course_id=course.id))
                 return jsonify(domain.to_json(url, all_course_urls)), 200
 
+            page_num = 1
             if request.args.get("page"):
                     page = request.args.get("page")
                     if page:
@@ -71,13 +72,14 @@ def domain_api(domain_id):
             domains_json = request.json
             if domains_json:
                 domain = Domain.from_json(domains_json)
-                existing_domain = get_db().get_domain(domain.id)
+                existing_domain = get_db().get_domain(domain_id)
+                existing_domain.id = domain_id
                 
                 if existing_domain:
-                    get_db().modify_domain(domain)
+                    get_db().modify_domain(existing_domain)
                     infoset = {'id': "Success", 'description': 'Successfully updated domain.'}
                     response = make_response(jsonify(infoset), 200)
-                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain.id)
+                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain_id)
                     return response
                 
                 infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}

@@ -31,10 +31,12 @@ def courses_api():
                 url = url_for('courses_api.course_api', course_id=course.id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
                 return jsonify(course.to_json(url, domain_url)), 200
-                if request.args.get("page"):
-                    page = request.args.get("page")
-                    if page:
-                        page_num = int(page)
+            
+            page_num = 1
+            if request.args.get("page"):
+                page = request.args.get("page")
+                if page:
+                    page_num = int(page)
             
             courses, prev_page, next_page = get_db().get_all_courses(page_num=page_num, page_size=10)
             json = {'prev_page': prev_page, 

@@ -95,7 +95,7 @@ class Database:
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                              host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
 
-    def get_all_courses(self, page_num=1, page_size=50):
+    def get_all_courses(self, page_num=1, page_size=5):
         all_courses = []
         prev_page = None
         next_page = None
@@ -116,8 +116,8 @@ class Database:
                 
                 return all_courses, prev_page, next_page
 
-                    except oracledb.Error:
-                        pass
+            except oracledb.Error:
+                pass
 
     def get_course(self, id):  
         with self.__get_cursor() as cursor:
@@ -189,7 +189,7 @@ class Database:
             except oracledb.Error:
                 pass
     
-    def get_all_competencies(self, page_num=1, page_size=50):
+    def get_all_competencies(self, page_num=1, page_size=5):
         all_competencies = []
         prev_page = None
         next_page = None
@@ -197,7 +197,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
-                competency_type FROM competencies ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
+                competency_type FROM competencies ORDER BY competency_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     competency = Competency(row[0], row[1], row[2], row[3])
@@ -413,7 +413,7 @@ class Database:
 
             return courses_by_domain
         
-    def get_all_domains(self, page_num=1, page_size=50):
+    def get_all_domains(self, page_num=1, page_size=5):
         all_domains = []
         prev_page = None
         next_page = None
@@ -421,7 +421,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 results = cursor.execute("""SELECT domain_id, domain, domain_description 
-                FROM domains ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
+                FROM domains ORDER BY domain_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     domain = Domain(row[1], row[2])
@@ -437,6 +437,13 @@ class Database:
                         
             except oracledb.Error:
                 pass
+    
+    def get_last_domain_id(self):
+        with self.__get_cursor() as cursor:
+            result = cursor.execute("SELECT domain_id FROM domains WHERE domain_id = (SELECT MAX(domain_id) FROM domains)")
+            for row in result:
+                domain_id = int(row[0])
+                return domain_id
     
     def add_domain(self, domain):
         if domain.id is None:

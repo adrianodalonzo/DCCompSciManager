@@ -24,11 +24,13 @@ def competencies_api():
                 id = request.args.get("id")
                 competency = get_db().get_competency(id)
                 return jsonify(competency.to_json()), 200
+            
+            page_num = 1
             if request.args.get("page"):
                     page = request.args.get("page")
                     if page:
                         page_num = int(page)
-            
+                        
             competencies, prev_page, next_page = get_db().get_all_competencies(page_num=page_num, page_size=10)
             json = {'prev_page': prev_page, 
                     'next_page': next_page, 
@@ -120,7 +122,7 @@ def competency_elements_api(competency_id):
                 return jsonify(element.to_json()), 200
             
             elements = get_db().get_competency_elements(competency_id)
-            json = [element.to_json for element in elements]
+            json = [element.to_json() for element in elements]
             return jsonify(json), 200
     
     except oracledb.Error:
@@ -140,13 +142,14 @@ def competency_element_api(competency_id, element_id):
             elements_json = request.json
             if elements_json:
                 element = Element.from_json(elements_json)
-                existing_element = get_db().get_element(element.id)
+                existing_element = get_db().get_element(element_id)
+                existing_element.id = element_id
                 
                 if existing_element:
-                    get_db().modify_competency_element(element)
+                    get_db().modify_competency_element(existing_element)
                     infoset = {'id': "Success", 'description': 'Successfully updated element'}
                     response = make_response(jsonify(infoset), 200)
-                    response.headers['Location'] = url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element.id)
+                    response.headers['Location'] = url_for('competencies_api.competency_element_api', competency_id=competency_id, element_id=element_id)
                     return response
                 
                 infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}

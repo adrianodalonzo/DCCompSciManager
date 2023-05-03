@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Block Member
+{% endblock %}
+
+{% block content %}
+    <div id="block_unblock_content">
+        <h2>Block Member Form</h2>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.unblocked_members.label }} {{ form.unblocked_members() }}
+            <input type="submit" value="Block Member">
+        </form>
+    </div>
+{% endblock %}

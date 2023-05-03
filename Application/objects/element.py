@@ -15,6 +15,7 @@ class Element:
         self.competency_id = competency_id
 
         self.id = None
+        self.hours = None
 
     def __repr__(self):
         to_return = f'Element(order:{self.order}, name:{self.name}, ' + f'criteria:{self.criteria}, competency_id:{self.competency_id})'

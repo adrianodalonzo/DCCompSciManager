@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Unblock Member
+{% endblock %}
+
+{% block content %}
+    <div id="block_unblock_content">
+        <h2>Unblock Member Form</h2>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.blocked_members.label }} {{ form.blocked_members() }}
+            <input type="submit" value="Unblock Member">
+        </form>
+    </div>
+{% endblock %}

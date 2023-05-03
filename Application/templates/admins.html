@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Admins Dashboard
+{% endblock %}
+
+{% block content %}
+    <h1 id="admins_heading">List of Admins</h1>
+    <div class="users_toolbar">
+        <button>
+            <a href="{{ url_for('admins.add_admin') }}">Add Admin</a>
+        </button>
+        <button>
+            <a href="{{ url_for('admins.delete_admin') }}">Delete Admin</a>
+        </button>
+        <button>
+            <a href="{{ url_for('admins.move_admin') }}">Move Admin</a>
+        </button>
+    </div>
+    <ul class="users_list">
+        {% if admins|length == 0 %}
+            <h1>There Aren't Any Admins Created!</h1>
+        {% endif %}
+        {% for admin in admins %}
+            <div class="member_info">
+                <a href="{{ url_for('profile.get_profile', email=admin.email) }}" class="invisible_link user_info">
+                    <img class="user_list_avatar" src="{{ url_for('auth.get_avatar', email=admin.email) }}">
+                    {{ admin.name }} <span class="member_email">&nbsp;{{ admin.email }}</span></a>
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock %}

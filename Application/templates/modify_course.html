@@ -10,16 +10,29 @@
 
 {% block content %}
     {% if course %}
-        <h2>Editing Course</h2>
-        <p>{{ course }}</p>
+    <div id="course_info">
+            <h1>Editing {{ course.title }}</h1>
+            <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=course.term_id)}}">
+                <p><span class="underline">Term:</span> {{ course.term_id }}</p>
+            </a>
+            <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=course.domain_id)}}">
+                <p><span class="underline">Domain:</span> {{ domain.name }}</p>
+            </a>
+            <p><span class="underline">Theory Hours:</span> {{ course.theory_hours }}</p>
+            <p><span class="underline">Lab Hours:</span> {{ course.lab_hours }}</p>
+            <p><span class="underline">Work Hours:</span> {{ course.work_hours }}</p>
+            <p><span class="underline">Description:</span></p>
+            <p id="description">{{ course.description }}</p>
+        </div>
     {% endif %}
 
-    <form method="post">
+    <form id="edit_course_form" method="post">
         {{ form.csrf_token }}
 
         {% if course %}
-            <p>ID cannot be changed</p>
+            <p class="not_id_change_p">****ID cannot be changed****</p>
         {% else %}
+            <h2>Add Course</h2>
             {{ form.id.label }} {{ form.id() }}
         {% endif %}
 
@@ -28,9 +41,9 @@
         {{ form.lab_hours.label }} {{ form.lab_hours() }}
         {{ form.work_hours.label }} {{ form.work_hours() }}
         {{ form.description.label }} {{ form.description() }}
-        {{ form.domain.label }} {{ form.domain() }}
-        {{ form.term.label }} {{ form.term() }}
+        {{ form.domain_id.label }} {{ form.domain_id() }}
+        {{ form.term_id.label }} {{ form.term_id() }}
 
-        <input type="submit" value="submit">
+        <input type="submit" value="Submit">
     </form>
 {% endblock %}

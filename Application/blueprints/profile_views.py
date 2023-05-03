@@ -24,6 +24,10 @@ def get_profile(email):
     flash("A User With That Email Doesn't Exist!", category='invalid')
     return redirect(url_for('index.index'))
 
+@bp.route('/edit/<email>')
+@login_required
+def edit_profile(email):
+    pass
 @bp.route('/reset-password/', methods=['GET', 'POST'])
 @login_required
 def reset_password():

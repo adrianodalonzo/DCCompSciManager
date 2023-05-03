@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {{ form.csrf_token }}
         {{ form.name.label }} {{ form.name() }}
         {{ form.avatar.label }} {{ form.avatar() }}

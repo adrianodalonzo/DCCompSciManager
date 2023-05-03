@@ -35,8 +35,8 @@ def edit_profile(email):
     if get_db().get_user(email) not in get_db().get_users():
         flash("Can't Edit Profile of User which Doesn't Exist!", category='invalid')
         return redirect(url_for('index.index'))
-    # fix this
-    if current_user.group != 'Admin' or current_user.email == email:
+    
+    if current_user.group != 'Admin' and current_user.email != email:
         flash("You Don't Have Permissions to Edit Other User's Profiles!", category='invalid')
         return redirect(url_for('index.index'))
     user = get_db().get_user(email)
@@ -55,17 +55,18 @@ def edit_profile(email):
             
             # add checking for no avatar
 
-            # file = form.avatar.data
-            # avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], user.email)
-            # if not os.path.exists(avatar_dir):
-            #     os.makedirs(avatar_dir)
-            # avatar_path = os.path.join(avatar_dir, 'avatar.png')
-            # try:
-            #     file.save(avatar_path)
-            # except Exception:
-            #     flash('An error occurred with saving the avatar!', category='invalid')
-            #     return redirect(url_for('auth.signup'))
-            
+            file = form.avatar.data
+            avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], email)
+            if not os.path.exists(avatar_dir):
+                os.makedirs(avatar_dir)
+            avatar_path = os.path.join(avatar_dir, 'avatar.png')
+            if file:
+                try:
+                    file.save(avatar_path)
+                except Exception:
+                    flash('An error occurred with saving the avatar!', category='invalid')
+                    return redirect(url_for('auth.signup'))
+
             get_db().update_user_username(email, username)
             flash('Profile Edited Successfully!', category='valid')
             return redirect(url_for('profile.get_profile', email=user.email))

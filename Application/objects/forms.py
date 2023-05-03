@@ -50,6 +50,10 @@ class CourseElementForm(FlaskForm):
     # The choices are set after the form is created
     id = SelectField('Element', validators=[DataRequired()])
 
+class EditProfileForm(FlaskForm):
+    name = StringField("Username", validators=[DataRequired()])
+    avatar = FileField('Avatar', validators=[FileAllowed(['png'])])
+
 # find way to use 1 class
 class DeleteMemberForm(FlaskForm):
     users = SelectField('Select a Member to Delete')

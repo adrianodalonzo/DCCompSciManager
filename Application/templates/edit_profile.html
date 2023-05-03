@@ -5,5 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    {{ user.name }}
+    <form method="post">
+        {{ form.csrf_token }}
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.avatar.label }} {{ form.avatar() }}
+        <input type="submit" value="Save Changes">
+    </form>
 {% endblock %}

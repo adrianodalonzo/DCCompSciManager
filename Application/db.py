@@ -59,6 +59,19 @@ class Database:
         if result == '1':
             return True
         return False
+    
+    def get_users(self):
+        users = []
+        with self.__get_cursor() as cursor:
+            results = cursor.execute('select email, password, user_id, username, user_group, blocked from courses_users')
+
+            for result in results:
+                user = User(result[0], result[3], result[1])
+                user.id = result[2]
+                user.group = result[4]
+                user.blocked = Database.fetch_blocked(result[5])
+                users.append(user)
+        return users
             
     def get_user(self, email):
         if not isinstance(email, str):
@@ -99,6 +112,16 @@ class Database:
             user_id = self.get_user(email).id
             cursor.execute('update courses_users set password = :password where user_id = :id', password=password, id=user_id)
 
+    def update_user_username(self, email, username):
+        if not isinstance(email, str):
+            raise TypeError('Email MUST be a string!')
+        
+        if not isinstance(username, str):
+            raise TypeError('Username MUST be a string!')
+        
+        with self.__get_cursor() as cursor:
+            cursor.execute('update courses_users set username = :username where email = :email', username=username, email=email)
+            
     def get_members(self):
         members = []
         with self.__get_cursor() as cursor:

@@ -1,6 +1,7 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+import os
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from ..objects.forms import ResetPasswordForm
+from ..objects.forms import EditProfileForm, ResetPasswordForm
 from ..dbmanager import get_db
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -20,16 +21,63 @@ def get_profile(email):
     #     return redirect(url_for('profile.profile'))
     user = get_db().get_user(email)
     if user:
-        return render_template('specific_profile.html', user=user)
+        is_my_profile = email == current_user.email
+        return render_template('specific_profile.html', user=user, is_my_profile=is_my_profile)
     flash("A User With That Email Doesn't Exist!", category='invalid')
     return redirect(url_for('index.index'))
 
-@bp.route('/<email>/edit/')
+@bp.route('/<email>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit_profile(email):
-    if request.method == 'GET':
-        # add code to get  url path
-        return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=True)
+    if not isinstance(email, str):
+        flash("Email Passed MUST be a string!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=email))
+    if get_db().get_user(email) not in get_db().get_users():
+        flash("Can't Edit Profile of User which Doesn't Exist!", category='invalid')
+        return redirect(url_for('index.index'))
+    user = get_db().get_user(email)
+    form = EditProfileForm(obj=user)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            username = form.name.data
+            username_exists = False
+
+            for user_iterator in get_db().get_users():
+                username_exists = user_iterator.name == username
+
+            if username_exists:
+                flash('A User with that Username Already Exists!', category='invalid')
+                return redirect(url_for('index.index'))
+            
+            # add checking for no avatar
+
+            # file = form.avatar.data
+            # avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], user.email)
+            # if not os.path.exists(avatar_dir):
+            #     os.makedirs(avatar_dir)
+            # avatar_path = os.path.join(avatar_dir, 'avatar.png')
+            # try:
+            #     file.save(avatar_path)
+            # except Exception:
+            #     flash('An error occurred with saving the avatar!', category='invalid')
+            #     return redirect(url_for('auth.signup'))
+            
+            get_db().update_user_username(email, username)
+            flash('Profile Edited Successfully!', category='valid')
+            return redirect(url_for('profile.get_profile', email=user.email))
+        else:
+            for error in form.errors:
+                if error == 'avatar':
+                    flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
+                else:
+                    if len(form.errors) == 1:   
+                        flash(f"{error} is Invalid!", category='invalid')
+                    else:
+                        errors = ""
+                        errors += f"{error.capitalize()}, "
+                        flash(f"{errors} are Invalid!", category='invalid')  
+    elif request.method == 'GET':
+        return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=True, form=form)
 
 @bp.route('/reset-password/', methods=['GET', 'POST'])
 @login_required

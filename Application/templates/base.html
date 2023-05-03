@@ -45,7 +45,7 @@
                         <li><a href="{{ url_for('admins.list_admins') }}">Admins Dashboard</a></li>
                     {% endif %}
                     <li>
-                        <a id="small_avatar_a" href="{{ url_for('profile.profile') }}">
+                        <a id="small_avatar_a" href="{{ url_for('profile.get_profile', email=current_user.email) }}">
                             <img id="small_avatar" src="{{ url_for('auth.get_avatar', email=current_user.email) }}" alt="small_profile_pic">Profile
                         </a>
                     </li>

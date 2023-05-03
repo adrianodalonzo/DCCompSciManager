@@ -16,7 +16,7 @@ def domains_api():
                     get_db().add_domain(domain)
                     infoset = {'id': "Success", 'description': 'Successfully added domain.'}
                     response = make_response(jsonify(infoset), 201)
-                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=get_db().get_last_element_id())
+                    response.headers['Location'] = url_for('domains_api.domain_api', domain_id=get_db().get_last_domain_id())
                     return response
                     
             except Exception:

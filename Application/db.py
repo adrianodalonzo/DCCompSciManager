@@ -632,6 +632,207 @@ class Database:
         with self.__connection.cursor() as cursor:
             cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
 
+    def search_course_id(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_id) LIKE :search"""
+                                         , search=search_text.lower())
+
+                for row in results:
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                    matches.append(course)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_course_title(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(course_title) LIKE :search"""
+                                         , search=search_text.lower())
+
+                for row in results:
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                    matches.append(course)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_course_description(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
+                work_hours, description, domain_id, term_id FROM courses WHERE lower(description) LIKE :search"""
+                                         , search=search_text.lower())
+
+                for row in results:
+                    course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                    matches.append(course)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_competency_name(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE lower(competency) LIKE :search"""
+                                         , search=search_text)
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    matches.append(competency)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_competency_achievement(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
+                competency_type FROM competencies WHERE lower(competency_achievement) LIKE :search"""
+                                         , search=search_text)
+
+                for row in results:
+                    competency = Competency(row[0], row[1], row[2], row[3])
+                    matches.append(competency)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_element_name(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM view_competencies_elements WHERE lower(element) LIKE :search"""
+                                         , search=search_text)
+
+                for row in results:
+                    element = Element(row[1], row[2], row[3], row[4])
+                    element.id = row[0]
+                    matches.append(element)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_element_criteria(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM view_competencies_elements WHERE lower(element_criteria) LIKE :search"""
+                                         , search=search_text)
+
+                for row in results:
+                    element = Element(row[1], row[2], row[3], row[4])
+                    element.id = row[0]
+                    matches.append(element)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_domain_name(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT domain, domain_description, domain_id FROM domains
+                WHERE lower(domain) LIKE :search""", search=search_text)
+
+                for row in results:
+                    domain = Domain(row[0], row[1])
+                    domain.id = row[2]
+                    matches.append(domain)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+
+    def search_domain_description(self, search_text):
+        with self.__get_cursor() as cursor:
+            try:
+                matches = []
+                search_text = f'\'%{search_text}%\''
+
+                results = cursor.execute("""SELECT domain, domain_description, domain_id FROM domains
+                WHERE lower(domain_description) LIKE :search""", search=search_text)
+
+                for row in results:
+                    domain = Domain(row[0], row[1])
+                    domain.id = row[2]
+                    matches.append(domain)
+
+                return matches
+            
+            except oracledb.Error:
+                pass
+    
+    def search_all(self, search_text):
+        # I am sorry PDBORA19C
+        course_ids = self.search_course_id(search_text)
+        course_titles = self.search_course_title(search_text)
+        course_descriptions = self.search_course_description(search_text)
+        competency_names = self.search_competency_name(search_text)
+        comptency_achievements = self.search_competency_achievement(search_text)
+        element_names = self.search_element_name(search_text)
+        element_criterias = self.search_element_criteria(search_text)
+        domain_names = self.search_domain_name(search_text)
+        domain_descriptions = self.search_domain_description(search_text)
+
+        course_results = course_ids + course_titles + course_descriptions
+        competency_results = competency_names + comptency_achievements
+        element_results = element_names + element_criterias
+        domain_results = domain_names + domain_descriptions
+
+        if len(course_results) == 0:
+            course_results = None
+        if len(competency_results) == 0:
+            competency_results = None
+        if len(element_results) == 0:
+            element_results = None
+        if len(domain_results) == 0:
+            domain_results = None
+        
+        return course_results, competency_results, element_results, domain_results
+
 if __name__ == '__main__':
     print('Provide file to initialize database')
     file_path = input()

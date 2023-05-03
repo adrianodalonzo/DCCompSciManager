@@ -30,7 +30,11 @@ def courses_api():
                 course = get_db().get_course(id)
                 url = url_for('courses_api.course_api', course_id=course.id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
-                return jsonify(course.to_json(url, domain_url)), 200
+                elements = get_db().get_course_elements(course.id)
+                all_elements_urls = []
+                for element in elements:
+                    all_elements_urls.append(url_for('competencies_api.competency_element_api', competency_id=element.competency_id, element_id=element.id))
+                return jsonify(course.to_json(url, domain_url, all_elements_urls)), 200
             
             page_num = 1
             if request.args.get("page"):
@@ -41,7 +45,7 @@ def courses_api():
             courses, prev_page, next_page = get_db().get_all_courses(page_num=page_num, page_size=10)
             json = {'prev_page': prev_page, 
                     'next_page': next_page, 
-                    'results':[course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id)) for course in courses]}
+                    'results':[course.to_json(url_for('courses_api.course_api', course_id=course.id), url_for('domains_api.domain_api', domain_id=course.domain_id), [url_for('competencies_api.competency_element_api', competency_id=element.competency_id, element_id=element.id) for element in get_db().get_course_elements(course.id)]) for course in courses]}
             return jsonify(json), 200
     
     except oracledb.Error:
@@ -81,7 +85,11 @@ def course_api(course_id):
                 course = get_db().get_course(course_id)
                 url = url_for('courses_api.course_api', course_id=course_id)
                 domain_url = url_for('domains_api.domain_api', domain_id=course.domain_id)
-                return jsonify(course.to_json(url, domain_url)), 200
+                elements = get_db().get_course_elements(course.id)
+                all_elements_urls = []
+                for element in elements:
+                    all_elements_urls.append(url_for('competencies_api.competency_element_api', competency_id=element.competency_id, element_id=element.id))
+                return jsonify(course.to_json(url, domain_url, all_elements_urls)), 200
             
             except Exception:
                 error_infoset = {'id': 'Bad Request',

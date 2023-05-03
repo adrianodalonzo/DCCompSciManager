@@ -693,10 +693,6 @@ class Database:
                             (domain.name, domain.description))
         elif self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")
-        
-        with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
-                           (domain.name, domain.description))
 
     def modify_domain(self, domain):
         if not self.get_domain(domain.id):

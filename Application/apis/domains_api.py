@@ -75,7 +75,7 @@ def domain_api(domain_id):
                     response.headers['Location'] = url_for('domains_api.domain_api', domain_id=domain_id)
                     return response
                 
-                infoset = {'id': "Not Supported", 'description': 'Does not support adding a new element in this route.'}
+                infoset = {'id': "Not Supported", 'description': 'Does not support adding a new domain  in this route.'}
                 return make_response(jsonify(infoset), 404)
             
         elif request.method == 'GET':

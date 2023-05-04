@@ -7,18 +7,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('profile', __name__, url_prefix='/profile/')
 
-# @bp.route('/')
-# @login_required
-# def profile():
-#     return render_template('profile.html')
-
 @bp.route('/<email>/')
 @login_required
 def get_profile(email):
     if not isinstance(email, str):
         return TypeError("Email MUST be a string!")
-    # if current_user.email == email:
-    #     return redirect(url_for('profile.profile'))
     user = get_db().get_user(email)
     if user:
         is_my_profile = email == current_user.email
@@ -39,6 +32,7 @@ def edit_profile(email):
     if current_user.group != 'Admin' and current_user.email != email:
         flash("You Don't Have Permissions to Edit Other User's Profiles!", category='invalid')
         return redirect(url_for('index.index'))
+    
     user = get_db().get_user(email)
     form = EditProfileForm(obj=user)
     if request.method == 'POST':
@@ -52,8 +46,6 @@ def edit_profile(email):
             if username_exists:
                 flash('A User with that Username Already Exists!', category='invalid')
                 return redirect(url_for('index.index'))
-            
-            # add checking for no avatar
 
             file = form.avatar.data
             avatar_dir = os.path.join(current_app.config['IMAGE_PATH'], email)
@@ -87,30 +79,42 @@ def edit_profile(email):
     elif request.method == 'GET':
         return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=True, form=form)
 
-@bp.route('/reset-password/', methods=['GET', 'POST'])
+@bp.route('/<email>/reset-password/', methods=['GET', 'POST'])
 @login_required
-def reset_password():
+def reset_password(email):
+    if not isinstance(email, str):
+        flash("Email Passed MUST be a string!", category='invalid')
+        return redirect(url_for('index.index'))
+    if get_db().get_user(email) not in get_db().get_users():
+        flash("Can't Reset Password of User which Doesn't Exist!", category='invalid')
+        return redirect(url_for('index.index'))
+    
+    if current_user.group != 'Admin' and current_user.email != email:
+        flash("You Don't Have Permissions to Reset Other User's Passwords!", category='invalid')
+        return redirect(url_for('index.index'))
+
+    user = get_db().get_user(email)
     form = ResetPasswordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             old_password = form.old_password.data
-            if check_password_hash(current_user.password, old_password):
+            if check_password_hash(user.password, old_password):
                 new_password = form.new_password.data
                 retyped_new_password = form.retype_new_password.data
                 if new_password == retyped_new_password:
                     if new_password == old_password:
                         flash("If You Want to Reset your Password, Your Old and New Passwords Must be Different!", category='message')
-                        return redirect(url_for('profile.reset_password'))
+                        return redirect(url_for('profile.reset_password', email=user.email))
                     hashed_password = generate_password_hash(new_password)
-                    get_db().update_user_password(current_user.email, hashed_password)
+                    get_db().update_user_password(user.email, hashed_password)
                     flash('Password Successfully Resetted!', category='valid')
-                    return render_template('profile.html')
+                    return render_template('specific_profile.html', user=user)
                 else:
                     flash("The New Password and Retyped New Password Must Both Match!", category='invalid')
-                    return redirect(url_for('profile.reset_password'))
+                    return redirect(url_for('profile.reset_password', email=user.email))
             else:
                 flash("The Password You Entered Doesn't Match Your Old Password!", category='invalid')
-                return redirect(url_for('profile.reset_password'))
+                return redirect(url_for('profile.reset_password', email=user.email))
         else:
             for error in form.errors:
                 if error == 'avatar':

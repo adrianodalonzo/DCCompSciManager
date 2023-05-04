@@ -100,9 +100,6 @@ def reset_password(email):
             new_password = form.new_password.data
             retyped_new_password = form.retype_new_password.data
             if new_password == retyped_new_password:
-                # if new_password == old_password:
-                #     flash("If You Want to Reset your Password, Your Old and New Passwords Must be Different!", category='message')
-                #     return redirect(url_for('profile.reset_password', email=user.email))
                 hashed_password = generate_password_hash(new_password)
                 get_db().update_user_password(user.email, hashed_password)
                 flash('Password Successfully Resetted!', category='valid')

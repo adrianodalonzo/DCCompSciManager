@@ -6,7 +6,7 @@
     3. Adriano D'Alonzo
 
 ## Development Setup Steps:
-    a) Install Python 3.7 or `greater`
+    a) Install Python 3.7 or greater
     b) Create a virtual environment [ Windows: `py -m venv .venv` ] [ Linux/Mac: `python3 -m venv .venv` ]
     c) Activate virtual environment [ Windows: `.venv\Scripts\activate` ] [ Linux/Mac: `. .venv/bin/activate` ]
     d) Install requirements [ `pip install -r requirements.txt` ]

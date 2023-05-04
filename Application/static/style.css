@@ -733,13 +733,6 @@ a.invisible_link:active {
     display: flex;
 }
 
-/* .profile_info {
-    /* display: flex; */
-    /* flex-direction: column;
-    align-items: center;
-    margin-top: 2em; */
-
-/* custom 404 */
 #custom_404_area {
     display: flex;
     flex-direction: column;
@@ -816,6 +809,21 @@ a.invisible_link:active {
 
 #reset_password_content form input {
     margin-bottom: 1em;
+}
+/* edit profile page */
+#edit_profile_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid lightskyblue;
+    width: fit-content;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 10px;
 }
 /* add user page */
 #add_user_content {

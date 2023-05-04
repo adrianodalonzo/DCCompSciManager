@@ -45,7 +45,9 @@ def signup():
                 if error == 'avatar':
                     flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
                 else:
-                    if len(form.errors) == 1:
+                    if error == 'name':
+                        flash("Username Can't Contain any Spaces!", category='invalid')
+                    elif len(form.errors) == 1:
                         flash(f"{error} is Invalid!", category='invalid')
                     else:
                         errors = ""
@@ -90,6 +92,7 @@ def login():
                         errors = ""
                         errors += f"{error.capitalize()}, "
                         flash(f"{errors} are Invalid!", category='invalid')
+            return redirect(url_for('index.index'))
     elif request.method == 'GET':
         return render_template('login.html', form=form)
     
@@ -103,8 +106,8 @@ def logout():
 @bp.route('/avatar/<email>/avatar.png/')
 @login_required
 def get_avatar(email):
-    # if current_user.blocked:
-    #     flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
-    #     return redirect(url_for('profile.profile'))
+    if current_user.blocked and current_user.email != email:
+        flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     dir = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(dir, 'avatar.png')

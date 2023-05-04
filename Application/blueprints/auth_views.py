@@ -103,8 +103,8 @@ def logout():
 @bp.route('/avatar/<email>/avatar.png/')
 @login_required
 def get_avatar(email):
-    # if current_user.blocked:
-    #     flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
-    #     return redirect(url_for('profile.profile'))
+    if current_user.blocked and current_user.email != email:
+        flash("You Have Been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     dir = os.path.join(current_app.config['IMAGE_PATH'], email)
     return send_from_directory(dir, 'avatar.png')

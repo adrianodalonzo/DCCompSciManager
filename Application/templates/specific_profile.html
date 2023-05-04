@@ -19,9 +19,11 @@
             <h2>{{ user.email }}</h2>
             <h3>{{ user.group }}</h3>
             <div id="profile_controls">
-                <a href="{{ url_for('profile.reset_password') }}">
-                    <button>Reset Password</button>
-                </a>
+                {% if current_user.email == user.email %}
+                    <a href="{{ url_for('profile.reset_password') }}">
+                        <button>Reset Password</button>
+                    </a>
+                {% endif %}
                 {% if current_user.group == 'Admin' or is_my_profile %}
                     <a href="{{ url_for('profile.edit_profile', email=user.email) }}">
                         <button>Edit Profile</button>

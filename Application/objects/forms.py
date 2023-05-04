@@ -7,7 +7,7 @@ class SignUpForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])
     name = StringField('Username', validators=[DataRequired(), Length(min=1, max=100), Regexp(r'^[\w.@+-]+$')])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    avatar = FileField('Avatar', validators=[FileAllowed(['png'])])
+    avatar = FileField('Avatar', validators=[FileAllowed(['png']), DataRequired()])
     
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(min=10, max=100)])

@@ -45,7 +45,9 @@ def signup():
                 if error == 'avatar':
                     flash("Avatar Inputed Must Have a '.png' Extension!", category='invalid')
                 else:
-                    if len(form.errors) == 1:
+                    if error == 'name':
+                        flash("Username Can't Contain any Spaces!", category='invalid')
+                    elif len(form.errors) == 1:
                         flash(f"{error} is Invalid!", category='invalid')
                     else:
                         errors = ""

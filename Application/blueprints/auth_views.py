@@ -90,6 +90,7 @@ def login():
                         errors = ""
                         errors += f"{error.capitalize()}, "
                         flash(f"{errors} are Invalid!", category='invalid')
+            return redirect(url_for('index.index'))
     elif request.method == 'GET':
         return render_template('login.html', form=form)
     

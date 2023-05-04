@@ -96,6 +96,20 @@ def reset_password(email):
     user = get_db().get_user(email)
     form = ResetPasswordForm()
     if request.method == 'POST':
+        if not form.old_password.data:
+            new_password = form.new_password.data
+            retyped_new_password = form.retype_new_password.data
+            if new_password == retyped_new_password:
+                # if new_password == old_password:
+                #     flash("If You Want to Reset your Password, Your Old and New Passwords Must be Different!", category='message')
+                #     return redirect(url_for('profile.reset_password', email=user.email))
+                hashed_password = generate_password_hash(new_password)
+                get_db().update_user_password(user.email, hashed_password)
+                flash('Password Successfully Resetted!', category='valid')
+                return render_template('specific_profile.html', user=user)
+            else:
+                flash("The New Password and Retyped New Password Must Both Match!", category='invalid')
+                return redirect(url_for('profile.reset_password', email=user.email))
         if form.validate_on_submit():
             old_password = form.old_password.data
             if check_password_hash(user.password, old_password):
@@ -126,5 +140,7 @@ def reset_password(email):
                         errors = ""
                         errors += f"{error.capitalize()}, "
                         flash(f"{errors} are Invalid!", category='invalid')
+            return redirect(url_for('profile.get_profile', email=email))
     elif request.method == 'GET':
-        return render_template('reset_password.html', form=form)
+        is_my_profile = email == current_user.email
+        return render_template('reset_password.html', form=form, is_my_profile=is_my_profile)

@@ -10,7 +10,7 @@ create table terms (term_id number PRIMARY KEY,
                     term_name char(6) NOT NULL);
 
 --Domain
-create table domains (domain_id number PRIMARY KEY, 
+create table domains (domain_id number generated always as identity PRIMARY KEY, 
                         domain varchar2(50) NOT NULL, 
                         domain_description varchar2(500) NOT NULL);
 

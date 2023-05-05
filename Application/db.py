@@ -232,22 +232,29 @@ class Database:
         return oracledb.connect(user=os.environ['DBUSER'], password=os.environ['DBPWD'],
                                              host="198.168.52.211", port=1521, service_name="pdbora19c.dawsoncollege.qc.ca")
 
-    def get_all_courses(self):
+    def get_all_courses(self, page_num=1, page_size=5):
+        all_courses = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1)*page_size
         with self.__get_cursor() as cursor:
-            all_courses = []
-
             try:
                 results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours,
-                work_hours, description, domain_id, term_id FROM courses""")
+                work_hours, description, domain_id, term_id FROM courses ORDER BY course_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     all_courses.append(course)
+                
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_courses) > 0 and (len(all_courses) >= page_size):
+                    next_page = page_num + 1
+                
+                return all_courses, prev_page, next_page
 
             except oracledb.Error:
                 pass
-
-            return all_courses
 
     def get_course(self, id):  
         with self.__get_cursor() as cursor:
@@ -286,7 +293,7 @@ class Database:
             raise ValueError("Course does not exist. Please choose an existing course to delete.") 
 
         with self.__connection.cursor() as cursor:
-            cursor.execute("DELETE FROM courses WHERE course_id=:course_id)", course_id=id)
+            cursor.execute("DELETE FROM courses WHERE course_id=:course_id", course_id=id)
 
     def get_course_competencies(self, id): 
         with self.__get_cursor() as cursor:
@@ -319,22 +326,29 @@ class Database:
             except oracledb.Error:
                 pass
     
-    def get_all_competencies(self):
+    def get_all_competencies(self, page_num=1, page_size=5):
+        all_competencies = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1) * page_size
         with self.__get_cursor() as cursor:
-            all_competencies = []
-
             try:
                 results = cursor.execute("""SELECT competency_id, competency, competency_achievement, 
-                competency_type FROM competencies""")
+                competency_type FROM competencies ORDER BY competency_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     competency = Competency(row[0], row[1], row[2], row[3])
                     all_competencies.append(competency)
+                    
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_competencies) > 0 and (len(all_competencies) >= page_size):
+                    next_page = page_num + 1
                 
+                return all_competencies, prev_page, next_page
+                        
             except oracledb.Error:
                 pass
-
-        return all_competencies
 
     def add_competency(self, competency):
         if self.get_competency(competency.id):
@@ -377,19 +391,66 @@ class Database:
 
             return all_competency_elements
 
-    def get_element(self, name):
+
+    def get_competency_element(self, competency_id, element_id):
+        if not isinstance(element_id, int):
+            raise TypeError("id must be an int")
+        
         with self.__get_cursor() as cursor:
             try:
-                result = cursor.execute("""SELECT element_id, element_order, element_criteria, competency_id 
-                FROM view_competencies_elements WHERE element=:name""", name=name)
+                result = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM elements WHERE competency_id=:compentecy_id AND element_id=:element_id""", (competency_id, element_id))
 
                 for row in result:
-                    element = Element(row[1], name, row[2], row[3])
+                    element = Element(row[1], row[2], row[3], row[4])
                     element.id = row[0]
                     return element
+
             except oracledb.Error:
                 pass
     
+    def get_all_elements(self):
+        elements = []
+        
+        with self.__get_cursor() as cursor:
+            try:
+                results = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM elements""")
+
+                for row in results:
+                    element = Element(row[1], row[2], row[3], row[4])
+                    element.id = row[0]
+                    elements.append(element)
+                    
+                return elements    
+            
+            except oracledb.Error:
+                pass
+            
+    def get_element(self, id):
+        if not isinstance(id, int):
+            raise TypeError("id must be an int")
+        
+        with self.__get_cursor() as cursor:
+            try:
+                result = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
+                FROM elements WHERE element_id=:id""", id=id)
+
+                for row in result:
+                    element = Element(row[1], row[2], row[3], row[4])
+                    element.id = row[0]
+                    return element
+                
+            except oracledb.Error:
+                pass
+        
+    def get_last_element_id(self):
+        with self.__get_cursor() as cursor:
+            result = cursor.execute("SELECT element_id FROM elements WHERE element_id = (SELECT MAX(element_id) FROM elements)")
+            for row in result:
+                element_id = int(row[0])
+                return element_id
+
     def get_element_by_both_id(self, course_id, elem_id):
         with self.__get_cursor() as cursor:
             try:
@@ -575,15 +636,15 @@ class Database:
             try:
                 result = cursor.execute("""SELECT domain, domain_description FROM domains
                 WHERE domain_id=:id""", id=id)
-
+                
                 for row in result:
                     domain = Domain(row[0], row[1])
                     domain.id = id
                     return domain
                 
             except oracledb.Error:
-                pass
-    
+                return None
+
     def get_courses_by_domain(self, id):
         if not isinstance(id, int):
             raise TypeError("id must be an int")
@@ -605,23 +666,39 @@ class Database:
 
             return courses_by_domain
         
-    def get_all_domains(self):
+    def get_all_domains(self, page_num=1, page_size=5):
+        all_domains = []
+        prev_page = None
+        next_page = None
+        offset = (page_num - 1) * page_size
         with self.__get_cursor() as cursor:
-            all_domains = []
-
             try:
                 results = cursor.execute("""SELECT domain_id, domain, domain_description 
-                FROM domains""")
+                FROM domains ORDER BY domain_id OFFSET :offset ROWS FETCH NEXT :page_size ROWS ONLY""", offset=offset, page_size=page_size)
 
                 for row in results:
                     domain = Domain(row[1], row[2])
                     domain.id = row[0]
                     all_domains.append(domain)
-
+                    
+                if page_num > 1:
+                    prev_page = page_num - 1
+                if len(all_domains) > 0 and (len(all_domains) >= page_size):
+                    next_page = page_num + 1
+                
+                return all_domains, prev_page, next_page
+                        
             except oracledb.Error:
                 pass
 
             return all_domains
+    
+    def get_last_domain_id(self):
+        with self.__get_cursor() as cursor:
+            result = cursor.execute("SELECT domain_id FROM domains WHERE domain_id = (SELECT MAX(domain_id) FROM domains)")
+            for row in result:
+                domain_id = int(row[0])
+                return domain_id
     
     def get_domain_choices(self):
         domains = self.get_all_domains()
@@ -633,20 +710,20 @@ class Database:
         return domain_choices
     
     def add_domain(self, domain):
-        if self.get_domain(domain.id):
+        if domain.id is None:
+            with self.__connection.cursor() as cursor:
+                cursor.execute("INSERT INTO domains (domain, domain_description) VALUES(:domain, :domain_description)",
+                            (domain.name, domain.description))
+        elif self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")
-        
-        with self.__connection.cursor() as cursor:
-            cursor.execute("INSERT INTO domains VALUES(:domain, :domain_description)",
-                           (domain.name, domain.description))
 
     def modify_domain(self, domain):
         if not self.get_domain(domain.id):
             raise ValueError("Domain does not exist. Please modify an existing domain.")
         
         with self.__connection.cursor() as cursor:
-            cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description",
-                           (domain.name, domain.description))
+            cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description WHERE domain_id=:domain_id",
+                           (domain.name, domain.description, domain.id))
 
     def delete_domain(self, domain):
         if not self.get_domain(domain.id):

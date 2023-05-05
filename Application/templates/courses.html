@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Courses
+{% endblock %}
+
+{% block content %}
+    <h1 id="courses_page_heading">
+        {% if domain %}    
+            {{ domain.name }}
+        {% elif term %}
+            Term {{ term | safe }}
+        {% endif %}
+        Courses
+    </h1>
+    <div id="courses_page_content">
+        {% if current_user.is_authenticated %}
+            <div id="add_course_btn">
+                <a href="{{url_for('courses.add_course')}}"><input type="button" value="Add Course" /></a>
+            </div>
+        {% endif %}
+        
+        {% for course in courses %}
+        <div id="course_list">
+        <h2><a href="{{url_for('courses.show_course', course_id=course.id)}}" class="invisible_link course">{{ course.title }}</a></h2>
+        </div>
+        <br/>
+        {% endfor %}
+    </div>
+{% endblock %}

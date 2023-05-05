@@ -15,7 +15,7 @@ def close_db():
         
 def init_db():
     db = get_db()
-    file_path = os.path.join(current_app.root_path, 'setup.sql')
+    file_path = os.path.join(current_app.root_path, 'sql\setup.sql')
     db.run_file(file_path)
     
 @click.command('init-db')

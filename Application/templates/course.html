@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ course.title }}
+{% endblock %}
+
+{% block content %}
+    <h1 id="course_page_heading">{{ course.title }}</h1>
+    <div id="course_info">
+        <a class="invisible_link" href="{{url_for('index.show_courses_by_term', term_id=course.term_id)}}">
+            <p><span class="underline">Term:</span> {{ course.term_id }}</p>
+        </a>
+        <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=course.domain_id)}}">
+            <p><span class="underline">Domain:</span> {{ domain.name }}</p>
+        </a>
+        <p><span class="underline">Theory Hours:</span> {{ course.theory_hours }}</p>
+        <p><span class="underline">Lab Hours:</span> {{ course.lab_hours }}</p>
+        <p><span class="underline">Work Hours:</span> {{ course.work_hours }}</p>
+        <p><span class="underline">Description:</span></p>
+        <p id="description">{{ course.description }}</p>
+        
+        {% if current_user.is_authenticated %}
+            <div id="course_edit_del_buttons">
+                <a href="{{url_for('courses.edit_course', course_id=course.id)}}"><input type="button" class="course_btns" value="Edit" /></a>
+                <a href="{{url_for('courses.delete_course', course_id=course.id)}}"><input type="button" class="course_btns" value="Delete" /></a>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <br/>
+    <hr class="white_line">
+
+    <div id="course_elements">
+        <h2>{{ course.title }}'s Competency Elements:</h2>
+        {% if current_user.is_authenticated %}
+            <a href="{{url_for('courses.add_course_element', course_id=course.id)}}"><input type="button" class="add_element_btn" value="Add Element" /></a>
+        {% endif %}
+        {% for element in elements %}
+            <div class="element">
+                <h3><a href="{{url_for('competencies.show_competency_elements', comp_id=element.competency_id)}}", class="invisible_link"><span class="underline">Competency ID:</span></a> {{ element.competency_id | safe }}</h3>
+                <h4><span class="underline">Order:</span> {{ element.order | safe }}</h4>
+                <h4><span class="underline">Name:</span> {{ element.name | safe }}</h4>
+                <h4><span class="underline">Hours:</span> {{ element.hours | safe}}</h4>
+                <h4><span class="underline">Criteria:</span></h4>
+                <p class="criteria">{{ element.criteria | safe }}</p>
+                {% if current_user.is_authenticated %}
+                    <div class="element_btns">
+                        <a href="{{url_for('courses.edit_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Edit Hours" /></a>
+                        <a href="{{url_for('courses.delete_course_element', course_id=course.id, elem_id=element.id)}}"><input type="button" value="Delete Course Element" /></a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

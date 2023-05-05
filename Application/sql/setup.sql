@@ -10,7 +10,7 @@ create table terms (term_id number PRIMARY KEY,
                     term_name char(6) NOT NULL);
 
 --Domain
-create table domains (domain_id number PRIMARY KEY, 
+create table domains (domain_id number generated always as identity PRIMARY KEY, 
                         domain varchar2(50) NOT NULL, 
                         domain_description varchar2(500) NOT NULL);
 
@@ -28,7 +28,7 @@ create table courses (course_id varchar2(10) PRIMARY KEY,
 create table competencies (competency_id char(4) PRIMARY KEY, 
                             competency varchar2(250) NOT NULL,
                             competency_achievement varchar2(500) NOT NULL ,
-                            competency_type varchar2(10) NOT NULL);
+                            competency_type varchar2(15) NOT NULL);
                         
 --Element
 create table elements (element_id number generated always as identity PRIMARY KEY, 
@@ -42,14 +42,14 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
                                 element_id REFERENCES elements(element_id) ON DELETE CASCADE, 
                                 element_hours number NOT NULL);
 
---Courses_Users
+----Courses_Users
 create table courses_users (
     user_id number generated always as identity PRIMARY KEY,
-    name varchar2(100) NOT NULL,
+    username varchar2(100) NOT NULL,
     email varchar2(100) NOT NULL,
     password varchar2(102) NOT NULL,
-    user_group varchar2(13) NOT NULL, 
-    avatar_path varchar2(2000)
+    user_group varchar2(13) NOT NULL,
+    blocked char(1) NOT NULL
 );
 
 --calling creation of sample data

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if domain %}    
+        {{ domain.name }}
+    {% else %}
+        Domains
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="domain_page_content">
+        <h1 id="domain_page_heading">
+            {% if domain %}    
+                Domain
+            {% else %}
+                Domains
+            {% endif %}
+        </h1>
+        {% if current_user.is_authenticated %}
+            <a href="{{url_for('domains.add_domain')}}">
+                <input id="add_domain_btn" type="button" value="Add Domain" />
+            </a>
+        {% endif %}
+        
+        {% for domain in domains %}
+            <div class="domain">
+                <a class="invisible_link" href="{{url_for('domains.show_domain', domain_id=domain.id)}}">
+                    <h2>{{ domain.name }}</h2>
+                </a>
+                <p>{{ domain.description }}</p>
+                {% if current_user.is_authenticated %}
+                    <div id="edit_delete_domain">
+                        <a href="{{url_for('domains.edit_domain', dom_id=domain.id)}}">
+                            <input type="button" value="Edit Domain" />
+                        </a>
+                        <a href="{{url_for('domains.delete_domain', dom_id=domain.id)}}">
+                            <input type="button" value="Delete Domain" />
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if domain -%}
+            <div class="domain">
+                <h2>{{ domain.name }}</h2>
+                <p>{{ domain.description }}</p>
+            </div>
+
+            <div id="domain_courses_div">
+                {% if courses %}
+                    <h3>Courses In This Domain</h3>
+
+                    {% for course in courses %}
+                        <a class="invisible_link" href="{{url_for('courses.show_course', course_id=course.id)}}">
+                            <p>{{ course.id }}</p>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {%- endif %}
+    </div>
+{% endblock %}

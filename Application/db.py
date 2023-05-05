@@ -535,8 +535,8 @@ class Database:
                     cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
                 except oracledb.Error:
                     pass
-            cursor.execute("DELETE FROM elements WHERE element_order=:element_order AND competency_id=:competency_id",
-                           (element.order, element.competency_id))
+            cursor.execute("DELETE FROM elements WHERE element_id=:element_id AND competency_id=:competency_id",
+                           (element.id, element.competency_id))
 
     def get_course_elements(self, course_id):
         if not isinstance(course_id, str):

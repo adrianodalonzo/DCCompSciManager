@@ -5,7 +5,7 @@ drop table competencies;
 drop table courses;
 drop table terms;
 drop table domains;
---drop table courses_users;
+drop table courses_users;
 --Logging
 drop table audit_logs;
 

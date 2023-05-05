@@ -375,7 +375,7 @@ class Database:
             elements = self.get_competency_elements(id)
             for element in elements:
                 try:
-                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=element.id)
+                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
                     self.delete_competency_element(element)
                 except oracledb.Error:
                     pass
@@ -408,7 +408,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 result = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
-                FROM elements WHERE competency_id=:compentecy_id AND element_id=:element_id""", (competency_id, element_id))
+                FROM elements WHERE competency_id=:compentecy_id AND element_id=:element_id""", (competency_id, int(element_id)))
 
                 for row in result:
                     element = Element(row[1], row[2], row[3], row[4])
@@ -443,7 +443,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 result = cursor.execute("""SELECT element_id, element_order, element, element_criteria, competency_id 
-                FROM elements WHERE element_id=:id""", id=id)
+                FROM elements WHERE element_id=:id""", id=int(id))
 
                 for row in result:
                     element = Element(row[1], row[2], row[3], row[4])
@@ -464,13 +464,13 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 hours_query = cursor.execute("""SELECT element_hours FROM courses_elements WHERE element_id=:elem_id
-                AND course_id=:course_id""", (elem_id, course_id))
+                AND course_id=:course_id""", (int(elem_id), course_id))
 
                 for row in hours_query:
                     hours = row[0]
 
                 result = cursor.execute("""SELECT element_order, element, element_criteria, competency_id 
-                    FROM view_competencies_elements WHERE element_id=:id""", id=elem_id)
+                    FROM view_competencies_elements WHERE element_id=:id""", id=int(elem_id))
                 
                 for row in result:
                         element = Element(row[0], row[1], row[2], row[3])
@@ -504,7 +504,7 @@ class Database:
         with self.__connection.cursor() as cursor:
             cursor.execute("""UPDATE elements SET element_order=:element_order, element=:element, 
             element_criteria=:element_criteria, competency_id=:competency_id WHERE element_id=:element_id""", 
-            (element.order, element.name, element.criteria, element.competency_id, element.id))
+            (element.order, element.name, element.criteria, element.competency_id, int(element.id)))
 
     def delete_competency_element(self, element):
         competency_elements = self.get_competency_elements(element.competency_id)
@@ -519,7 +519,7 @@ class Database:
         with self.__connection.cursor() as cursor:
             for element in competency_elements:
                 try:
-                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=element.id)
+                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
                 except oracledb.Error:
                     pass
             cursor.execute("DELETE FROM elements WHERE element_order=:element_order AND competency_id=:competency_id",
@@ -573,7 +573,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 cursor.execute("INSERT INTO courses_elements VALUES(:course_id, :element_id, :element_hours)",
-                                (course_id, elem_id, hours))
+                                (course_id, int(elem_id), hours))
             except oracledb.Error:
                 pass
     
@@ -588,7 +588,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 cursor.execute("""UPDATE courses_elements SET element_hours=:hours WHERE course_id=:course_id
-                AND element_id=:elem_id""", (hours, course_id, elem_id))
+                AND element_id=:elem_id""", (hours, course_id, int(elem_id)))
             except oracledb.Error:
                 pass
         
@@ -601,7 +601,7 @@ class Database:
         with self.__get_cursor() as cursor:
             try:
                 cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id AND element_id=:elem_id"
-                                , (course_id, elem_id))
+                                , (course_id, int(elem_id)))
             except oracledb.Error:
                 pass
 

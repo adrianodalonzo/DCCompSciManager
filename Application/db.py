@@ -286,7 +286,7 @@ class Database:
             cursor.execute("""UPDATE courses SET course_title=:course_title, theory_hours=:theory_hours, lab_hours=:lab_hours, work_hours=:work_hours, 
             description=:description, domain_id=:domain_id, term_id=:term_id WHERE course_id=:course_id""",
                     (course.title, course.theory_hours, course.lab_hours, course.work_hours, 
-                     course.description, course.domain_id, course.term_id, course.id))
+                     course.description, int(course.domain_id), int(course.term_id), course.id))
 
     def delete_course(self, id):
         if not self.get_course(id):

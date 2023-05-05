@@ -17,6 +17,7 @@ def add_element():
             return redirect(url_for('profile.get_profile', email=current_user.email))
     
     form = ElementForm()
+    form.competency_id.choices=get_db().get_comepetency_choices()
 
     if request.method == 'GET':
         return render_template("modify_element.html", form=form)
@@ -50,6 +51,7 @@ def edit_element(elem_nm):
             return redirect(url_for('profile.get_profile', email=current_user.email))
     elem = get_db().get_element(elem_nm)
     form = ElementForm(obj=elem)
+    form.competency_id.choices=get_db().get_comepetency_choices()
 
     if request.method == 'GET':
         return render_template('modify_element.html', form=form, element=elem)

@@ -326,6 +326,19 @@ class Database:
             
             except oracledb.Error:
                 pass
+
+    def get_comepetency_choices(self):
+        with self.__get_cursor() as cursor:
+            competencies_choices = []
+
+            try:
+                results = cursor.execute("SELECT competency_id, competency FROM competencies")
+                for row in results:
+                    competencies_choices.append((row[0], row[1]))
+            except oracledb.Error:
+                pass
+
+            return competencies_choices
     
     def get_all_competencies(self, page_num=1, page_size=5):
         all_competencies = []

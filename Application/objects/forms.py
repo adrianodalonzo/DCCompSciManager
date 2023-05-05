@@ -43,7 +43,7 @@ class ElementForm(FlaskForm):
     order = IntegerField('Element Order', validators=[DataRequired(), NumberRange(min=1)])
     name = StringField('Element', validators=[DataRequired(), Length(min=1, max=250)]) 
     criteria = TextAreaField('Criteria', validators=[DataRequired(), Length(min=1, max=500)])
-    competency_id = StringField('Existing Competency', validators=[DataRequired(), Length(min=4, max=4)])
+    competency_id = SelectField('Existing Competency', validators=[DataRequired()])
 
 class CourseElementForm(FlaskForm):
     hours = IntegerField('Number Of Hours This Element Will Be Worked On', validators=[DataRequired(), NumberRange(min=1)])

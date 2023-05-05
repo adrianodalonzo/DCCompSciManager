@@ -45,5 +45,9 @@ def show_courses_by_term(term_id):
 
 @bp.route("/search/<string:search_query>/")
 def search_db(search_query):
-    courses, competencies, elements, domains = get_db().search_all(search_query)
-    return render_template('search_results.html', courses=courses, competencies=competencies, elements=elements, domains=domains, search=search_query)
+    try:
+        courses, competencies, elements, domains = get_db().search_all(search_query)
+        return render_template('search_results.html', courses=courses, competencies=competencies, elements=elements, domains=domains, search=search_query)
+    except Exception:
+        flash('Error Searching', category='invalid')
+        return redirect(url_for('index.index'))

@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
 from flask_login import current_user, login_required
+import oracledb
 
 from ..objects.forms import CourseForm, CourseElementForm
 from ..objects.course import Course
@@ -56,8 +57,11 @@ def add_course():
                 course = Course(form.id.data, form.title.data, form.theory_hours.data, 
                                 form.lab_hours.data, form.work_hours.data, 
                                 form.description.data, form.domain_id.data, form.term_id.data)
-                get_db().add_course(course)
-                flash("Added Course: " + course.title, category='valid')
+                try:
+                    get_db().add_course(course)
+                    flash("Added Course: " + course.title, category='valid')
+                except Exception:
+                    flash("Error adding course", category='invalid')
     
     return redirect(url_for('courses.show_courses'))
 
@@ -103,16 +107,22 @@ def edit_course(course_id):
             
             edited_course = Course(course_id, course_title, course_theo_hours, course_lab_hours,
                                    course_work_hours, course_desc, int(course_dom_id), int(course_term_id))
-            get_db().modify_course(edited_course)
-            flash("Edited Course: " + course_title, category='valid')
+            try:
+                get_db().modify_course(edited_course)
+                flash("Edited Course: " + course_title, category='valid')
+            except Exception:
+                flash("Error editing course " + course_id, category='invalid')
 
     return redirect(url_for('courses.show_courses'))
 
 @bp.route("/delete/<string:course_id>/")
 @login_required
 def delete_course(course_id):
-    get_db().delete_course(course_id)
-    flash("Course " + course_id + " has been deleted", category='valid')
+    try:
+        get_db().delete_course(course_id)
+        flash("Course " + course_id + " has been deleted", category='valid')
+    except Exception:
+        flash("Error deleting course " + course_id, category='invalid')
     return redirect(url_for('courses.show_courses'))
 
 @bp.route("/element/add/<string:course_id>/", methods=['GET', 'POST'])
@@ -138,8 +148,11 @@ def add_course_element(course_id):
                     flash("Course " + course_id + " already has this element!", category='invalid')    
 
             if not matchingCourseElement:
-                get_db().add_course_element(course_id, form.id.data, form.hours.data)
-                flash("Course Element Added Succesfully", category='valid')
+                try:
+                    get_db().add_course_element(course_id, form.id.data, form.hours.data)
+                    flash("Course Element Added Succesfully", category='valid')
+                except Exception:
+                    flash("Error adding course element", category='invalid')
     
     return redirect(url_for('courses.show_course', course_id=course_id))
 
@@ -161,8 +174,11 @@ def edit_course_element(course_id, elem_id):
     elif request.method == 'POST':
         form.id.data = elem_id
         if form.validate_on_submit():
-            get_db().edit_course_element(course_id, elem_id, form.hours.data)
-            flash("Edited Course Element Succesfully", category='valid')
+            try:
+                get_db().edit_course_element(course_id, elem_id, form.hours.data)
+                flash("Edited Course Element Succesfully", category='valid')
+            except Exception:
+                flash("Error editing course element", category='invalid')
         else:
             flash("Unsuccesfully Edited Course Element", category='invalid')
 
@@ -171,6 +187,9 @@ def edit_course_element(course_id, elem_id):
 @bp.route("/element/delete/<string:course_id>/<string:elem_id>")
 @login_required
 def delete_course_element(course_id, elem_id):
-    get_db().delete_course_element(course_id, elem_id)
-    flash("Deleted Course Element Succesfully", category='valid')
+    try:
+        get_db().delete_course_element(course_id, elem_id)
+        flash("Deleted Course Element Succesfully", category='valid')
+    except Exception:
+        flash("Error deleting course element")
     return redirect(url_for('courses.show_course', course_id=course_id))

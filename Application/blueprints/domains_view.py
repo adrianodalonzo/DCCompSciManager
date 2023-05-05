@@ -53,8 +53,11 @@ def add_domain():
 
             if not matchingDomain:
                 dom = Domain(form.name.data, form.description.data)
-                get_db().add_domain(dom)
-                flash("Added Domain: " + dom.name, category='valid')
+                try:
+                    get_db().add_domain(dom)
+                    flash("Added Domain: " + dom.name, category='valid')
+                except Exception:
+                    flash('Error adding domain', category='invalid')
 
     return redirect(url_for('domains.show_domains'))
 
@@ -84,8 +87,11 @@ def edit_domain(dom_id):
             
             domain = Domain(dom_name, dom_desc)
             domain.id = dom.id
-            get_db().modify_domain(domain)
-            flash("Edited Domain: " + domain.name, category='valid')
+            try:
+                get_db().modify_domain(domain)
+                flash("Edited Domain: " + domain.name, category='valid')
+            except Exception:
+                flash('Error editing domain', category='invalid')
         
         else:
             flash("Domain form is not valid!", category='invalid')
@@ -95,6 +101,9 @@ def edit_domain(dom_id):
 @bp.route('/delete/<int:dom_id>')
 @login_required
 def delete_domain(dom_id):
-    get_db().delete_domain(dom_id)
-    flash("Domain " + dom_id + " has been deleted along with its courses")
+    try:
+        get_db().delete_domain(dom_id)
+        flash("Domain " + dom_id + " has been deleted along with its courses")
+    except Exception:
+        flash('Error deleting domain', cateogry='invalid')
     return redirect(url_for('domains.show_domains'))

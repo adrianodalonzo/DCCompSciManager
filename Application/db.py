@@ -276,7 +276,7 @@ class Database:
         with self.__connection.cursor() as cursor:
             cursor.execute("INSERT INTO courses VALUES(:id, :title, :theory_hours, :lab_hours, :work_hours, :description, :domain_id, :term_id)",
                     (course.id, course.title, course.theory_hours, course.lab_hours, course.work_hours, 
-                     course.description, course.domain_id, course.term_id))
+                     course.description, int(course.domain_id), int(course.term_id)))
     
     def modify_course(self, course):
         if not self.get_course(course.id):

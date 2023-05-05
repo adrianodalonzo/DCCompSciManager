@@ -701,7 +701,7 @@ class Database:
                 return domain_id
     
     def get_domain_choices(self):
-        domains = self.get_all_domains()
+        domains, prev_page, next_page = self.get_all_domains(page_size=100)
         domain_choices = []
 
         for domain in domains:

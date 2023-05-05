@@ -16,7 +16,7 @@ def show_courses():
         if current_user.blocked:
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
-    courses = get_db().get_all_courses()
+    courses, prev_page, next_page = get_db().get_all_courses(page_size=100)
     if courses:
         return render_template('courses.html', courses=courses)
     flash("No courses", category='invalid')
@@ -45,8 +45,9 @@ def add_course():
     elif request.method == 'POST':
         if form.validate_on_submit():
             matchingCourse = False
+            courses, prev_page, next_page = get_db().get_all_courses(page_size=100)
 
-            for course in get_db().get_all_courses():
+            for course in courses:
                 if course.id == form.id.data:
                     matchingCourse = True
                     flash("A Course with the same number already exists!", category='invalid')

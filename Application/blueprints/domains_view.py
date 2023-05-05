@@ -15,7 +15,7 @@ def show_domains():
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
         
-    domains = get_db().get_all_domains()
+    domains, prev_page, next_page = get_db().get_all_domains(page_size=100)
     if domains:
         return render_template('domains.html', domains=domains)
     
@@ -44,8 +44,9 @@ def add_domain():
     elif request.method == 'POST':
         if form.validate_on_submit():
             matchingDomain = False
+            domains = get_db().get_all_domains(page_size=100)
 
-            for domain in get_db().get_all_domains():
+            for domain in domains:
                 if domain.name == form.name.data:
                     matchingDomain = True
                     flash("A Domain with the same name already exists")

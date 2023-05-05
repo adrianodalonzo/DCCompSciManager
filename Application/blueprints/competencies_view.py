@@ -14,7 +14,7 @@ def show_all_competencies():
         if current_user.blocked:
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
-    competencies = get_db().get_all_competencies()
+    competencies, prev_page, next_page = get_db().get_all_competencies(page_size=500)
 
     if competencies:
         return render_template('competencies.html', competencies=competencies)
@@ -46,8 +46,9 @@ def add_competency():
     elif request.method == 'POST':
         if form.validate_on_submit():
             matchingCompetency = False
+            competencies, prev_page, next_page = get_db().get_all_competencies(page_size=500)
 
-            for competency in get_db().get_all_competencies():
+            for competency in competencies:
                 if competency.id == form.id.data:
                     matchingCompetency = True
                     flash("A Competency with the same id already exists!", category='invalid')

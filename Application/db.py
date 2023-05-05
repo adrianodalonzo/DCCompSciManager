@@ -530,13 +530,10 @@ class Database:
             raise ValueError("Element does not exist in this competency. Please choose an existing competency element to delete.")
         
         with self.__get_cursor() as cursor:
-            for element in competency_elements:
-                try:
-                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
-                except oracledb.Error:
-                    pass
+            cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
+
             cursor.execute("DELETE FROM elements WHERE element_id=:element_id AND competency_id=:competency_id",
-                           (element.id, element.competency_id))
+                           (int(element.id), element.competency_id))
 
     def get_course_elements(self, course_id):
         if not isinstance(course_id, str):

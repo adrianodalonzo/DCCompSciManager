@@ -293,6 +293,7 @@ class Database:
             raise ValueError("Course does not exist. Please choose an existing course to delete.") 
 
         with self.__connection.cursor() as cursor:
+            cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id", course_id=id)
             cursor.execute("DELETE FROM courses WHERE course_id=:course_id", course_id=id)
 
     def get_course_competencies(self, id): 
@@ -371,6 +372,14 @@ class Database:
             raise ValueError("Competency does not exist. Please choose an existing competency to delete.")
         
         with self.__connection.cursor() as cursor:
+            elements = self.get_competency_elements(id)
+            for element in elements:
+                try:
+                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=element.id)
+                    self.delete_competency_element(element)
+                except oracledb.Error:
+                    pass
+            
             cursor.execute("DELETE FROM competencies WHERE competency_id=:competency_id", competency_id=id)
 
     def get_competency_elements(self, id):
@@ -508,6 +517,11 @@ class Database:
             raise ValueError("Element does not exist in this competency. Please choose an existing competency element to delete.")
         
         with self.__connection.cursor() as cursor:
+            for element in competency_elements:
+                try:
+                    cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=element.id)
+                except oracledb.Error:
+                    pass
             cursor.execute("DELETE FROM elements WHERE element_order=:element_order AND competency_id=:competency_id",
                            (element.order, element.competency_id))
 
@@ -730,6 +744,21 @@ class Database:
             raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
         
         with self.__connection.cursor() as cursor:
+            courses = self.get_courses_by_domain(domain.id)
+            # Deleting courses' elements
+            for course in courses:
+                try:
+                    cursor.execute("DELETE FROM courses_elements WHERE course_id=:id", id=course.id)
+                except oracledb.Error:
+                    pass
+
+            # Deleting courses in domain
+            for course in courses:
+                try:
+                    self.delete_course(course.id)
+                except oracledb.Error:
+                    pass
+                
             cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
 
     def search_course_id(self, search_text):

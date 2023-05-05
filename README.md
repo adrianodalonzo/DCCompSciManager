@@ -3,7 +3,7 @@
 ## URL: 10.172.10.235:8000/
 
 ## List of Group Members:
-    1. Shu Ya Liu ()
+    1. Shu Ya Liu (2136141)
     2. Vincent Keedwell (2137034)
     3. Adriano D'Alonzo (2035770)
 

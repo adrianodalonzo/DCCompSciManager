@@ -51,7 +51,9 @@ def edit_element(elem_id):
             return redirect(url_for('profile.get_profile', email=current_user.email))
     elem = get_db().get_element(elem_id)
     form = ElementForm(obj=elem)
-    form.competency_id.choices=get_db().get_comepetency_choices()
+    competency = get_db().get_competency(elem.competency_id)
+    competency_choice = [(competency.id, competency.name)]
+    form.competency_id.choices=(competency_choice)
 
     if request.method == 'GET':
         return render_template('modify_element.html', form=form, element=elem)
@@ -96,5 +98,5 @@ def delete_element(elem_id):
             return redirect(url_for('profile.get_profile', email=current_user.email))
     element = get_db().get_element(elem_id)
     get_db().delete_competency_element(element)
-    flash("Deleted element " + elem_id, category='valid')
+    flash("Deleted element " + str(elem_id), category='valid')
     return redirect(url_for('competencies.show_competency_elements', comp_id=element.competency_id))

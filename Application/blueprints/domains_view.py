@@ -102,8 +102,8 @@ def edit_domain(dom_id):
 @login_required
 def delete_domain(dom_id):
     try:
-        get_db().delete_domain(dom_id)
-        flash("Domain " + dom_id + " has been deleted along with its courses")
+        get_db().delete_domain(int(dom_id))
+        flash(f"Domain {dom_id} has been deleted along with its courses", category='valid')
     except Exception:
-        flash('Error deleting domain', cateogry='invalid')
+        flash('Error deleting domain', category='invalid')
     return redirect(url_for('domains.show_domains'))

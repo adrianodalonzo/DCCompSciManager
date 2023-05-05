@@ -682,7 +682,7 @@ class Database:
             try:
                 results = cursor.execute("""SELECT course_id, course_title, theory_hours, lab_hours, 
                 work_hours, description, term_id FROM view_courses_domains WHERE domain_id=:id"""
-                                         , id=id)
+                                         , id=int(id))
 
                 for row in results:
                     course = Course(row[0], row[1], row[2], row[3], row[4], row[5], id, row[6])
@@ -753,11 +753,11 @@ class Database:
                            (domain.name, domain.description, domain.id))
 
     def delete_domain(self, domain):
-        if not self.get_domain(domain.id):
-            raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
+        # if not self.get_domain(int(domain.id)):
+        #     raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
         
         with self.__connection.cursor() as cursor:
-            courses = self.get_courses_by_domain(domain.id)
+            courses = self.get_courses_by_domain(domain)
             # Deleting courses' elements
             for course in courses:
                 try:
@@ -772,7 +772,7 @@ class Database:
                 except oracledb.Error:
                     pass
                 
-            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain.id)
+            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain)
 
     def search_course_id(self, search_text):
         with self.__get_cursor() as cursor:

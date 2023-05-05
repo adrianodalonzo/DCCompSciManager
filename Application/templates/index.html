@@ -7,6 +7,18 @@
 {% block content %}
     <h1 id="home_page_heading">Home</h1>
     <div id="home_page_content">
+        {% if form %}
+            <div id="home_page_search">
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div id="search_bar">
+                        <img src="{{ url_for('static', filename='images/search.png') }}" alt="search_icon">
+                        {{ form.query() }}
+                        <input type="submit" value="Search" />
+                    </div>
+                </form>
+            </div>
+        {% endif %}
         <a href="{{url_for('domains.show_domains')}}" class="invisible_link">
             <h2>Domains</h2>
         </a>

@@ -5,12 +5,31 @@
 {% endblock %}
 
 {% block content %}
+    {% if user.blocked %}
+        <div id="blocked_message">
+            <img src="{{ url_for('static', filename='images/warning.png') }}" alt="warning">
+            <h1>BLOCKED</h1>
+            <img src="{{ url_for('static', filename='images/warning.png') }}" alt="warning">
+        </div>
+    {% endif %}
     <div class="profile_info">
         <img class="avatar" src="{{ url_for('auth.get_avatar', email=user.email) }}" alt="profile_picture">
         <div id="profile_credentials">
             <h1>{{ user.name }}</h1>
             <h2>{{ user.email }}</h2>
             <h3>{{ user.group }}</h3>
+            <div id="profile_controls">
+                {% if current_user.email == user.email or current_user.group == 'Admin' %}
+                    <a href="{{ url_for('profile.reset_password', email=user.email) }}">
+                        <button>Reset Password</button>
+                    </a>
+                {% endif %}
+                {% if current_user.group == 'Admin' or is_my_profile %}
+                    <a href="{{ url_for('profile.edit_profile', email=user.email) }}">
+                        <button>Edit Profile</button>
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

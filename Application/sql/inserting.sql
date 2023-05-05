@@ -4,9 +4,9 @@
     --Term
     insert into terms values (1, 'Fall');
     --Domain
-    insert into domains values (1/*GENERATED*/, 'Programming, Data Structures, and Algorithms',
+    insert into domains (domain, domain_description) values ('Programming, Data Structures, and Algorithms',
         --Description
-        'The courses in the Programming, Data Structures and Algorithms domain teach the knowledge and skills required to design and program solutions to typical information technology problems. The students are taught object-oriented programming in the context of standalone, event-driven and web-based programs.');
+        'The courses in the Programming, Data Structures and Algorithms domain teach the knowledge and skills required to design and program solutions to typical information technology problems. The students areï¿½taughtï¿½object-oriented programming in the context of standalone, event-driven and web-based programs.');
     --Course
     insert into courses values ('420-110-DW', 'Programming I', 3,3,3,
         --Description
@@ -160,7 +160,7 @@
     --Term
     insert into terms values (4, 'Winter');
     --Domain
-    insert into domains values (2/*GENERATED*/, 'Infrastructure, Operating Systems and Networking',
+    insert into domains (domain, domain_description) values ('Infrastructure, Operating Systems and Networking',
         --Description
         'The courses within the Infrastructure, Operating Systems and Networking domain deliver the knowledge and skills required by the student to understand, install and optimally configure various operating systems locally or on the cloud, and to deploy and run applications on these systems.');
     --Course
@@ -312,7 +312,7 @@
 --Term
     --already made with programming II
     --Domain
-    insert into domains values (3/*GENERATED*/, 'Database',
+    insert into domains (domain, domain_description) values ('Database',
         --Description
         'The Database domain courses give the student the knowledge and skills to build relational databases and to administer a database management system. This domain will draw upon the knowledge and skills learned in the programming, data structures and algorithms domain.');
     --Course

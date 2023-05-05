@@ -273,7 +273,7 @@ class Database:
         if self.get_course(course.id):
             raise ValueError("Course already exist. Please change to a valid course ID.") 
             
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("INSERT INTO courses VALUES(:id, :title, :theory_hours, :lab_hours, :work_hours, :description, :domain_id, :term_id)",
                     (course.id, course.title, course.theory_hours, course.lab_hours, course.work_hours, 
                      course.description, int(course.domain_id), int(course.term_id)))
@@ -282,7 +282,7 @@ class Database:
         if not self.get_course(course.id):
             raise ValueError("Course does not exist. Please modify an existing course.") 
             
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("""UPDATE courses SET course_title=:course_title, theory_hours=:theory_hours, lab_hours=:lab_hours, work_hours=:work_hours, 
             description=:description, domain_id=:domain_id, term_id=:term_id WHERE course_id=:course_id""",
                     (course.title, course.theory_hours, course.lab_hours, course.work_hours, 
@@ -292,7 +292,7 @@ class Database:
         if not self.get_course(id):
             raise ValueError("Course does not exist. Please choose an existing course to delete.") 
 
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("DELETE FROM courses_elements WHERE course_id=:course_id", course_id=id)
             cursor.execute("DELETE FROM courses WHERE course_id=:course_id", course_id=id)
 
@@ -368,7 +368,7 @@ class Database:
         if self.get_competency(competency.id):
             raise ValueError("Competency already exist. Please modify an existing competency.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("INSERT INTO competencies VALUES(:competency_id, :competency, :competency_achievement, :competency_type)",
                            (competency.id, competency.name, competency.achievement, competency.type))
           
@@ -376,7 +376,7 @@ class Database:
         if not self.get_competency(competency.id):
             raise ValueError("Competency does not exist. Please change to a valid competency id.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("UPDATE competencies SET competency=:competency, competency_achievement=:competency_achievement, competency_type=:competency_type WHERE competency_id=:competency_id",
                            (competency.name, competency.achievement, competency.type, competency.id))
     
@@ -384,7 +384,7 @@ class Database:
         if not self.get_competency(id):
             raise ValueError("Competency does not exist. Please choose an existing competency to delete.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             elements = self.get_competency_elements(id)
             for element in elements:
                 try:
@@ -500,7 +500,7 @@ class Database:
             if competency_element.name == element.name:
                 raise ValueError("Element already exist in this competency. Please change the element order.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("INSERT INTO elements (element_order, element, element_criteria, competency_id) VALUES(:element_order, :element, :element_criteria, :competency_id)",
                            (element.order, element.name, element.criteria, element.competency_id))
 
@@ -514,7 +514,7 @@ class Database:
         if not element_exist:
             raise ValueError("Element does not exist in this competency. Please modify an existing competency element.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("""UPDATE elements SET element_order=:element_order, element=:element, 
             element_criteria=:element_criteria, competency_id=:competency_id WHERE element_id=:element_id""", 
             (element.order, element.name, element.criteria, element.competency_id, int(element.id)))
@@ -529,7 +529,7 @@ class Database:
         if not element_exist:
             raise ValueError("Element does not exist in this competency. Please choose an existing competency element to delete.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             for element in competency_elements:
                 try:
                     cursor.execute("DELETE FROM courses_elements WHERE element_id=:element_id", element_id=int(element.id))
@@ -738,7 +738,7 @@ class Database:
     
     def add_domain(self, domain):
         if domain.id is None:
-            with self.__get_cursor().cursor() as cursor:
+            with self.__get_cursor() as cursor:
                 cursor.execute("INSERT INTO domains (domain, domain_description) VALUES (:domain, :domain_description)",
                             (domain.name, domain.description))
         elif self.get_domain(domain.id):
@@ -748,16 +748,16 @@ class Database:
         if not self.get_domain(domain.id):
             raise ValueError("Domain does not exist. Please modify an existing domain.")
         
-        with self.__get_cursor().cursor() as cursor:
+        with self.__get_cursor() as cursor:
             cursor.execute("UPDATE domains SET domain=:domain, domain_description=:domain_description WHERE domain_id=:domain_id",
                            (domain.name, domain.description, domain.id))
 
-    def delete_domain(self, domain):
+    def delete_domain(self, id):
         # if not self.get_domain(int(domain.id)):
         #     raise ValueError("Domain does not exist. Please choose an existing domain to delete.")
         
-        with self.__get_cursor().cursor() as cursor:
-            courses = self.get_courses_by_domain(domain)
+        with self.__get_cursor() as cursor:
+            courses = self.get_courses_by_domain(id)
             # Deleting courses' elements
             for course in courses:
                 try:
@@ -772,7 +772,7 @@ class Database:
                 except oracledb.Error:
                     pass
                 
-            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=domain)
+            cursor.execute("DELETE FROM domains WHERE domain_id=:domain_id", domain_id=id)
 
     def search_course_id(self, search_text):
         with self.__get_cursor() as cursor:

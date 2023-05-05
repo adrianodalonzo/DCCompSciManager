@@ -95,7 +95,7 @@ def domain_api(domain_id):
         
         elif request.method == 'DELETE':
             domain = get_db().get_domain(domain_id)
-            get_db().delete_domain(domain)
+            get_db().delete_domain(domain.id)
             infoset = {'id': "Success", 'description': 'Successfully deleted domain'}
             return make_response(jsonify(infoset), 204)
         

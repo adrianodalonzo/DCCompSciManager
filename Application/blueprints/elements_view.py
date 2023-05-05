@@ -33,8 +33,11 @@ def add_element():
             if not matchingElement:
                 elem = Element(form.order.data, form.name.data,
                                form.criteria.data, form.competency_id.data)
-                get_db().add_competency_element(elem)
-                flash("Added Element: " + elem.name, category='valid')
+                try:
+                    get_db().add_competency_element(elem)
+                    flash("Added Element: " + elem.name, category='valid')
+                except Exception:
+                    flash('Error adding element', category='invalid')
     
     return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 
@@ -74,8 +77,11 @@ def edit_element(elem_nm):
             
             element = Element(elem_order, elem_name, elem_crit, elem_comp_id)
             element.id = elem.id
-            get_db().modify_competency_element(element)
-            flash("Edited Element: " + elem_name, category='valid')
+            try:
+                get_db().modify_competency_element(element)
+                flash("Edited Element: " + elem_name, category='valid')
+            except Exception:
+                flash('Error editing element', category='invalid')
             
     return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 

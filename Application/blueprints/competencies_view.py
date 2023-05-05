@@ -56,8 +56,11 @@ def add_competency():
             if not matchingCompetency:
                 comp = Competency(form.id.data, form.name.data,
                                   form.achievement.data, form.type.data)
-                get_db().add_competency(comp)
-                flash("Added Competency: " + comp.name, category='valid')
+                try:
+                    get_db().add_competency(comp)
+                    flash("Added Competency: " + comp.name, category='valid')
+                except Exception:
+                    flash("Error adding competency", cateogry='invalid')
     
     return redirect(url_for('elements.add_element'))
 
@@ -89,14 +92,20 @@ def edit_competency(comp_id):
                 comp_type = competency.type
 
             comp = Competency(comp_id, comp_name, comp_achieve, comp_type)
-            get_db().modify_competency(comp)
-            flash("Edited Competency: " + comp_name, category='valid')
+            try:
+                get_db().modify_competency(comp)
+                flash("Edited Competency: " + comp_name, category='valid')
+            except Exception:
+                flash("Error editing competency", category='invalid')
 
     return redirect(url_for('competencies.show_all_competencies'))
 
 @bp.route("/delete/<string:comp_id>/")
 @login_required
 def delete_competency(comp_id):
-    get_db().delete_competency(comp_id)
-    flash('Competency ' + comp_id + ' has been deleted, along with its elements', category='valid')
+    try:
+        get_db().delete_competency(comp_id)
+        flash('Competency ' + comp_id + ' has been deleted, along with its elements', category='valid')
+    except Exception:
+        flash('Error deleting competency', category='invalid')
     return redirect(url_for('competencies.show_all_competencies'))

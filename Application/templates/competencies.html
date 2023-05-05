@@ -46,8 +46,8 @@
                                 <p>{{ element.criteria }}</p>
                                 {% if current_user.is_authenticated %}
                                     <div class="element-add-edit-del-buttons">
-                                        <a href="{{url_for('elements.edit_element', elem_nm=element.name)}}"><input type="button" class="edit_delete_element_btn" value="Edit Element" /></a>
-                                        <a href="{{url_for('elements.delete_element', elem_nm=element.name)}}"><input type="button" class="edit_delete_element_btn" value="Delete Element" /></a>
+                                        <a href="{{url_for('elements.edit_element', elem_id=element.id)}}"><input type="button" class="edit_delete_element_btn" value="Edit Element" /></a>
+                                        <a href="{{url_for('elements.delete_element', elem_id=element.id)}}"><input type="button" class="edit_delete_element_btn" value="Delete Element" /></a>
                                     </div>
                                 {% endif %}
                             </div>

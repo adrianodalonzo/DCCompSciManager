@@ -42,14 +42,14 @@ def add_element():
     
     return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 
-@bp.route("/edit/<string:elem_nm>/", methods=['GET', 'POST'])
+@bp.route("/edit/<int:elem_id>/", methods=['GET', 'POST'])
 @login_required
-def edit_element(elem_nm):
+def edit_element(elem_id):
     if current_user.is_active:
         if current_user.blocked:
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
-    elem = get_db().get_element(elem_nm)
+    elem = get_db().get_element(elem_id)
     form = ElementForm(obj=elem)
     form.competency_id.choices=get_db().get_comepetency_choices()
 
@@ -87,14 +87,14 @@ def edit_element(elem_nm):
             
     return redirect(url_for('competencies.show_competency_elements', comp_id=form.competency_id.data))
 
-@bp.route("/delete/<string:elem_nm>")
+@bp.route("/delete/<int:elem_id>")
 @login_required
-def delete_element(elem_nm):
+def delete_element(elem_id):
     if current_user.is_active:
         if current_user.blocked:
             flash('You Have Been Blocked by an Admin!', category='invalid')
             return redirect(url_for('profile.get_profile', email=current_user.email))
-    element = get_db().get_element(elem_nm)
+    element = get_db().get_element(elem_id)
     get_db().delete_competency_element(element)
-    flash("Deleted element " + elem_nm, category='valid')
+    flash("Deleted element " + elem_id, category='valid')
     return redirect(url_for('competencies.show_competency_elements', comp_id=element.competency_id))

@@ -42,7 +42,7 @@ create table courses_elements (course_id REFERENCES courses(course_id) ON DELETE
                                 element_id REFERENCES elements(element_id) ON DELETE CASCADE, 
                                 element_hours number NOT NULL);
 
---Courses_Users
+----Courses_Users
 create table courses_users (
     user_id number generated always as identity PRIMARY KEY,
     username varchar2(100) NOT NULL,

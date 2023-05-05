@@ -7,11 +7,21 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('profile', __name__, url_prefix='/profile/')
 
+@bp.route('/')
+@login_required
+def profile():
+    if current_user.blocked:
+        flash("You Have been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
+
 @bp.route('/<email>/')
 @login_required
 def get_profile(email):
     if not isinstance(email, str):
         return TypeError("Email MUST be a string!")
+    if current_user.blocked and current_user.email != email:
+        flash("You Have been Blocked by an Admin, so Viewing this Page is Not Allowed!", category='invalid')
+        return redirect(url_for('profile.get_profile', email=current_user.email))
     user = get_db().get_user(email)
     if user:
         is_my_profile = email == current_user.email
@@ -77,7 +87,8 @@ def edit_profile(email):
                         flash(f"{errors} are Invalid!", category='invalid')  
             return redirect(url_for('profile.get_profile', email=email))
     elif request.method == 'GET':
-        return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=True, form=form)
+        is_my_profile = current_user.email == email
+        return render_template('edit_profile.html', user=get_db().get_user(email), is_my_profile=is_my_profile, form=form)
 
 @bp.route('/<email>/reset-password/', methods=['GET', 'POST'])
 @login_required
@@ -95,6 +106,7 @@ def reset_password(email):
 
     user = get_db().get_user(email)
     form = ResetPasswordForm()
+    is_my_profile = current_user.email == email
     if request.method == 'POST':
         if not form.old_password.data:
             new_password = form.new_password.data
@@ -106,7 +118,7 @@ def reset_password(email):
                 return render_template('specific_profile.html', user=user)
             else:
                 flash("The New Password and Retyped New Password Must Both Match!", category='invalid')
-                return redirect(url_for('profile.reset_password', email=user.email))
+                return redirect(url_for('profile.reset_password', email=user.email, is_my_profile=is_my_profile))
         if form.validate_on_submit():
             old_password = form.old_password.data
             if check_password_hash(user.password, old_password):
@@ -119,7 +131,7 @@ def reset_password(email):
                     hashed_password = generate_password_hash(new_password)
                     get_db().update_user_password(user.email, hashed_password)
                     flash('Password Successfully Resetted!', category='valid')
-                    return render_template('specific_profile.html', user=user)
+                    return render_template('specific_profile.html', user=user, is_my_profile=is_my_profile)
                 else:
                     flash("The New Password and Retyped New Password Must Both Match!", category='invalid')
                     return redirect(url_for('profile.reset_password', email=user.email))

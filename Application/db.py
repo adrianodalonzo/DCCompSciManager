@@ -726,7 +726,7 @@ class Database:
     def add_domain(self, domain):
         if domain.id is None:
             with self.__connection.cursor() as cursor:
-                cursor.execute("INSERT INTO domains (domain, domain_description) VALUES(:domain, :domain_description)",
+                cursor.execute("INSERT INTO domains (domain, domain_description) VALUES (:domain, :domain_description)",
                             (domain.name, domain.description))
         elif self.get_domain(domain.id):
             raise ValueError("Domain already exist. Please change the domain id.")

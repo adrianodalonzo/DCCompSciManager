@@ -44,7 +44,7 @@ def add_domain():
     elif request.method == 'POST':
         if form.validate_on_submit():
             matchingDomain = False
-            domains = get_db().get_all_domains(page_size=100)
+            domains, prev_page, next_page = get_db().get_all_domains(page_size=100)
 
             for domain in domains:
                 if domain.name == form.name.data:

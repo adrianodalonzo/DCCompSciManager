@@ -1,6 +1,6 @@
 # 420-project
 
-## URL: http://10.172.10.235:8000/
+## URL: 10.172.10.235:8000/
 
 ## List of Group Members:
     1. Shu Ya Liu ()

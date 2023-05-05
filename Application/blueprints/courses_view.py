@@ -26,6 +26,9 @@ def show_courses():
 @bp.route("/<string:course_id>/", methods=['GET', 'POST'])
 def show_course(course_id):
     course = get_db().get_course(course_id)
+    if not course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     elements = get_db().get_course_elements(course_id)
     domain = get_db().get_domain(course.domain_id)
 
@@ -56,7 +59,7 @@ def add_course():
             if not matchingCourse:
                 course = Course(form.id.data, form.title.data, form.theory_hours.data, 
                                 form.lab_hours.data, form.work_hours.data, 
-                                form.description.data, form.domain_id.data, form.term_id.data)
+                                form.description.data, int(form.domain_id.data), int(form.term_id.data))
                 try:
                     get_db().add_course(course)
                     flash("Added Course: " + course.title, category='valid')
@@ -69,11 +72,14 @@ def add_course():
 @login_required
 def edit_course(course_id):
     course = get_db().get_course(course_id)
+    if not course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     form = CourseForm(obj=course)
     form.domain_id.choices=get_db().get_domain_choices()
 
     if request.method == 'GET':
-        return render_template('modify_course.html', form=form, course=course)
+        return render_template('modify_course.html', form=form, course=course, domain=get_db().get_domain(course.domain_id))
     
     elif request.method == 'POST':
         if form.validate_on_submit():
@@ -118,6 +124,10 @@ def edit_course(course_id):
 @bp.route("/delete/<string:course_id>/")
 @login_required
 def delete_course(course_id):
+    test_course = get_db().get_course(course_id)
+    if not test_course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     try:
         get_db().delete_course(course_id)
         flash("Course " + course_id + " has been deleted", category='valid')
@@ -128,6 +138,10 @@ def delete_course(course_id):
 @bp.route("/element/add/<string:course_id>/", methods=['GET', 'POST'])
 @login_required
 def add_course_element(course_id):
+    test_course = get_db().get_course(course_id)
+    if not test_course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     if get_db().get_course(course_id) is None:
         flash("Could not find course " + course_id, category='invalid')
         return redirect(url_for('courses.show_course', course_id=course_id))
@@ -159,6 +173,10 @@ def add_course_element(course_id):
 @bp.route("/element/edit/<string:course_id>/<string:elem_id>", methods=['GET', 'POST'])
 @login_required
 def edit_course_element(course_id, elem_id):
+    test_course = get_db().get_course(course_id)
+    if not test_course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     if get_db().get_course(course_id) is None:
         flash("Could not find course " + course_id, category='invalid')
         return redirect(url_for('courses.show_course', course_id=course_id))
@@ -187,6 +205,10 @@ def edit_course_element(course_id, elem_id):
 @bp.route("/element/delete/<string:course_id>/<string:elem_id>")
 @login_required
 def delete_course_element(course_id, elem_id):
+    test_course = get_db().get_course(course_id)
+    if not test_course:
+        flash('No Course Exists with that Course ID', category='invalid')
+        return redirect(url_for('courses.show_courses'))
     try:
         get_db().delete_course_element(course_id, elem_id)
         flash("Deleted Course Element Succesfully", category='valid')

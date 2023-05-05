@@ -76,7 +76,7 @@ def edit_competency(comp_id):
     elif request.method == 'POST':
         if form.validate_on_submit():
 
-            if form.name.data.isnumeric() or form.achivement.data.isnumeric() or form.type.data.isnumeric():
+            if form.name.data.isnumeric() or form.achievement.data.isnumeric() or form.type.data.isnumeric():
                 flash("Unsuccesfully Edited Competency", category='invalid')
                 return redirect(url_for('competencies.show_all_competencies'))
             
